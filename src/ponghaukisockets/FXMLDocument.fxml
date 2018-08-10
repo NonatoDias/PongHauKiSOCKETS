@@ -18,10 +18,10 @@
                   <Label alignment="CENTER" contentDisplay="TOP" layoutX="172.0" layoutY="23.0" text="MENSAGENS" textFill="WHITE" />
                </children>
             </Pane>
-            <Pane layoutX="19.0" layoutY="89.0" prefHeight="539.0" prefWidth="400.0" style="-fx-background-color: #ffffff; -fx-border-radius: 50%;" />
-            <Pane layoutX="19.0" layoutY="639.0" prefHeight="88.0" prefWidth="400.0" style="-fx-background-color: #fff;">
+            <Pane layoutX="19.0" layoutY="89.0" prefHeight="547.0" prefWidth="400.0" style="-fx-background-color: #ffffff; -fx-border-radius: 50%;" />
+            <Pane layoutX="19.0" layoutY="629.0" prefHeight="98.0" prefWidth="400.0" style="-fx-background-color: #fff;">
                <children>
-                  <JFXTextField layoutX="25.0" layoutY="20.0" prefHeight="49.0" prefWidth="363.0" />
+                  <JFXTextField fx:id="jfxTf_message" layoutX="25.0" layoutY="20.0" prefHeight="49.0" prefWidth="363.0" />
                </children>
             </Pane>
          </children>
@@ -41,14 +41,14 @@
                         <Font name="Calibri Bold" size="28.0" />
                      </font>
                   </Label>
-                  <Circle fill="#f6ff48" layoutX="140.0" layoutY="423.0" radius="33.0" stroke="WHITE" strokeType="INSIDE" />
-                  <Circle fill="DODGERBLUE" layoutX="140.0" layoutY="108.0" radius="33.0" stroke="WHITE" strokeType="INSIDE">
+                  <Circle fx:id="pecaAmareloA" fill="#f6ff48" layoutX="140.0" layoutY="423.0" radius="33.0" stroke="WHITE" strokeType="INSIDE" />
+                  <Circle fx:id="pecaAzulA" fill="DODGERBLUE" layoutX="140.0" layoutY="108.0" onMouseClicked="#circleClick" radius="33.0" stroke="WHITE" strokeType="INSIDE">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </Circle>
-                  <Circle fill="DODGERBLUE" layoutX="556.0" layoutY="108.0" radius="33.0" stroke="WHITE" strokeType="INSIDE" />
-                  <Circle fill="#f6ff48" layoutX="556.0" layoutY="423.0" radius="33.0" stroke="WHITE" strokeType="INSIDE" />
+                  <Circle fx:id="pecaAzulB" fill="DODGERBLUE" layoutX="556.0" layoutY="108.0" radius="33.0" stroke="WHITE" strokeType="INSIDE" />
+                  <Circle fx:id="pecaAmareloB" fill="#f6ff48" layoutX="556.0" layoutY="423.0" radius="33.0" stroke="WHITE" strokeType="INSIDE" />
                   <Label alignment="CENTER" layoutX="202.0" layoutY="456.0" prefHeight="41.0" prefWidth="283.0" text="Sua vez" textAlignment="CENTER" textFill="WHITE">
                      <font>
                         <Font name="Calibri Bold" size="28.0" />
