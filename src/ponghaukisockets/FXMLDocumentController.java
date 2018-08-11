@@ -45,9 +45,16 @@ public class FXMLDocumentController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+                
+        PieceMap pieceMap = new PieceMap();
+        pieceMap.setPieceblueA(new Piece(pecaAzulA, 1));
+        pieceMap.setPieceblueB(new Piece(pecaAzulB, 2));
+        pieceMap.setPieceYellowA(new Piece(pecaAmareloA, 3));
+        pieceMap.setPieceYellowB(new Piece(pecaAmareloB, 4));
+        
+        //Events
         pecaAzulA.setOnMouseClicked((e)->{
-            PieceMovement.moveCircle(pecaAzulA);
+            pieceMap.moveBlueA();
         });
         
         pecaAzulB.setOnMouseClicked((e)->{
@@ -61,10 +68,9 @@ public class FXMLDocumentController implements Initializable {
         pecaAmareloB.setOnMouseClicked((e)->{
             PieceMovement.moveCircle(pecaAmareloB);
         });
-        
     }   
     
     public void circleClick(){
-        PieceMovement.moveCircle(pecaAmareloB);
+        
     }
 }

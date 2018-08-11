@@ -20,26 +20,64 @@ public class PieceMovement {
     
     private static double centerGemeX = 337;
     private static double centerGemeY = 325;
+    private static boolean isAnyMoving = false;
     
     public static void moveCircle(Circle circ){
-        moveToCenter(circ);
+        moveVertically(circ);
     }
     
-    private static void moveToCenter(Circle circ){
+    public static void moveToCenter(Circle circ){
+        if(isAnyMoving == true) return; isAnyMoving = true;//só uma peça movimenta por vez 
+        
         double x = circ.localToScene(circ.getBoundsInLocal()).getMinX();
         double y = circ.localToScene(circ.getBoundsInLocal()).getMinY();
         
         TranslateTransition translateTransition = new TranslateTransition();  
-        translateTransition.setDuration(Duration.millis(2100)); 
+        translateTransition.setDuration(Duration.millis(1800)); 
         translateTransition.setNode(circ);
         
-        translateTransition.setToX(x > centerGemeX ? -207 : +207);
-        translateTransition.setToY(y > centerGemeY ? -160 : +160);
+        translateTransition.setByX(x > centerGemeX ? -207 : +207);
+        translateTransition.setByY(y > centerGemeY ? -160 : +160);
+        translateTransition.setAutoReverse(false); 
         translateTransition.setOnFinished((e)->{
-            //callback
+            isAnyMoving = false;
         });
         
         translateTransition.play();
+    }
+    
+    public static void moveVertically(Circle circ){
+        if(isAnyMoving == true) return; isAnyMoving = true;//só uma peça movimenta por vez 
         
+        double y = circ.localToScene(circ.getBoundsInLocal()).getMinY();
+        
+        TranslateTransition translateTransition = new TranslateTransition();  
+        translateTransition.setDuration(Duration.millis(1800)); 
+        translateTransition.setNode(circ);
+        translateTransition.setByY(y > centerGemeY ? -318 : +318);
+        translateTransition.setAutoReverse(false); translateTransition.setOnFinished((e)->{
+            isAnyMoving = false;
+        });
+        
+        translateTransition.play();
+    }
+    
+    public void moveHorizontally(Circle circ){
+        if(isAnyMoving == true) return; isAnyMoving = true;//só uma peça movimenta por vez 
+        
+        double x = circ.localToScene(circ.getBoundsInLocal()).getMinX();
+        double y = circ.localToScene(circ.getBoundsInLocal()).getMinY();
+        if(y < centerGemeY){
+            return;
+        }
+        TranslateTransition translateTransition = new TranslateTransition();  
+        translateTransition.setDuration(Duration.millis(1800)); 
+        translateTransition.setNode(circ);
+        translateTransition.setByX(x > centerGemeX ? -412 : +412);
+        translateTransition.setAutoReverse(false); 
+        translateTransition.setOnFinished((e)->{
+            isAnyMoving = false;
+        });
+        translateTransition.play();
     }
 }

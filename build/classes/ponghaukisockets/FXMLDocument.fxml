@@ -21,7 +21,7 @@
             <Pane layoutX="19.0" layoutY="89.0" prefHeight="547.0" prefWidth="400.0" style="-fx-background-color: #ffffff; -fx-border-radius: 50%;" />
             <Pane layoutX="19.0" layoutY="629.0" prefHeight="98.0" prefWidth="400.0" style="-fx-background-color: #fff;">
                <children>
-                  <JFXTextField fx:id="jfxTf_message" layoutX="25.0" layoutY="20.0" prefHeight="49.0" prefWidth="363.0" />
+                  <JFXTextField fx:id="jfxTf_message" focusColor="#ababab" layoutX="25.0" layoutY="20.0" prefHeight="49.0" prefWidth="363.0" style="-fx-background-color: #fafafa; -fx-background-radius: 10px; -fx-border-radius: 10px;" unFocusColor="#c6c6c6" />
                </children>
             </Pane>
          </children>
@@ -29,33 +29,42 @@
       <AnchorPane fx:id="an_content" prefHeight="740.0" prefWidth="732.0" style="-fx-background-color: #00bfa5;">
          <children>
             <Pane prefHeight="66.0" prefWidth="732.0" />
-            <Pane layoutX="22.0" layoutY="93.0" prefHeight="634.0" prefWidth="695.0">
+            <Pane layoutX="95.0" layoutY="141.0" prefHeight="444.0" prefWidth="558.0" style="-fx-background-color: #fff; -fx-background-radius: 5;">
                <children>
-                  <Line endX="349.0" endY="-153.0" layoutX="207.0" layoutY="261.0" startX="-67.0" startY="162.0" stroke="WHITE" strokeWidth="3.0" />
-                  <Line endX="275.0" endY="315.0" layoutX="272.0" layoutY="108.0" startX="-132.0" stroke="WHITE" strokeWidth="3.0" />
-                  <Line endX="10.0" endY="316.0" layoutX="130.0" layoutY="107.0" startX="9.29290771484375" startY="0.292877197265625" stroke="WHITE" strokeWidth="3.0" />
-                  <Line endX="10.0" endY="316.0" layoutX="547.0" layoutY="107.0" startX="9.29290771484375" startY="0.292877197265625" stroke="WHITE" strokeWidth="3.0" />
-                  <Line endX="309.0" layoutX="247.0" layoutY="423.0" startX="-100.0" stroke="WHITE" strokeWidth="3.0" />
-                  <Label alignment="CENTER" layoutX="207.0" layoutY="55.0" prefHeight="41.0" prefWidth="283.0" text="PONG-HAU-KI" textAlignment="CENTER" textFill="WHITE">
-                     <font>
-                        <Font name="Calibri Bold" size="28.0" />
-                     </font>
-                  </Label>
-                  <Circle fx:id="pecaAmareloA" fill="#f6ff48" layoutX="140.0" layoutY="423.0" radius="33.0" stroke="WHITE" strokeType="INSIDE" />
-                  <Circle fx:id="pecaAzulA" fill="DODGERBLUE" layoutX="140.0" layoutY="108.0" onMouseClicked="#circleClick" radius="33.0" stroke="WHITE" strokeType="INSIDE">
+                  <Line endX="349.0" endY="-153.0" layoutX="140.0" layoutY="218.0" startX="-67.0" startY="162.0" strokeWidth="3.0" />
+                  <Line endX="275.0" endY="315.0" layoutX="205.0" layoutY="65.0" startX="-132.0" strokeWidth="3.0" />
+                  <Line endX="10.0" endY="316.0" layoutX="63.0" layoutY="64.0" startX="9.29290771484375" startY="0.292877197265625" strokeWidth="3.0" />
+                  <Line endX="10.0" endY="316.0" layoutX="480.0" layoutY="64.0" startX="9.29290771484375" startY="0.292877197265625" strokeWidth="3.0" />
+                  <Line endX="309.0" layoutX="180.0" layoutY="380.0" startX="-100.0" strokeWidth="3.0" />
+                  <Circle fx:id="pecaAmareloA" fill="#f6ff48" layoutX="73.0" layoutY="380.0" radius="33.0" stroke="WHITE" strokeType="INSIDE">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor></Circle>
+                  <Circle fx:id="pecaAzulA" fill="DODGERBLUE" layoutX="73.0" layoutY="65.0" radius="33.0" stroke="WHITE" strokeType="INSIDE">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </Circle>
-                  <Circle fx:id="pecaAzulB" fill="DODGERBLUE" layoutX="556.0" layoutY="108.0" radius="33.0" stroke="WHITE" strokeType="INSIDE" />
-                  <Circle fx:id="pecaAmareloB" fill="#f6ff48" layoutX="556.0" layoutY="423.0" radius="33.0" stroke="WHITE" strokeType="INSIDE" />
-                  <Label alignment="CENTER" layoutX="202.0" layoutY="456.0" prefHeight="41.0" prefWidth="283.0" text="Sua vez" textAlignment="CENTER" textFill="WHITE">
-                     <font>
-                        <Font name="Calibri Bold" size="28.0" />
-                     </font>
-                  </Label>
+                  <Circle fx:id="pecaAzulB" fill="DODGERBLUE" layoutX="489.0" layoutY="65.0" radius="33.0" stroke="WHITE" strokeType="INSIDE">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor></Circle>
+                  <Circle fx:id="pecaAmareloB" fill="#f6ff48" layoutX="489.0" layoutY="380.0" radius="33.0" stroke="WHITE" strokeType="INSIDE">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor></Circle>
                </children>
             </Pane>
+            <Label alignment="CENTER" layoutX="225.0" layoutY="66.0" prefHeight="41.0" prefWidth="283.0" text="PONG-HAU-KI" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font name="Calibri Bold" size="30.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER" layoutX="225.0" layoutY="608.0" prefHeight="41.0" prefWidth="283.0" text="Sua vez" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font name="Calibri Bold" size="28.0" />
+               </font>
+            </Label>
          </children>
       </AnchorPane>
    </children>
