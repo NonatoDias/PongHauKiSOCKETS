@@ -21,6 +21,7 @@ public class PieceMovement {
     private static double centerGemeX = 337;
     private static double centerGemeY = 325;
     private static boolean isAnyMoving = false;
+    private static int delay_ = 1500;
     
     public static void moveCircle(Circle circ){
         moveVertically(circ);
@@ -33,7 +34,7 @@ public class PieceMovement {
         double y = circ.localToScene(circ.getBoundsInLocal()).getMinY();
         
         TranslateTransition translateTransition = new TranslateTransition();  
-        translateTransition.setDuration(Duration.millis(1800)); 
+        translateTransition.setDuration(Duration.millis(delay_)); 
         translateTransition.setNode(circ);
         
         translateTransition.setByX(x > centerGemeX ? -207 : +207);
@@ -52,7 +53,7 @@ public class PieceMovement {
         double y = circ.localToScene(circ.getBoundsInLocal()).getMinY();
         
         TranslateTransition translateTransition = new TranslateTransition();  
-        translateTransition.setDuration(Duration.millis(1800)); 
+        translateTransition.setDuration(Duration.millis(delay_)); 
         translateTransition.setNode(circ);
         translateTransition.setByY(y > centerGemeY ? -318 : +318);
         translateTransition.setAutoReverse(false); translateTransition.setOnFinished((e)->{
@@ -62,7 +63,7 @@ public class PieceMovement {
         translateTransition.play();
     }
     
-    public void moveHorizontally(Circle circ){
+    public static void moveHorizontally(Circle circ){
         if(isAnyMoving == true) return; isAnyMoving = true;//só uma peça movimenta por vez 
         
         double x = circ.localToScene(circ.getBoundsInLocal()).getMinX();
@@ -71,7 +72,7 @@ public class PieceMovement {
             return;
         }
         TranslateTransition translateTransition = new TranslateTransition();  
-        translateTransition.setDuration(Duration.millis(1800)); 
+        translateTransition.setDuration(Duration.millis(delay_)); 
         translateTransition.setNode(circ);
         translateTransition.setByX(x > centerGemeX ? -412 : +412);
         translateTransition.setAutoReverse(false); 

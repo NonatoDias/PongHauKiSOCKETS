@@ -32,41 +32,41 @@ public class FXMLDocumentController implements Initializable {
     private JFXTextField jfxTf_message;
 
     @FXML
-    private Circle pecaAmareloA;
+    private Circle circuloAmareloA;
 
     @FXML
-    private Circle pecaAzulA;
+    private Circle circuloAzulA;
 
     @FXML
-    private Circle pecaAzulB;
+    private Circle circuloAzulB;
 
     @FXML
-    private Circle pecaAmareloB;
+    private Circle circuloAmareloB;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
                 
         PieceMap pieceMap = new PieceMap();
-        pieceMap.setPieceblueA(new Piece(pecaAzulA, 1));
-        pieceMap.setPieceblueB(new Piece(pecaAzulB, 2));
-        pieceMap.setPieceYellowA(new Piece(pecaAmareloA, 3));
-        pieceMap.setPieceYellowB(new Piece(pecaAmareloB, 4));
+        pieceMap.setPieceblueA(new Piece(circuloAzulA, 1));
+        pieceMap.setPieceblueB(new Piece(circuloAzulB, 2));
+        pieceMap.setPieceYellowA(new Piece(circuloAmareloA, 3));
+        pieceMap.setPieceYellowB(new Piece(circuloAmareloB, 4));
         
         //Events
-        pecaAzulA.setOnMouseClicked((e)->{
+        circuloAzulA.setOnMouseClicked((e)->{
             pieceMap.moveBlueA();
         });
         
-        pecaAzulB.setOnMouseClicked((e)->{
-            PieceMovement.moveCircle(pecaAzulB);
+        circuloAzulB.setOnMouseClicked((e)->{
+            pieceMap.moveBlueB();
         });
         
-        pecaAmareloA.setOnMouseClicked((e)->{
-            PieceMovement.moveCircle(pecaAmareloA);
+        circuloAmareloA.setOnMouseClicked((e)->{
+            pieceMap.moveYellowA();
         });
         
-        pecaAmareloB.setOnMouseClicked((e)->{
-            PieceMovement.moveCircle(pecaAmareloB);
+        circuloAmareloB.setOnMouseClicked((e)->{
+            pieceMap.moveYellowB();
         });
     }   
     

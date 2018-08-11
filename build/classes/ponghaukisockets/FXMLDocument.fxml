@@ -36,20 +36,20 @@
                   <Line endX="10.0" endY="316.0" layoutX="63.0" layoutY="64.0" startX="9.29290771484375" startY="0.292877197265625" strokeWidth="3.0" />
                   <Line endX="10.0" endY="316.0" layoutX="480.0" layoutY="64.0" startX="9.29290771484375" startY="0.292877197265625" strokeWidth="3.0" />
                   <Line endX="309.0" layoutX="180.0" layoutY="380.0" startX="-100.0" strokeWidth="3.0" />
-                  <Circle fx:id="pecaAmareloA" fill="#f6ff48" layoutX="73.0" layoutY="380.0" radius="33.0" stroke="WHITE" strokeType="INSIDE">
+                  <Circle fx:id="circuloAmareloA" fill="#f6ff48" layoutX="73.0" layoutY="380.0" radius="33.0" stroke="WHITE" strokeType="INSIDE">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor></Circle>
-                  <Circle fx:id="pecaAzulA" fill="DODGERBLUE" layoutX="73.0" layoutY="65.0" radius="33.0" stroke="WHITE" strokeType="INSIDE">
+                  <Circle fx:id="circuloAzulA" fill="DODGERBLUE" layoutX="73.0" layoutY="65.0" radius="33.0" stroke="WHITE" strokeType="INSIDE">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </Circle>
-                  <Circle fx:id="pecaAzulB" fill="DODGERBLUE" layoutX="489.0" layoutY="65.0" radius="33.0" stroke="WHITE" strokeType="INSIDE">
+                  <Circle fx:id="circuloAzulB" fill="DODGERBLUE" layoutX="489.0" layoutY="65.0" radius="33.0" stroke="WHITE" strokeType="INSIDE">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor></Circle>
-                  <Circle fx:id="pecaAmareloB" fill="#f6ff48" layoutX="489.0" layoutY="380.0" radius="33.0" stroke="WHITE" strokeType="INSIDE">
+                  <Circle fx:id="circuloAmareloB" fill="#f6ff48" layoutX="489.0" layoutY="380.0" radius="33.0" stroke="WHITE" strokeType="INSIDE">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor></Circle>
@@ -60,7 +60,7 @@
                   <Font name="Calibri Bold" size="30.0" />
                </font>
             </Label>
-            <Label alignment="CENTER" layoutX="225.0" layoutY="608.0" prefHeight="41.0" prefWidth="283.0" text="Sua vez" textAlignment="CENTER" textFill="WHITE">
+            <Label alignment="CENTER" layoutX="225.0" layoutY="608.0" prefHeight="41.0" prefWidth="283.0" text="Clique em uma peça" textAlignment="CENTER" textFill="WHITE">
                <font>
                   <Font name="Calibri Bold" size="28.0" />
                </font>
