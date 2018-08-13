@@ -5,6 +5,7 @@
  */
 package ponghaukisockets;
 
+import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -15,6 +16,12 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Circle;
 import javafx.animation.TranslateTransition;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
 
 /**
@@ -30,6 +37,9 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private JFXTextField jfxTf_message;
+    
+    @FXML
+    private TextFlow msgTextFlow;
 
     @FXML
     private Circle circuloAmareloA;
@@ -51,6 +61,18 @@ public class FXMLDocumentController implements Initializable {
         pieceMap.setPieceblueB(new Piece(circuloAzulB, 2));
         pieceMap.setPieceYellowA(new Piece(circuloAmareloA, 3));
         pieceMap.setPieceYellowB(new Piece(circuloAmareloB, 4));
+        
+   
+                
+        Text text1 = new Text("Mensagem jogador Azul\n");
+        text1.setFill(Paint.valueOf("#1e90ff"));
+        text1.setFont(Font.font("Helvetica", FontPosture.REGULAR, 20));
+        
+        Text text2 = new Text("Mensagem jogador Amarelo\n");
+        text2.setFill(Paint.valueOf("#c3c310"));
+        text2.setFont(Font.font("Helvetica", FontPosture.REGULAR, 20));
+
+        msgTextFlow.getChildren().addAll(text1, text2);
         
         //Events
         circuloAzulA.setOnMouseClicked((e)->{
