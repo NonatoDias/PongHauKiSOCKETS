@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
@@ -62,6 +63,11 @@
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor></Circle>
+                  <Label alignment="CENTER" layoutX="143.0" layoutY="32.0" prefHeight="41.0" prefWidth="283.0" text="Clique em iniciar" textAlignment="CENTER" textFill="#656565">
+                     <font>
+                        <Font name="Calibri Bold" size="24.0" />
+                     </font>
+                  </Label>
                </children>
             </Pane>
             <Label alignment="CENTER" layoutX="225.0" layoutY="66.0" prefHeight="41.0" prefWidth="283.0" text="PONG-HAU-KI" textAlignment="CENTER" textFill="WHITE">
@@ -69,11 +75,11 @@
                   <Font name="Calibri Bold" size="30.0" />
                </font>
             </Label>
-            <Label alignment="CENTER" layoutX="225.0" layoutY="608.0" prefHeight="41.0" prefWidth="283.0" text="Clique em uma peça" textAlignment="CENTER" textFill="WHITE">
-               <font>
-                  <Font name="Calibri Bold" size="28.0" />
-               </font>
-            </Label>
+            <JFXButton fx:id="btnStart" buttonType="RAISED" layoutX="303.0" layoutY="607.0" prefHeight="21.0" prefWidth="142.0" ripplerFill="#b5b0b0" style="-fx-background-color: #ffffff;" text="INICIAR">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </JFXButton>
          </children>
       </AnchorPane>
    </children>

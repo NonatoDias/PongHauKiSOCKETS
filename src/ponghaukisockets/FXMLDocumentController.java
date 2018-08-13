@@ -5,6 +5,7 @@
  */
 package ponghaukisockets;
 
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
 import java.net.URL;
@@ -58,6 +59,9 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private Circle circuloAmareloB;
     
+    @FXML
+    private JFXButton btnStart;
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
                 
@@ -100,25 +104,22 @@ public class FXMLDocumentController implements Initializable {
     }
     
     public void addMessageBlue(String msg){
-        DateFormat df = new SimpleDateFormat("HH:mm:ss");
-        Text dth = new Text(df.format(new Date()).toString() +" -- ");
-        dth.setFont(Font.font("Helvetica", FontPosture.REGULAR, 16));
-        
-        Text text1 = new Text(msg+"\n");
-        text1.setFill(Paint.valueOf("#1e90ff"));
-        text1.setFont(Font.font("Helvetica", FontPosture.REGULAR, 20));
-        msgTextFlow.getChildren().addAll(dth, text1);
+        addMessage(msg, Paint.valueOf("#1e90ff"));
     }
     
     public void addMessageYellow(String msg){
+       addMessage(msg, Paint.valueOf("#c3c310"));
+    }
+    
+    
+    public void addMessage(String msg, Paint value){
         DateFormat df = new SimpleDateFormat("HH:mm:ss");
         Text dth = new Text(df.format(new Date()).toString() +" -- ");
         dth.setFont(Font.font("Helvetica", FontPosture.REGULAR, 16));
         
         Text text1 = new Text(msg+"\n");
-        text1.setFill(Paint.valueOf("#c3c310"));
+        text1.setFill(value);
         text1.setFont(Font.font("Helvetica", FontPosture.REGULAR, 20));
         msgTextFlow.getChildren().addAll(dth, text1);
     }
-    
 }
