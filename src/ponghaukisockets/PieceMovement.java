@@ -81,4 +81,83 @@ public class PieceMovement {
         });
         translateTransition.play();
     }
+    
+    
+    public static void moveToTopLeft(Circle circ){
+        if(isAnyMoving == true) return; isAnyMoving = true;//só uma peça movimenta por vez 
+        
+        double x = circ.localToScene(circ.getBoundsInLocal()).getMinX();
+        double y = circ.localToScene(circ.getBoundsInLocal()).getMinY();
+        
+        TranslateTransition translateTransition = new TranslateTransition();  
+        translateTransition.setDuration(Duration.millis(delay_)); 
+        translateTransition.setNode(circ);
+        
+        translateTransition.setByX(-207);
+        translateTransition.setByY(-160);
+        translateTransition.setAutoReverse(false); 
+        translateTransition.setOnFinished((e)->{
+            isAnyMoving = false;
+        });
+        
+        translateTransition.play();
+    }
+    
+    public static void moveToTopRight(Circle circ){
+        if(isAnyMoving == true) return; isAnyMoving = true;//só uma peça movimenta por vez 
+        
+        double x = circ.localToScene(circ.getBoundsInLocal()).getMinX();
+        double y = circ.localToScene(circ.getBoundsInLocal()).getMinY();
+        
+        TranslateTransition translateTransition = new TranslateTransition();  
+        translateTransition.setDuration(Duration.millis(delay_)); 
+        translateTransition.setNode(circ);
+        
+        translateTransition.setByX(+207);
+        translateTransition.setByY(-160);
+        translateTransition.setAutoReverse(false); 
+        translateTransition.setOnFinished((e)->{
+            isAnyMoving = false;
+        });
+        translateTransition.play();
+    }
+    
+    
+    public static void moveToBottomLeft(Circle circ){
+        if(isAnyMoving == true) return; isAnyMoving = true;//só uma peça movimenta por vez 
+        
+        double x = circ.localToScene(circ.getBoundsInLocal()).getMinX();
+        double y = circ.localToScene(circ.getBoundsInLocal()).getMinY();
+        
+        TranslateTransition translateTransition = new TranslateTransition();  
+        translateTransition.setDuration(Duration.millis(delay_)); 
+        translateTransition.setNode(circ);
+        
+        translateTransition.setByX(-207);
+        translateTransition.setByY(+160);
+        translateTransition.setAutoReverse(false); 
+        translateTransition.setOnFinished((e)->{
+            isAnyMoving = false;
+        });
+        translateTransition.play();
+    }
+    
+    public static void moveToBottomRight(Circle circ){
+        if(isAnyMoving == true) return; isAnyMoving = true;//só uma peça movimenta por vez 
+        
+        double x = circ.localToScene(circ.getBoundsInLocal()).getMinX();
+        double y = circ.localToScene(circ.getBoundsInLocal()).getMinY();
+        
+        TranslateTransition translateTransition = new TranslateTransition();  
+        translateTransition.setDuration(Duration.millis(delay_)); 
+        translateTransition.setNode(circ);
+        
+        translateTransition.setByX(+207);
+        translateTransition.setByY(+160);
+        translateTransition.setAutoReverse(false); 
+        translateTransition.setOnFinished((e)->{
+            isAnyMoving = false;
+        });
+        translateTransition.play();
+    }
 }

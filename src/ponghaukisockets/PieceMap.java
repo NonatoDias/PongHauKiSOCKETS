@@ -78,50 +78,44 @@ public class PieceMap {
                 moveFromPosition4(p);
                 break;
             case 5: 
+                moveFromPosition5(p);
                 break;
         }
     }
 
     private void moveFromPosition1(Piece p) {
         if(this.positionsStatus[3] == false){
-            this.positionsStatus[p.position] = false;
-            this.positionsStatus[3] = true;
+            togglePosition(p, 3);
             PieceMovement.moveVertically(p.circle);
             
        }else if(this.positionsStatus[5] == false){
-           this.positionsStatus[p.position] = false;
-           this.positionsStatus[5] = true;
+           togglePosition(p, 5);
            PieceMovement.moveToCenter(p.circle);
        }
     }
     
     private void moveFromPosition2(Piece p) {
         if(this.positionsStatus[4] == false){
-            this.positionsStatus[p.position] = false;
-            this.positionsStatus[4] = true;
+            togglePosition(p, 4);
             PieceMovement.moveVertically(p.circle);
             
        }else if(this.positionsStatus[5] == false){
-           this.positionsStatus[p.position] = false;
-           this.positionsStatus[5] = true;
+           togglePosition(p, 5);
            PieceMovement.moveToCenter(p.circle);
        }
     }
     
     private void moveFromPosition3(Piece p) {
         if(this.positionsStatus[1] == false){
-            this.positionsStatus[p.position] = false;
-            this.positionsStatus[1] = true;
+            togglePosition(p, 1);
             PieceMovement.moveVertically(p.circle);
             
        }else if(this.positionsStatus[5] == false){
-           this.positionsStatus[p.position] = false;
-           this.positionsStatus[5] = true;
+           togglePosition(p, 5);
            PieceMovement.moveToCenter(p.circle);
            
        }else if(this.positionsStatus[4] == false){
-           this.positionsStatus[p.position] = false;
-           this.positionsStatus[4] = true;
+           togglePosition(p, 4);
            PieceMovement.moveHorizontally(p.circle);
        }
     }
@@ -129,43 +123,42 @@ public class PieceMap {
     
     private void moveFromPosition4(Piece p) {
         if(this.positionsStatus[2] == false){
-            this.positionsStatus[p.position] = false;
-            this.positionsStatus[2] = true;
+            togglePosition(p, 2);
             PieceMovement.moveVertically(p.circle);
             
        }else if(this.positionsStatus[5] == false){
-           this.positionsStatus[p.position] = false;
-           this.positionsStatus[5] = true;
+           togglePosition(p, 5);
            PieceMovement.moveToCenter(p.circle);
            
        }else if(this.positionsStatus[3] == false){
-           this.positionsStatus[p.position] = false;
-           this.positionsStatus[3] = true;
+           togglePosition(p, 3);
            PieceMovement.moveHorizontally(p.circle);
        }
     }
     
     private void moveFromPosition5(Piece p) {
         if(this.positionsStatus[1] == false){
-            this.positionsStatus[p.position] = false;
-            this.positionsStatus[1] = true;
-            PieceMovement.moveVertically(p.circle);
+            togglePosition(p, 1);
+            PieceMovement.moveToTopLeft(p.circle);
             
        }else if(this.positionsStatus[2] == false){
-            this.positionsStatus[p.position] = false;
-            this.positionsStatus[2] = true;
-            PieceMovement.moveVertically(p.circle);
+            togglePosition(p, 2);
+            PieceMovement.moveToTopRight(p.circle);
             
        }else if(this.positionsStatus[3] == false){
-           this.positionsStatus[p.position] = false;
-           this.positionsStatus[3] = true;
-           PieceMovement.moveHorizontally(p.circle);
+            togglePosition(p, 3);
+            PieceMovement.moveToBottomLeft(p.circle);
            
        }else if(this.positionsStatus[4] == false){
-           this.positionsStatus[p.position] = false;
-           this.positionsStatus[4] = true;
-           PieceMovement.moveHorizontally(p.circle);
+            togglePosition(p, 4);
+            PieceMovement.moveToBottomRight(p.circle);
        }
+    }
+    
+    private void togglePosition(Piece p, int pos){
+        this.positionsStatus[p.position] = false;
+        p.position = pos;
+        this.positionsStatus[p.position] = true;
     }
     
 }
