@@ -10,6 +10,7 @@ import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXDialogLayout;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
+import java.net.Socket;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -38,6 +39,10 @@ import javafx.util.Duration;
  * @author Nonato Dias
  */
 public class FXMLDocumentController implements Initializable {
+    
+    private ClientSocket socket;
+    
+    private PieceMap pieceMap;
     
     @FXML
     private AnchorPane an_message;
@@ -70,14 +75,68 @@ public class FXMLDocumentController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        //Conexao
+        socket = new ClientSocket();
               
-        PieceMap pieceMap = new PieceMap();
+        //Peças do jogo
+        pieceMap = new PieceMap();
         pieceMap.setPieceblueA(new Piece(circuloAzulA, 1));
         pieceMap.setPieceblueB(new Piece(circuloAzulB, 2));
         pieceMap.setPieceYellowA(new Piece(circuloAmareloA, 3));
         pieceMap.setPieceYellowB(new Piece(circuloAmareloB, 4));
         
         //Events
+        addEventsToTheView();
+        
+        //run
+        showDialog("Arguardando comunicação com o servidor ...");
+        addMessageBlue("Teste com texto azul");
+        addMessageYellow("Teste com texto amarelo");
+        socket.connect();
+    }   
+    
+    public void circleClick(){
+        
+    }
+    
+    public void addMessageBlue(String msg){
+        addMessage(msg, Paint.valueOf("#1e90ff"));
+    }
+    
+    public void addMessageYellow(String msg){
+       addMessage(msg, Paint.valueOf("#c3c310"));
+    }
+    
+    public void addMessage(String msg, Paint value){
+        DateFormat df = new SimpleDateFormat("HH:mm:ss");
+        Text dth = new Text(df.format(new Date()).toString() +" -- ");
+        dth.setFont(Font.font("Helvetica", FontPosture.REGULAR, 16));
+        
+        Text text1 = new Text(msg+"\n");
+        text1.setFill(value);
+        text1.setFont(Font.font("Helvetica", FontPosture.REGULAR, 20));
+        msgTextFlow.getChildren().addAll(dth, text1);
+    }
+    
+    private void showDialog(String text){
+        JFXDialogLayout content = new JFXDialogLayout();
+        content.setHeading(new Text("Atenção"));
+        content.setBody(new Text(text));
+        
+        JFXDialog dialog = new JFXDialog(dialogStackPane, content, JFXDialog.DialogTransition.CENTER);
+        JFXButton btn = new JFXButton("OK");
+        //btn.setButtonType(com.jfoenix.controls.JFXButton.ButtonType.RAISED);
+	//btn.setPrefHeight(32);
+        
+        btn.setOnAction((e)->{
+            dialog.close();
+        });
+        content.setActions(btn);
+        
+        dialog.show();
+    }
+
+    private void addEventsToTheView() {
         circuloAzulA.setOnMouseClicked((e)->{
             pieceMap.moveBlueA();
         });
@@ -109,51 +168,9 @@ public class FXMLDocumentController implements Initializable {
             
         });
         
-        showDialog("Arguardando comunicação com o servidor ...");
-        
-        addMessageBlue("Teste com texto azul");
-        addMessageYellow("Teste com texto amarelo");
-    }   
-    
-    public void circleClick(){
-        
-    }
-    
-    public void addMessageBlue(String msg){
-        addMessage(msg, Paint.valueOf("#1e90ff"));
-    }
-    
-    public void addMessageYellow(String msg){
-       addMessage(msg, Paint.valueOf("#c3c310"));
-    }
-    
-    
-    public void addMessage(String msg, Paint value){
-        DateFormat df = new SimpleDateFormat("HH:mm:ss");
-        Text dth = new Text(df.format(new Date()).toString() +" -- ");
-        dth.setFont(Font.font("Helvetica", FontPosture.REGULAR, 16));
-        
-        Text text1 = new Text(msg+"\n");
-        text1.setFill(value);
-        text1.setFont(Font.font("Helvetica", FontPosture.REGULAR, 20));
-        msgTextFlow.getChildren().addAll(dth, text1);
-    }
-    
-    private void showDialog(String text){
-        JFXDialogLayout content = new JFXDialogLayout();
-        content.setHeading(new Text("Atenção"));
-        content.setBody(new Text(text));
-        
-        JFXDialog dialog = new JFXDialog(dialogStackPane, content, JFXDialog.DialogTransition.CENTER);
-        JFXButton btn = new JFXButton("OK");
-        //btn.setButtonType(com.jfoenix.controls.JFXButton.ButtonType.RAISED);
-	//btn.setPrefHeight(32);
-        
-        btn.setOnAction((e)->{
-            dialog.close();
+        socket.setOnConnect(()->{
+            dialogStackPane.setVisible(false);
+            return 1;
         });
-        content.setActions(btn);
-        
-        dialog.show();
     }
 }

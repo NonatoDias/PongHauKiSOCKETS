@@ -8,34 +8,54 @@ package ponghaukisockets;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
+import java.util.concurrent.Callable;
 
 
 /**
  *
  * @author Nonato Dias
  */
-public class ClientSocket{
-    DataOutputStream out = null;
-    DataInputStream in = null; 		      
-    Socket soc = null; 
-    static String host = "";
-    static int port = 9090;
+public class ClientSocket{	      
+    
+    static String host = "127.0.0.1?";
+    static int port = 8080;
     String msg = "";
     
+    
+    private Socket socket;
+    private DataOutputStream output;
+    private DataInputStream input; 	
+    
+    private Callable<Integer> onconnect;
+    
     ClientSocket(){
-       
+        this.socket = null;
+        this.output = null;
+        this.input = null; 
     }
     
-    public void run(){
+    public void connect(){
         try{
-            soc = new Socket(host,port);
-            out = new DataOutputStream(soc.getOutputStream());
-            out.writeUTF("teste");   
-
-            in = new DataInputStream(soc.getInputStream());
-            msg = in.readUTF();		     
-            System.out.println("Stream Recebida: " + msg);
-
-        }catch(Exception e){}
+            this.socket = new Socket(host,port);
+            System.out.println("Conectado....");
+            onconnect.call();
+            System.out.println("Conectado");
+            
+            this.output = new DataOutputStream(this.socket.getOutputStream());
+            this.input = new DataInputStream(this.socket.getInputStream());
+          
+        }catch(Exception e){
+            System.out.println("Erro ao conectar: "+ e.toString());
+        }
     }
+    
+    /**
+     *
+     * @param myFunc
+     */
+    public void setOnConnect(Callable<Integer> func){
+       onconnect = func;
+   }
+               
+
 }
