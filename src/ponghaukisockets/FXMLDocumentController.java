@@ -6,6 +6,8 @@
 package ponghaukisockets;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXDialog;
+import com.jfoenix.controls.JFXDialogLayout;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
 import java.net.URL;
@@ -22,6 +24,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Circle;
 import javafx.animation.TranslateTransition;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
@@ -40,6 +43,9 @@ public class FXMLDocumentController implements Initializable {
     private AnchorPane an_message;
     @FXML
     private AnchorPane an_content;
+    
+    @FXML
+    private StackPane dialogStackPane;
 
     @FXML
     private JFXTextField jfxTf_message;
@@ -64,7 +70,7 @@ public class FXMLDocumentController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-                
+              
         PieceMap pieceMap = new PieceMap();
         pieceMap.setPieceblueA(new Piece(circuloAzulA, 1));
         pieceMap.setPieceblueB(new Piece(circuloAzulB, 2));
@@ -95,6 +101,16 @@ public class FXMLDocumentController implements Initializable {
             }
         });
         
+        dialogStackPane.setOnMouseClicked((e)->{
+            showDialog("Arguardando comunicação com o servidor ...");
+        });
+        
+        btnStart.setOnAction((e)->{
+            
+        });
+        
+        showDialog("Arguardando comunicação com o servidor ...");
+        
         addMessageBlue("Teste com texto azul");
         addMessageYellow("Teste com texto amarelo");
     }   
@@ -121,5 +137,23 @@ public class FXMLDocumentController implements Initializable {
         text1.setFill(value);
         text1.setFont(Font.font("Helvetica", FontPosture.REGULAR, 20));
         msgTextFlow.getChildren().addAll(dth, text1);
+    }
+    
+    private void showDialog(String text){
+        JFXDialogLayout content = new JFXDialogLayout();
+        content.setHeading(new Text("Atenção"));
+        content.setBody(new Text(text));
+        
+        JFXDialog dialog = new JFXDialog(dialogStackPane, content, JFXDialog.DialogTransition.CENTER);
+        JFXButton btn = new JFXButton("OK");
+        //btn.setButtonType(com.jfoenix.controls.JFXButton.ButtonType.RAISED);
+	//btn.setPrefHeight(32);
+        
+        btn.setOnAction((e)->{
+            dialog.close();
+        });
+        content.setActions(btn);
+        
+        dialog.show();
     }
 }
