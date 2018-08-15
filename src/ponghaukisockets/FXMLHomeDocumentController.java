@@ -35,6 +35,9 @@ import javafx.stage.Stage;
  */
 public class FXMLHomeDocumentController implements Initializable {
     
+    private ServerSocketThread serverSocket;
+    private LogText logText;
+    
     @FXML
     private JFXButton btnServer;
 
@@ -56,19 +59,27 @@ public class FXMLHomeDocumentController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        logText = new LogText(logTextFlow);
         
+        //Conexao
+        serverSocket = new ServerSocketThread();
+        /*serverSocket.setMethodLogText(()->{
+            
+            return null;
+        });*/
+        serverSocket.setLogText(logText);
         
         // TODO
         btnClient.setOnAction((e)->{
             if(maxAllowedClients == 0){
                 return;
             }
-            logText("Inicializando cliente game");
+            logText.log("Inicializando cliente game");
             Parent game = null;
             try {
                 game = FXMLLoader.load(getClass().getResource("FXMLGameDocument.fxml"));
             } catch (IOException ex) {
-                logText("ERROR: "+ex.toString());
+                logText.log("ERROR: "+ex.toString());
             }
             Stage stage2 = new Stage();
             Scene scene2 = new Scene(game);
@@ -82,7 +93,8 @@ public class FXMLHomeDocumentController implements Initializable {
         });
         
         btnServer.setOnAction((e)->{
-            logText("Inicializando SERVIDOR");
+            logText.log("Inicializando SERVIDOR");
+            serverSocket.start();
             btnServer.setDisable(true);
         });
     }    
@@ -91,30 +103,15 @@ public class FXMLHomeDocumentController implements Initializable {
         JFXDialogLayout content = new JFXDialogLayout();
         content.setHeading(new Text("Atenção"));
         content.setBody(new Text(text));
-        
         JFXDialog dialog = new JFXDialog(dialogStackPane, content, JFXDialog.DialogTransition.CENTER);
         JFXButton btn = new JFXButton("OK");
-        //btn.setButtonType(com.jfoenix.controls.JFXButton.ButtonType.RAISED);
-	//btn.setPrefHeight(32);
         
         btn.setOnAction((e)->{
             dialogStackPane.setVisible(false);
             dialog.close();
         });
         content.setActions(btn);
-        
         dialogStackPane.setVisible(true);
         dialog.show();
-    }
-    
-    public void logText(String text){
-        DateFormat df = new SimpleDateFormat("HH:mm:ss");
-        Text dth = new Text(df.format(new Date()).toString() +" -- ");
-        dth.setFont(Font.font("Helvetica", FontPosture.REGULAR, 14));
-        
-        Text text1 = new Text(text+"\n");
-        //text1.setFill(value);
-        text1.setFont(Font.font("Helvetica", FontPosture.REGULAR, 16));
-        logTextFlow.getChildren().addAll(dth, text1);
     }
 }

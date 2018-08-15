@@ -90,8 +90,8 @@ public class FXMLGameDocumentController implements Initializable {
         
         //run
         showDialog("Arguardando comunicação com o servidor ...");
-        addMessageBlue("Teste com texto azul");
-        addMessageYellow("Teste com texto amarelo");
+        //addMessageBlue("Teste com texto azul");
+        //addMessageYellow("Teste com texto amarelo");
         socket.connect();
     }   
     

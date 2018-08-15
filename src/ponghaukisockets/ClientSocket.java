@@ -17,7 +17,7 @@ import java.util.concurrent.Callable;
  */
 public class ClientSocket{	      
     
-    static String host = "127.0.0.1?";
+    static String host = "127.0.0.1";
     static int port = 8080;
     String msg = "";
     
@@ -39,7 +39,7 @@ public class ClientSocket{
             this.socket = new Socket(host,port);
             System.out.println("Conectado....");
             onconnect.call();
-            System.out.println("Conectado");
+            System.out.println("Cliente conectado");
             
             this.output = new DataOutputStream(this.socket.getOutputStream());
             this.input = new DataInputStream(this.socket.getInputStream());
