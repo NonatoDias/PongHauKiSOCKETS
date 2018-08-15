@@ -38,7 +38,7 @@ import javafx.util.Duration;
  *
  * @author Nonato Dias
  */
-public class FXMLDocumentController implements Initializable {
+public class FXMLGameDocumentController implements Initializable {
     
     private ClientSocket socket;
     

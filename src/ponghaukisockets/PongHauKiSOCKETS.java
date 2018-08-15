@@ -19,9 +19,9 @@ public class PongHauKiSOCKETS extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
+        Parent home = FXMLLoader.load(getClass().getResource("FXMLHomeDocument.fxml"));
         
-        Scene scene = new Scene(root);
+        Scene scene = new Scene(home);
         
         stage.setScene(scene);
         stage.show();

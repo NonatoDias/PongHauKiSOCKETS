@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.TextFlow?>
+
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="505.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.171" fx:controller="ponghaukisockets.FXMLHomeDocumentController">
+   <children>
+      <Pane prefHeight="400.0" prefWidth="506.0" style="-fx-background-color: #008e76;">
+         <children>
+            <Label alignment="CENTER" layoutX="112.0" layoutY="40.0" prefHeight="41.0" prefWidth="283.0" text="PONG-HAU-KI" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font name="Calibri Bold" size="30.0" />
+               </font>
+            </Label>
+            <JFXButton fx:id="btnServer" buttonType="RAISED" layoutX="37.0" layoutY="313.0" style="-fx-background-color: #ffffff;" text="INICIAR SERVIDOR" />
+            <JFXButton fx:id="btnClient" buttonType="RAISED" layoutX="355.0" layoutY="313.0" style="-fx-background-color: #ffffff;" text="INICIAR JOGO" />
+            <ScrollPane hbarPolicy="NEVER" layoutX="37.0" layoutY="114.0" prefHeight="172.0" prefWidth="432.0" style="-fx-background-color: #ffffff; -fx-border-width: 0;">
+               <content>
+                  <TextFlow fx:id="logTextFlow" prefHeight="164.0" prefWidth="430.0" style="-fx-background-color: #ffffff;" />
+               </content>
+            </ScrollPane>
+            <StackPane fx:id="dialogStackPane" layoutY="6.0" prefHeight="400.0" prefWidth="506.0" visible="false" />
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

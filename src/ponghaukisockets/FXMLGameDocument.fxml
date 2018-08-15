@@ -13,7 +13,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.TextFlow?>
 
-<AnchorPane id="AnchorPane" prefHeight="738.0" prefWidth="1158.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ponghaukisockets.FXMLDocumentController">
+<AnchorPane id="AnchorPane" prefHeight="738.0" prefWidth="1158.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ponghaukisockets.FXMLGameDocumentController">
    <children>
       <AnchorPane fx:id="an_message" layoutX="728.0" prefHeight="740.0" prefWidth="430.0" style="-fx-background-color: #eeeeee;">
          <children>
@@ -64,7 +64,7 @@
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor></Circle>
-                  <Label alignment="CENTER" layoutX="143.0" layoutY="32.0" prefHeight="41.0" prefWidth="283.0" text="Clique em iniciar" textAlignment="CENTER" textFill="#656565">
+                  <Label alignment="CENTER" layoutX="143.0" layoutY="32.0" prefHeight="41.0" prefWidth="283.0" text="Clique nas peças" textAlignment="CENTER" textFill="#656565">
                      <font>
                         <Font name="Calibri Bold" size="24.0" />
                      </font>
