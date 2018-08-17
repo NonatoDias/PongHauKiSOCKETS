@@ -18,20 +18,28 @@ import java.util.logging.Logger;
  * @author Nonato Dias
  */
 public class ServerSocketThread extends Thread{
+    private static final int CLIENT_ONE = 1;
+    private static final int CLIENT_TWO = 2;
+    
     private ServerSocket serversocket;
-    private DataOutputStream output;
-    private DataInputStream input; 
+    private DataOutputStream outputClient1;
+    private DataInputStream inputClient1; 
+    
+    private DataOutputStream outputClient2;
+    private DataInputStream inputClient2; 
     
     
-    private java.net.Socket clienteSoc1 = null;
-    private java.net.Socket clienteSoc2 = null;
+    private java.net.Socket clientSoc1 = null;
+    private java.net.Socket clientSoc2 = null;
     
     static int port = 8080;
 
     public ServerSocketThread() {
         this.serversocket = null;
-        this.output = null;
-        this.input = null; 
+        this.outputClient1 = null;
+        this.inputClient1 = null; 
+        this.outputClient2 = null;
+        this.inputClient2 = null; 
     }
     
     public void init() throws IOException{
@@ -39,14 +47,28 @@ public class ServerSocketThread extends Thread{
         
         log("Servidor inicializado");
         log("Aguardando conexão...");
-        clienteSoc1 = this.serversocket.accept();
+        
+        //Socket Client 1
+        clientSoc1 = this.serversocket.accept();
         log("Conexão Estabelecida Com cliente 1");
+        this.outputClient1 = new DataOutputStream(this.clientSoc1.getOutputStream());
+        this.inputClient1 = new DataInputStream(this.clientSoc1.getInputStream());
+        this.sendMessageToClient(CLIENT_ONE, "Conected 1");
+        log(getMessageFromClient(CLIENT_ONE));
         
-        clienteSoc2 = this.serversocket.accept();
+        
+        
+        //Socket Client 2
+        clientSoc2 = this.serversocket.accept();
         log("Conexão Estabelecida Com cliente 2");
+        this.outputClient2 = new DataOutputStream(this.clientSoc2.getOutputStream());
+        this.inputClient2 = new DataInputStream(this.clientSoc2.getInputStream());
+        this.sendMessageToClient(CLIENT_TWO, "Conected 2");
+        log(getMessageFromClient(CLIENT_TWO));
         
-        //this.output = new DataOutputStream(this.serversocket.getOutputStream());
-        //this.input = new DataInputStream(this.serversocket.getInputStream());
+        //init listening
+        listenCalls();
+        
     }
 
     @Override
@@ -54,7 +76,7 @@ public class ServerSocketThread extends Thread{
         try {
             this.init();
         } catch (IOException ex) {
-            Logger.getLogger(ServerSocketThread.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("ERROR "+ex.toString());
         }
         System.out.println("run java");
         
@@ -63,6 +85,60 @@ public class ServerSocketThread extends Thread{
     private void log(String text){
         System.out.println("*** SERVER ***  "+text);
         //logText.log(text);
+    }
+    
+    private String getMessageFromClient(int clientNum){
+        String msg = "";
+        try {
+            switch(clientNum){
+                case CLIENT_ONE:
+                    msg = this.inputClient1.readUTF();
+                    break;
+                case CLIENT_TWO:
+                    msg = this.inputClient2.readUTF();
+                    break;
+                default:
+                    break;
+            }
+        }catch (IOException ex) {
+            System.out.println("ERROR "+ex.toString());
+        }
+        return msg;
+    }
+    
+    
+    private void sendMessageToClient(int clientNum, String msg){
+        try {
+            switch(clientNum){
+                case CLIENT_ONE:
+                    this.outputClient1.writeUTF(msg);
+                    this.outputClient1.flush();
+                    break;
+                case CLIENT_TWO:
+                     this.outputClient2.writeUTF(msg);
+                     this.outputClient2.flush();
+                    break;
+                default:
+                    break;
+            }
+        }catch (IOException ex) {
+            System.out.println("ERROR "+ex.toString());
+        }
+    }
+    
+    private void listenCalls() throws IOException{
+        String request = "";
+        
+        log("servidor escultando as chamadas");
+        while(true){
+            request = getMessageFromClient(CLIENT_ONE);
+            System.out.println("Remoto: "+request);
+            
+            
+            
+            request = getMessageFromClient(CLIENT_TWO);
+            System.out.println("Remoto: "+request);
+        }
     }
     
 }

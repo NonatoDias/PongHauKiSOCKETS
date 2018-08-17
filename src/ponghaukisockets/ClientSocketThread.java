@@ -7,6 +7,7 @@ package ponghaukisockets;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.net.Socket;
 import java.util.concurrent.Callable;
 
@@ -15,7 +16,7 @@ import java.util.concurrent.Callable;
  *
  * @author Nonato Dias
  */
-public class ClientSocket{	      
+public class ClientSocketThread extends Thread{	      
     
     static String host = "127.0.0.1";
     static int port = 8080;
@@ -28,25 +29,33 @@ public class ClientSocket{
     
     private Callable<Integer> onconnect;
     
-    ClientSocket(){
+    ClientSocketThread(){
         this.socket = null;
         this.output = null;
         this.input = null; 
     }
     
-    public void connect(){
+    public void run() {
         try{
             this.socket = new Socket(host,port);
-            System.out.println("Conectado....");
+            log("Conectado....");
             onconnect.call();
-            System.out.println("Cliente conectado");
+            log("Cliente conectado");
             
             this.output = new DataOutputStream(this.socket.getOutputStream());
             this.input = new DataInputStream(this.socket.getInputStream());
+            
+            log(getMessage());
+            sendMessage("MENSAGEM DO CLIENTE");
           
         }catch(Exception e){
-            System.out.println("Erro ao conectar: "+ e.toString());
+            log("Erro ao conectar: "+ e.toString());
         }
+        
+    }
+    
+    public void connect(){
+        this.start();
     }
     
     /**
@@ -56,6 +65,29 @@ public class ClientSocket{
     public void setOnConnect(Callable<Integer> func){
        onconnect = func;
    }
-               
+            
+    private void sendMessage(String text){
+        try{
+            this.output.writeUTF(text);
+            this.output.flush();
+        }catch (IOException ex) {
+            System.out.println("ERROR "+ex.toString());
+        }
+    }
+    
+    private String getMessage(){
+        String msg = null;
+        try{
+            msg = this.input.readUTF();
+        }catch (IOException ex) {
+            System.out.println("ERROR "+ex.toString());
+        }
+        return msg;
+    }
+    
+    private void log(String text){
+        String msg = "*** CLIENT *** "+text;
+        System.out.println(msg);
+    }
 
 }

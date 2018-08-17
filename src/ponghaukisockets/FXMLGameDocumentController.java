@@ -40,7 +40,7 @@ import javafx.util.Duration;
  */
 public class FXMLGameDocumentController implements Initializable {
     
-    private ClientSocket socket;
+    private ClientSocketThread socket;
     
     private PieceMap pieceMap;
     
@@ -76,7 +76,7 @@ public class FXMLGameDocumentController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         //Conexao
-        socket = new ClientSocket();
+        socket = new ClientSocketThread();
               
         //Peças do jogo
         pieceMap = new PieceMap();
