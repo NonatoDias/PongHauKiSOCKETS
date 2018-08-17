@@ -58,26 +58,18 @@ public class FXMLHomeDocumentController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         //Conexao
         serverSocketThread = new ServerSocketThread();
-        /*serverSocketThread.setMethodLogText(()->{
-            
-            return null;
-        });*/
-        
+
+        //Eventos da view
+        addEventsToTheView();
+    }    
+    
+    private void addEventsToTheView() {
         btnClient.setOnAction((e)->{
             if(maxAllowedClients == 0){
                 return;
             }
-            log("Inicializando cliente game");
-            Parent game = null;
-            try {
-                game = FXMLLoader.load(getClass().getResource("FXMLGameDocument.fxml"));
-            } catch (IOException ex) {
-                log("ERROR: "+ex.toString());
-            }
-            Stage stage2 = new Stage();
-            Scene scene2 = new Scene(game);
-            stage2.setScene(scene2);
-            stage2.show();
+            log("CLIENTE inicializado");
+            createWindowGame();
             maxAllowedClients--;
             if(maxAllowedClients == 0){
                 btnClient.setDisable(true);
@@ -86,11 +78,24 @@ public class FXMLHomeDocumentController implements Initializable {
         });
         
         btnServer.setOnAction((e)->{
-            log("Inicializando SERVIDOR");
+            log("SERVIDOR inicializado");
             serverSocketThread.start();
             btnServer.setDisable(true);
         });
-    }    
+    }
+    
+    public void createWindowGame(){
+        Parent game = null;
+        try {
+            game = FXMLLoader.load(getClass().getResource("FXMLGameDocument.fxml"));
+        } catch (IOException ex) {
+            log("ERROR: "+ex.toString());
+        }
+        Stage stage2 = new Stage();
+        Scene scene2 = new Scene(game);
+        stage2.setScene(scene2);
+        stage2.show();
+    }
     
     public void alertText(String text){
         JFXDialogLayout content = new JFXDialogLayout();
@@ -113,7 +118,8 @@ public class FXMLHomeDocumentController implements Initializable {
      * @param text 
      */
     private void log(String text){
-        System.out.println(text);
+        String msg = "*** HOME *** "+text;
+        System.out.println(msg);
         
         //Login na view
         DateFormat df = new SimpleDateFormat("HH:mm:ss");
@@ -124,5 +130,4 @@ public class FXMLHomeDocumentController implements Initializable {
         text1.setFont(Font.font("Helvetica", FontPosture.REGULAR, 16));
         logTextFlow.getChildren().addAll(dth, text1);
     }
-    
 }
