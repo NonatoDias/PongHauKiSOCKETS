@@ -35,8 +35,8 @@ import javafx.stage.Stage;
  */
 public class FXMLHomeDocumentController implements Initializable {
     
-    private ServerSocketThread serverSocket;
-    private LogText logText;
+    private ServerSocketThread serverSocketThread;
+    private int maxAllowedClients = 2;
     
     @FXML
     private JFXButton btnServer;
@@ -49,37 +49,30 @@ public class FXMLHomeDocumentController implements Initializable {
     
     @FXML
     private StackPane dialogStackPane;
-    
-    
-    
-    private int maxAllowedClients = 2;
+   
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        logText = new LogText(logTextFlow);
-        
         //Conexao
-        serverSocket = new ServerSocketThread();
-        /*serverSocket.setMethodLogText(()->{
+        serverSocketThread = new ServerSocketThread();
+        /*serverSocketThread.setMethodLogText(()->{
             
             return null;
         });*/
-        serverSocket.setLogText(logText);
         
-        // TODO
         btnClient.setOnAction((e)->{
             if(maxAllowedClients == 0){
                 return;
             }
-            logText.log("Inicializando cliente game");
+            log("Inicializando cliente game");
             Parent game = null;
             try {
                 game = FXMLLoader.load(getClass().getResource("FXMLGameDocument.fxml"));
             } catch (IOException ex) {
-                logText.log("ERROR: "+ex.toString());
+                log("ERROR: "+ex.toString());
             }
             Stage stage2 = new Stage();
             Scene scene2 = new Scene(game);
@@ -93,8 +86,8 @@ public class FXMLHomeDocumentController implements Initializable {
         });
         
         btnServer.setOnAction((e)->{
-            logText.log("Inicializando SERVIDOR");
-            serverSocket.start();
+            log("Inicializando SERVIDOR");
+            serverSocketThread.start();
             btnServer.setDisable(true);
         });
     }    
@@ -114,4 +107,22 @@ public class FXMLHomeDocumentController implements Initializable {
         dialogStackPane.setVisible(true);
         dialog.show();
     }
+    
+    /**
+     * Loga na view 
+     * @param text 
+     */
+    private void log(String text){
+        System.out.println(text);
+        
+        //Login na view
+        DateFormat df = new SimpleDateFormat("HH:mm:ss");
+        Text dth = new Text(df.format(new Date()).toString() +" -- ");
+        dth.setFont(Font.font("Helvetica", FontPosture.REGULAR, 14));
+        
+        Text text1 = new Text(text+"\n");
+        text1.setFont(Font.font("Helvetica", FontPosture.REGULAR, 16));
+        logTextFlow.getChildren().addAll(dth, text1);
+    }
+    
 }

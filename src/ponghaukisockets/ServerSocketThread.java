@@ -18,8 +18,6 @@ import java.util.logging.Logger;
  * @author Nonato Dias
  */
 public class ServerSocketThread extends Thread{
-    private LogText logText;
-            
     private ServerSocket serversocket;
     private DataOutputStream output;
     private DataInputStream input; 
@@ -61,15 +59,7 @@ public class ServerSocketThread extends Thread{
         System.out.println("run java");
         
     }
-    
-    public void setMethodLogText(Callable<Integer> func){
-        
-    }
 
-    void setLogText(LogText logText) {
-        this.logText = logText;
-    }
-    
     private void log(String text){
         System.out.println("*** SERVER ***  "+text);
         //logText.log(text);
