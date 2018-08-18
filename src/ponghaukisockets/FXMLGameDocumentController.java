@@ -17,6 +17,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.ResourceBundle;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -24,6 +26,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Circle;
 import javafx.animation.TranslateTransition;
+import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -43,6 +46,8 @@ public class FXMLGameDocumentController implements Initializable {
     private ClientSocket clientSocket;
     
     private PieceMap pieceMap;
+    private int PLAYER_BLUE = 1;
+    private int PLAYER_YELLOW = 2;
     
     @FXML
     private AnchorPane an_message;
@@ -91,6 +96,16 @@ public class FXMLGameDocumentController implements Initializable {
         //run
         showDialog("Arguardando comunicação com o servidor ...");
         clientSocket.connect();
+        
+        Timeline syncPeriodicaly = new Timeline(new KeyFrame(Duration.seconds(2),
+            //this is called every 3 seconds on UI thread
+            (ActionEvent event) -> {
+                getMessagesAndAddToTheView();
+            }
+        ));
+        syncPeriodicaly.setCycleCount(Timeline.INDEFINITE);
+        syncPeriodicaly.play();
+        
     }   
     
     public void circleClick(){
@@ -115,8 +130,22 @@ public class FXMLGameDocumentController implements Initializable {
         text.setFont(Font.font("Helvetica", FontPosture.REGULAR, 20));
         
         String message = msg+"&amp;"+value;
-        
-        addMessageToTheServer(message, text);
+        msgTextFlow.getChildren().addAll(text);
+    }
+    
+    private void writeMessages(String data) {
+        if(data.length()>0){
+            msgTextFlow.getChildren().setAll(new Text(""));
+            String[] messagesArray = data.split("\n");
+            for (int i = 0; i < messagesArray.length; i++) {
+                String [] aux = messagesArray[i].split("&amp;");
+                
+                Text text = new Text(aux[0]+"\n");
+                text.setFill(Paint.valueOf(aux[1]));
+                text.setFont(Font.font("Helvetica", FontPosture.REGULAR, 20));
+                msgTextFlow.getChildren().addAll(text);
+            }
+        }
     }
     
     private void showDialog(String text){
@@ -156,7 +185,8 @@ public class FXMLGameDocumentController implements Initializable {
         
         jfxTf_message.setOnKeyPressed((e)->{
             if(e.getCode().equals(KeyCode.ENTER)){
-                addMessageBlue(jfxTf_message.getText());
+                String colorPlayer = "#1e90ff";
+                addMessageToTheServer(jfxTf_message.getText()+"&amp;"+colorPlayer+"\n");
                 jfxTf_message.setText("");
             }
         });
@@ -175,7 +205,7 @@ public class FXMLGameDocumentController implements Initializable {
         });
     }
 
-    private void addMessageToTheServer(String message,Text text) {
+    private void addMessageToTheServer(String message) {
         //Chamada Assicrona
         GameService service = new GameService();
         service.setClientSocket(clientSocket);
@@ -187,9 +217,23 @@ public class FXMLGameDocumentController implements Initializable {
             if(code.equals(protocolCONFIG.RESULT_OK)){
                 String data = protocolCONFIG.getDataFromResponse(resp);
                 System.out.println("Resposta "+data);
+            }       
+        });
+        service.start();
+    }
+
+    private void getMessagesAndAddToTheView() {
+        GameService service = new GameService();
+        service.setClientSocket(clientSocket);
+        service.setAction("getallmessages");
+        service.setData("");
+        service.setOnSucceeded((e)->{
+            String resp = e.getSource().getValue().toString();
+            String code = protocolCONFIG.getCodeFromResponse(resp);
+            if(code.equals(protocolCONFIG.RESULT_OK)){
+                String data = protocolCONFIG.getDataFromResponse(resp);
+                writeMessages(data);
             }
-            msgTextFlow.getChildren().addAll(text);
-        
         });
         service.start();
     }

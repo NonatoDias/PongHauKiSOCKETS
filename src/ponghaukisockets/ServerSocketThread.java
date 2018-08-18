@@ -34,7 +34,15 @@ public class ServerSocketThread extends Thread{
     private java.net.Socket clientSoc2 = null;
     
     static int port = 8080;
+    
+    
 
+    private String messages_ = "";
+    
+    
+    /**
+     * Constructor
+     */
     public ServerSocketThread() {
         this.serversocket = null;
         this.outputClient1 = null;
@@ -148,10 +156,18 @@ public class ServerSocketThread extends Thread{
     }
     
     public void resolveRequest(int clientNum, String action, String data){
+        String resp ="";
+        
         switch(action){
             case "addmessage":
-                String message = protocolCONFIG.prepareRequest(protocolCONFIG.RESULT_OK, "oK");
-                sendResponseToClient(clientNum, message);
+                resp = protocolCONFIG.prepareResponse(protocolCONFIG.RESULT_OK, "oK");
+                messages_ += data;
+                sendResponseToClient(clientNum, resp);
+                break;
+                
+            case "getallmessages":
+                resp = protocolCONFIG.prepareResponse(protocolCONFIG.RESULT_OK, messages_);
+                sendResponseToClient(clientNum, resp);
                 break;
         }
     }

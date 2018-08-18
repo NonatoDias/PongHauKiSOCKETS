@@ -42,4 +42,8 @@ public interface protocolCONFIG {
     public static String prepareRequest(String code, String data){
         return code+separator_+data;
     }
+    
+    public static String prepareResponse(String code, String data){
+        return code+separator_+data;
+    }
 }
