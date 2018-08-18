@@ -106,27 +106,17 @@ public class FXMLGameDocumentController implements Initializable {
     }
     
     public void addMessage(String msg, Paint value){
-        DateFormat df = new SimpleDateFormat("HH:mm:ss");
+        /*DateFormat df = new SimpleDateFormat("HH:mm:ss");
         Text dth = new Text(df.format(new Date()).toString() +" -- ");
-        dth.setFont(Font.font("Helvetica", FontPosture.REGULAR, 16));
+        dth.setFont(Font.font("Helvetica", FontPosture.REGULAR, 16));*/
         
-        Text text1 = new Text(msg+"\n");
-        text1.setFill(value);
-        text1.setFont(Font.font("Helvetica", FontPosture.REGULAR, 20));
+        Text text = new Text(msg+"\n");
+        text.setFill(value);
+        text.setFont(Font.font("Helvetica", FontPosture.REGULAR, 20));
         
         String message = msg+"&amp;"+value;
         
-        //Chamada Assicrona
-        GameService service = new GameService();
-        service.setClientSocket(clientSocket);
-        service.setAction("addmessage");
-        service.setData(message);
-        service.setOnSucceeded((e)->{
-            System.out.println(e.getSource().getValue());
-            msgTextFlow.getChildren().addAll(dth, text1);
-        
-        });
-        service.start();
+        addMessageToTheServer(message, text);
     }
     
     private void showDialog(String text){
@@ -183,5 +173,24 @@ public class FXMLGameDocumentController implements Initializable {
             dialogStackPane.setVisible(false);
             return 1;
         });
+    }
+
+    private void addMessageToTheServer(String message,Text text) {
+        //Chamada Assicrona
+        GameService service = new GameService();
+        service.setClientSocket(clientSocket);
+        service.setAction("addmessage");
+        service.setData(message);
+        service.setOnSucceeded((e)->{
+            String resp = e.getSource().getValue().toString();
+            String code = protocolCONFIG.getCodeFromResponse(resp);
+            if(code.equals(protocolCONFIG.RESULT_OK)){
+                String data = protocolCONFIG.getDataFromResponse(resp);
+                System.out.println("Resposta "+data);
+            }
+            msgTextFlow.getChildren().addAll(text);
+        
+        });
+        service.start();
     }
 }

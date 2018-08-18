@@ -49,14 +49,14 @@ public class ServerSocketThread extends Thread{
         log("Servidor inicializado");
         log("Aguardando conexão...");
         
-        //Socket Client 1
+        /**
+         * Socket Client 1
+         */
         clientSoc1 = this.serversocket.accept();
         log("Conexão Estabelecida Com cliente 1");
         this.outputClient1 = new DataOutputStream(this.clientSoc1.getOutputStream());
         this.inputClient1 = new DataInputStream(this.clientSoc1.getInputStream());
-        this.sendResponseToClient(CLIENT_ONE, "Conected 1");
-        log(getRequestFromClient(CLIENT_ONE));
-        //Cliente 1
+        //testeConect();
         Task task = new Task<Void>() {
             @Override public Void call() {
                 while(true){
@@ -72,23 +72,21 @@ public class ServerSocketThread extends Thread{
         
         
         
-        
-        
-        //Socket Client 2
+        /**
+         * Socket Client 2
+         */
         clientSoc2 = this.serversocket.accept();
         log("Conexão Estabelecida Com cliente 2");
         this.outputClient2 = new DataOutputStream(this.clientSoc2.getOutputStream());
         this.inputClient2 = new DataInputStream(this.clientSoc2.getInputStream());
-        this.sendResponseToClient(CLIENT_TWO, "Conected 2");
-        log(getRequestFromClient(CLIENT_TWO));
-        
-        //Cliente 2
+        //testeConect(CLIENT_TWO);
         Task task2 = new Task<Void>() {
             @Override public Void call() {
                 while(true){
                     String request = getRequestFromClient(CLIENT_TWO);
-                    System.out.println("Remoto 111111: "+request);
-                    sendResponseToClient(CLIENT_ONE, "Toudo certo");
+                    String action = protocolCONFIG.getActionFromRequest(request);
+                    String data = protocolCONFIG.getDataFromRequest(request);
+                    resolveRequest(CLIENT_TWO, action, data);
                 }
             }
         };
@@ -109,18 +107,17 @@ public class ServerSocketThread extends Thread{
 
     private void log(String text){
         System.out.println("*** SERVER ***  "+text);
-        //logText.log(text);
     }
     
     private String getRequestFromClient(int clientNum){
-        String msg = "";
+        String req = "";
         try {
             switch(clientNum){
                 case CLIENT_ONE:
-                    msg = this.inputClient1.readUTF();
+                    req = this.inputClient1.readUTF();
                     break;
                 case CLIENT_TWO:
-                    msg = this.inputClient2.readUTF();
+                    req = this.inputClient2.readUTF();
                     break;
                 default:
                     break;
@@ -128,7 +125,7 @@ public class ServerSocketThread extends Thread{
         }catch (IOException ex) {
             System.out.println("ERROR "+ex.toString());
         }
-        return msg;
+        return req;
     }
     
     private void sendResponseToClient(int clientNum, String msg){
@@ -157,6 +154,11 @@ public class ServerSocketThread extends Thread{
                 sendResponseToClient(clientNum, message);
                 break;
         }
+    }
+
+    private void testeConect(int clientNum) {
+        this.sendResponseToClient(clientNum, "Conected "+clientNum);
+        log(getRequestFromClient(clientNum));
     }
     
     

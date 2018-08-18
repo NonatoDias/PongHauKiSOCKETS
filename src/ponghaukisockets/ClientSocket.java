@@ -50,8 +50,7 @@ public class ClientSocket{
             this.output = new DataOutputStream(this.socket.getOutputStream());
             this.input = new DataInputStream(this.socket.getInputStream());
             
-            log(getResponse());
-            sendRequest("MENSAGEM DO CLIENTE");
+            //testConect();
           
         }catch(Exception e){
             log("Erro ao conectar: "+ e.toString());
@@ -66,10 +65,10 @@ public class ClientSocket{
        onconnect = func;
    }
             
-    public void sendRequest(String text){
+    public void sendRequest(String req){
         try{
-            log("mensagem --- "+text);
-            this.output.writeUTF(text);
+            log("mensagem --- "+req);
+            this.output.writeUTF(req);
             this.output.flush();
         }catch (IOException ex) {
             System.out.println("ERROR "+ex.toString());
@@ -77,18 +76,23 @@ public class ClientSocket{
     }
     
     public String getResponse(){
-        String msg = null;
+        String resp = null;
         try{
-            msg = this.input.readUTF();
+            resp = this.input.readUTF();
         }catch (IOException ex) {
             System.out.println("ERROR "+ex.toString());
         }
-        return msg;
+        return resp;
     }
     
     private void log(String text){
         String msg = "*** CLIENT *** "+text;
         System.out.println(msg);
+    }
+
+    private void testConect() {
+        log(getResponse());
+        sendRequest("MENSAGEM DO CLIENTE");
     }
 
 }
