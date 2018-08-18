@@ -16,6 +16,8 @@ import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -58,6 +60,7 @@ public class FXMLHomeDocumentController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         //Conexao
         serverSocketThread = new ServerSocketThread();
+        serverSocketThread.setDaemon(true);
 
         //Eventos da view
         addEventsToTheView();

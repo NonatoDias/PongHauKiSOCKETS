@@ -40,7 +40,7 @@ import javafx.util.Duration;
  */
 public class FXMLGameDocumentController implements Initializable {
     
-    private ClientSocketThread socket;
+    private ClientSocket clientSocket;
     
     private PieceMap pieceMap;
     
@@ -76,7 +76,7 @@ public class FXMLGameDocumentController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         //Conexao
-        socket = new ClientSocketThread();
+        clientSocket = new ClientSocket();
               
         //Peças do jogo
         pieceMap = new PieceMap();
@@ -90,7 +90,7 @@ public class FXMLGameDocumentController implements Initializable {
         
         //run
         showDialog("Arguardando comunicação com o servidor ...");
-        socket.connect();
+        clientSocket.connect();
     }   
     
     public void circleClick(){
@@ -113,7 +113,20 @@ public class FXMLGameDocumentController implements Initializable {
         Text text1 = new Text(msg+"\n");
         text1.setFill(value);
         text1.setFont(Font.font("Helvetica", FontPosture.REGULAR, 20));
-        msgTextFlow.getChildren().addAll(dth, text1);
+        
+        Text message = text1;
+        
+        //Chamada Assicrona
+        GameService service = new GameService();
+        service.setClientSocket(clientSocket);
+        service.setAction("addmessage");
+        service.setData(message);
+        service.setOnSucceeded((e)->{
+            System.out.println(e.getSource().getValue());
+            msgTextFlow.getChildren().addAll(dth, text1);
+        
+        });
+        service.start();
     }
     
     private void showDialog(String text){
@@ -166,7 +179,7 @@ public class FXMLGameDocumentController implements Initializable {
             
         });
         
-        socket.setOnConnect(()->{
+        clientSocket.setOnConnect(()->{
             dialogStackPane.setVisible(false);
             return 1;
         });

@@ -12,6 +12,7 @@ import java.net.ServerSocket;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.concurrent.Task;
 
 /**
  *
@@ -127,18 +128,33 @@ public class ServerSocketThread extends Thread{
     }
     
     private void listenCalls() throws IOException{
-        String request = "";
-        
         log("servidor escultando as chamadas");
-        while(true){
-            request = getMessageFromClient(CLIENT_ONE);
-            System.out.println("Remoto: "+request);
+
+        //Cliente 1
+        Task task = new Task<Void>() {
+            @Override public Void call() {
+                while(true){
+                    String request = getMessageFromClient(CLIENT_ONE);
+                    System.out.println("Remoto 111111: "+request);
+                    sendMessageToClient(CLIENT_ONE, "Toudo certo");
+                }
+            }
+        };
+        new Thread(task).start();
             
             
-            
-            request = getMessageFromClient(CLIENT_TWO);
-            System.out.println("Remoto: "+request);
-        }
+        //Cliente 2
+        Task task2 = new Task<Void>() {
+            @Override public Void call() {
+                while(true){
+                    String request = getMessageFromClient(CLIENT_TWO);
+                    System.out.println("Remoto 111111: "+request);
+                    sendMessageToClient(CLIENT_ONE, "Toudo certo");
+                }
+            }
+        };
+        new Thread(task2).start();
+        //}
     }
     
 }

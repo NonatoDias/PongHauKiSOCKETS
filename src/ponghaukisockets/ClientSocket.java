@@ -16,7 +16,7 @@ import java.util.concurrent.Callable;
  *
  * @author Nonato Dias
  */
-public class ClientSocketThread extends Thread{	      
+public class ClientSocket{	      
     
     static String host = "127.0.0.1";
     static int port = 8080;
@@ -29,13 +29,18 @@ public class ClientSocketThread extends Thread{
     
     private Callable<Integer> onconnect;
     
-    ClientSocketThread(){
+    ClientSocket(){
         this.socket = null;
         this.output = null;
         this.input = null; 
     }
     
     public void run() {
+        //caso use thread
+        
+    }
+    
+    public void connect(){
         try{
             this.socket = new Socket(host,port);
             log("Conectado....");
@@ -51,11 +56,6 @@ public class ClientSocketThread extends Thread{
         }catch(Exception e){
             log("Erro ao conectar: "+ e.toString());
         }
-        
-    }
-    
-    public void connect(){
-        this.start();
     }
     
     /**
@@ -66,8 +66,9 @@ public class ClientSocketThread extends Thread{
        onconnect = func;
    }
             
-    private void sendMessage(String text){
+    public void sendMessage(String text){
         try{
+            log("mensagem --- "+text);
             this.output.writeUTF(text);
             this.output.flush();
         }catch (IOException ex) {
@@ -75,7 +76,7 @@ public class ClientSocketThread extends Thread{
         }
     }
     
-    private String getMessage(){
+    public String getMessage(){
         String msg = null;
         try{
             msg = this.input.readUTF();
