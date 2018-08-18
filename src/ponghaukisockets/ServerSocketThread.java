@@ -54,15 +54,16 @@ public class ServerSocketThread extends Thread{
         log("Conexão Estabelecida Com cliente 1");
         this.outputClient1 = new DataOutputStream(this.clientSoc1.getOutputStream());
         this.inputClient1 = new DataInputStream(this.clientSoc1.getInputStream());
-        this.sendMessageToClient(CLIENT_ONE, "Conected 1");
-        log(getMessageFromClient(CLIENT_ONE));
+        this.sendResponseToClient(CLIENT_ONE, "Conected 1");
+        log(getRequestFromClient(CLIENT_ONE));
         //Cliente 1
         Task task = new Task<Void>() {
             @Override public Void call() {
                 while(true){
-                    String request = getMessageFromClient(CLIENT_ONE);
-                    System.out.println("Remoto 111111: "+request);
-                    sendMessageToClient(CLIENT_ONE, "Toudo certo");
+                    String request = getRequestFromClient(CLIENT_ONE);
+                    String action = protocolCONFIG.getActionFromRequest(request);
+                    String data = protocolCONFIG.getDataFromRequest(request);
+                    resolveRequest(CLIENT_ONE, action, data);
                 }
             }
         };
@@ -78,16 +79,16 @@ public class ServerSocketThread extends Thread{
         log("Conexão Estabelecida Com cliente 2");
         this.outputClient2 = new DataOutputStream(this.clientSoc2.getOutputStream());
         this.inputClient2 = new DataInputStream(this.clientSoc2.getInputStream());
-        this.sendMessageToClient(CLIENT_TWO, "Conected 2");
-        log(getMessageFromClient(CLIENT_TWO));
+        this.sendResponseToClient(CLIENT_TWO, "Conected 2");
+        log(getRequestFromClient(CLIENT_TWO));
         
         //Cliente 2
         Task task2 = new Task<Void>() {
             @Override public Void call() {
                 while(true){
-                    String request = getMessageFromClient(CLIENT_TWO);
+                    String request = getRequestFromClient(CLIENT_TWO);
                     System.out.println("Remoto 111111: "+request);
-                    sendMessageToClient(CLIENT_ONE, "Toudo certo");
+                    sendResponseToClient(CLIENT_ONE, "Toudo certo");
                 }
             }
         };
@@ -111,7 +112,7 @@ public class ServerSocketThread extends Thread{
         //logText.log(text);
     }
     
-    private String getMessageFromClient(int clientNum){
+    private String getRequestFromClient(int clientNum){
         String msg = "";
         try {
             switch(clientNum){
@@ -130,8 +131,7 @@ public class ServerSocketThread extends Thread{
         return msg;
     }
     
-    
-    private void sendMessageToClient(int clientNum, String msg){
+    private void sendResponseToClient(int clientNum, String msg){
         try {
             switch(clientNum){
                 case CLIENT_ONE:
@@ -149,5 +149,16 @@ public class ServerSocketThread extends Thread{
             System.out.println("ERROR "+ex.toString());
         }
     }
+    
+    public void resolveRequest(int clientNum, String action, String data){
+        switch(action){
+            case "addmessage":
+                String message = protocolCONFIG.prepareRequest(protocolCONFIG.RESULT_OK, "oK");
+                sendResponseToClient(clientNum, message);
+                break;
+        }
+    }
+    
+    
    
 }

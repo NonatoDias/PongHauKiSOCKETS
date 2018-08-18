@@ -41,8 +41,9 @@ public class GameService extends Service<String>{
         return new Task<String>() {
             
             protected String call() throws Exception {
-                clientSocket.sendMessage(action + "==>"+ data);
-                return clientSocket.getMessage();
+                String req = protocolCONFIG.prepareRequest(action, (String)data);
+                clientSocket.sendRequest(req);
+                return clientSocket.getResponse();
             }
         };
         
