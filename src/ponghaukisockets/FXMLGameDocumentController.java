@@ -114,7 +114,7 @@ public class FXMLGameDocumentController implements Initializable {
         text1.setFill(value);
         text1.setFont(Font.font("Helvetica", FontPosture.REGULAR, 20));
         
-        Text message = text1;
+        String message = msg+"&amp;"+value;
         
         //Chamada Assicrona
         GameService service = new GameService();

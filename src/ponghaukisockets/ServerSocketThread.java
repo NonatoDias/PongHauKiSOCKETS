@@ -56,6 +56,20 @@ public class ServerSocketThread extends Thread{
         this.inputClient1 = new DataInputStream(this.clientSoc1.getInputStream());
         this.sendMessageToClient(CLIENT_ONE, "Conected 1");
         log(getMessageFromClient(CLIENT_ONE));
+        //Cliente 1
+        Task task = new Task<Void>() {
+            @Override public Void call() {
+                while(true){
+                    String request = getMessageFromClient(CLIENT_ONE);
+                    System.out.println("Remoto 111111: "+request);
+                    sendMessageToClient(CLIENT_ONE, "Toudo certo");
+                }
+            }
+        };
+        new Thread(task).start();
+        
+        
+        
         
         
         
@@ -67,8 +81,17 @@ public class ServerSocketThread extends Thread{
         this.sendMessageToClient(CLIENT_TWO, "Conected 2");
         log(getMessageFromClient(CLIENT_TWO));
         
-        //init listening
-        listenCalls();
+        //Cliente 2
+        Task task2 = new Task<Void>() {
+            @Override public Void call() {
+                while(true){
+                    String request = getMessageFromClient(CLIENT_TWO);
+                    System.out.println("Remoto 111111: "+request);
+                    sendMessageToClient(CLIENT_ONE, "Toudo certo");
+                }
+            }
+        };
+        new Thread(task2).start();
         
     }
 
@@ -126,35 +149,5 @@ public class ServerSocketThread extends Thread{
             System.out.println("ERROR "+ex.toString());
         }
     }
-    
-    private void listenCalls() throws IOException{
-        log("servidor escultando as chamadas");
-
-        //Cliente 1
-        Task task = new Task<Void>() {
-            @Override public Void call() {
-                while(true){
-                    String request = getMessageFromClient(CLIENT_ONE);
-                    System.out.println("Remoto 111111: "+request);
-                    sendMessageToClient(CLIENT_ONE, "Toudo certo");
-                }
-            }
-        };
-        new Thread(task).start();
-            
-            
-        //Cliente 2
-        Task task2 = new Task<Void>() {
-            @Override public Void call() {
-                while(true){
-                    String request = getMessageFromClient(CLIENT_TWO);
-                    System.out.println("Remoto 111111: "+request);
-                    sendMessageToClient(CLIENT_ONE, "Toudo certo");
-                }
-            }
-        };
-        new Thread(task2).start();
-        //}
-    }
-    
+   
 }
