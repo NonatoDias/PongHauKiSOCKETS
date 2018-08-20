@@ -53,6 +53,9 @@ public class FXMLHomeDocumentController implements Initializable {
     
     @FXML
     private StackPane dialogStackPane;
+    
+    int portClient = 8080;
+    int portServer = 8000;
    
 
     /**
@@ -60,72 +63,10 @@ public class FXMLHomeDocumentController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        server = new SocketServer();
-        client = new SocketClient();
-        /*client.bindAndConnect();*/
-
         
-        
-        
-        Task task = new Task<Void>() {
-            @Override public Void call() throws IOException {
-                server.acceptAndConnect();
-                
-                while(true){
-                    String msg = server.receiveMessage();
-                    String msgResp = protocolCONFIG.prepareResponse(protocolCONFIG.RESULT_OK, msg+" RECEBI A MENSAGEM");
-                    server.sendMessage(msgResp);
-                }
-            }
-        };
-        Thread t = new Thread(task);
-        t.setDaemon(true);
-        t.start();
-        
-
-        Task task2 = new Task<Void>() {
-            @Override public Void call() throws IOException {
-                client.bindAndConnect();
-                
-                
-                
-                
-                SocketClientService service = new SocketClientService();
-                service.setSocket(client);
-                service.setAction("addmessage");
-                service.setData("teste");
-                service.setOnSucceeded((e)->{
-                    String message = e.getSource().getValue().toString();
-                    String action = protocolCONFIG.getCodeFromResponse(message);
-                    if(action.equals(protocolCONFIG.RESULT_OK)){
-                        
-                        System.out.println("Resposta "+message);
-                    }       
-                });
-                service.start();
-                
-                
-                
-                
-                return null;
-            }
-        };
-        Thread t2= new Thread(task2);
-        t2.setDaemon(true);
-        t2.start();
-        
-        
-        
-        //Conexao
-        //serverSocketThread = new ServerSocketThread();
-        //serverSocketThread.setDaemon(true);
-
         //Eventos da view
-        //addEventsToTheView();
-    }    
-    
-    private void addEventsToTheView() {
-        btnClient.setOnAction((e)->{
+        //Cria window game
+         btnClient.setOnAction((e)->{
             if(maxAllowedClients == 0){
                 return;
             }
@@ -135,14 +76,53 @@ public class FXMLHomeDocumentController implements Initializable {
             if(maxAllowedClients == 0){
                 btnClient.setDisable(true);
             }
-        
         });
         
+        //Inicia thread server
         btnServer.setOnAction((e)->{
             log("SERVIDOR inicializado");
-            //serverSocketThread.start();
+            initThreadServer();
             btnServer.setDisable(true);
         });
+    }    
+    
+    public void initThreadServer(){
+        //Cria o socket e inicializa a thread
+        server = new SocketServer(portServer);
+        Task task = new Task<Void>() {
+            @Override public Void call() throws IOException {
+                server.acceptAndConnect();
+                initThreadClient();
+                
+                while(true){
+                    String msg = server.receiveMessage();
+                    String msgResp = protocolCONFIG.prepareResponse(protocolCONFIG.RESULT_OK, msg+" RECEBI A MENSAGEM");
+                    server.sendMessage(msgResp);
+                }
+            }
+        };
+        Thread threadSocket = new Thread(task);
+        threadSocket.setDaemon(true);//Mata a thread qdo fecha a janela
+        threadSocket.start();
+    }
+    
+    public void initThreadClient(){
+        //Cria o socket e inicializa a thread
+        client = new SocketClient(portClient);
+        Task task = new Task<Void>() {
+            @Override public Void call() throws IOException {
+                client.bindAndConnect();
+                
+                while(true){
+                    String msg = client.receiveMessage();
+                    String msgResp = protocolCONFIG.prepareResponse(protocolCONFIG.RESULT_OK, msg+" RECEBI A MENSAGEM");
+                    client.sendMessage(msgResp);
+                }
+            }
+        };
+        Thread threadSocket = new Thread(task);
+        threadSocket.setDaemon(true);//Mata a thread qdo fecha a janela
+        threadSocket.start();
     }
     
     public void createWindowGame(){

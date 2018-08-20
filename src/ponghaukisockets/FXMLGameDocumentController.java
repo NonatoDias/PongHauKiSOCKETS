@@ -10,6 +10,7 @@ import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXDialogLayout;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
+import java.io.IOException;
 import java.net.Socket;
 import java.net.URL;
 import java.text.DateFormat;
@@ -26,6 +27,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Circle;
 import javafx.animation.TranslateTransition;
+import javafx.concurrent.Task;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
@@ -43,11 +45,15 @@ import javafx.util.Duration;
  */
 public class FXMLGameDocumentController implements Initializable {
     
-    //private ClientSocket clientSocket;
+    private SocketServer server;
+    private SocketClient client;
     
     private PieceMap pieceMap;
     private int PLAYER_BLUE = 1;
     private int PLAYER_YELLOW = 2;
+    
+    int portClient = 8000;
+    int portServer = 8080;
     
     @FXML
     private AnchorPane an_message;
@@ -86,15 +92,41 @@ public class FXMLGameDocumentController implements Initializable {
         pieceMap.setPieceblueB(new Piece(circuloAzulB, 2));
         pieceMap.setPieceYellowA(new Piece(circuloAmareloA, 3));
         pieceMap.setPieceYellowB(new Piece(circuloAmareloB, 4));
-        
+  
         //Events
-        addEventsToTheView();
+        circuloAzulA.setOnMouseClicked((e)->{
+            pieceMap.moveBlueA();
+        });
+        circuloAzulB.setOnMouseClicked((e)->{
+            pieceMap.moveBlueB();
+        });
+        circuloAmareloA.setOnMouseClicked((e)->{
+            pieceMap.moveYellowA();
+        });
+        circuloAmareloB.setOnMouseClicked((e)->{
+            pieceMap.moveYellowB();
+        });
+        jfxTf_message.setOnKeyPressed((e)->{
+            if(e.getCode().equals(KeyCode.ENTER)){
+                String colorPlayer = "#1e90ff";
+                //addMessageToTheServer(jfxTf_message.getText()+"&amp;"+colorPlayer+"\n");
+                jfxTf_message.setText("");
+            }
+        });
+        
+        dialogStackPane.setOnMouseClicked((e)->{
+            showDialog("Arguardando comunicação com o servidor ...");
+        });
+        
+        btnStart.setOnAction((e)->{
+            
+        });
         
         //run
-        showDialog("Arguardando comunicação com o servidor ...");
+        //showDialog("Arguardando comunicação com o servidor ...");
+        //dialogStackPane.setVisible(false);
         //clientSocket.connect();
-        
-
+        initThreadClient();
     }   
     
     public void circleClick(){
@@ -154,46 +186,7 @@ public class FXMLGameDocumentController implements Initializable {
         
         dialog.show();
     }
-
-    private void addEventsToTheView() {
-        circuloAzulA.setOnMouseClicked((e)->{
-            pieceMap.moveBlueA();
-        });
-        
-        circuloAzulB.setOnMouseClicked((e)->{
-            pieceMap.moveBlueB();
-        });
-        
-        circuloAmareloA.setOnMouseClicked((e)->{
-            pieceMap.moveYellowA();
-        });
-        
-        circuloAmareloB.setOnMouseClicked((e)->{
-            pieceMap.moveYellowB();
-        });
-        
-        jfxTf_message.setOnKeyPressed((e)->{
-            if(e.getCode().equals(KeyCode.ENTER)){
-                String colorPlayer = "#1e90ff";
-                //addMessageToTheServer(jfxTf_message.getText()+"&amp;"+colorPlayer+"\n");
-                jfxTf_message.setText("");
-            }
-        });
-        
-        dialogStackPane.setOnMouseClicked((e)->{
-            showDialog("Arguardando comunicação com o servidor ...");
-        });
-        
-        btnStart.setOnAction((e)->{
-            
-        });
-        
-        /*clientSocket.setOnConnect(()->{
-            dialogStackPane.setVisible(false);
-            return 1;
-        });*/
-    }
-
+    
     /*private void addMessageToTheServer(String message) {
         //Chamada Assicrona
         GameService service = new GameService();
@@ -226,4 +219,43 @@ public class FXMLGameDocumentController implements Initializable {
         });
         service.start();
     }*/
+    
+    public void initThreadServer(){
+        //Cria o socket e inicializa a thread
+        server = new SocketServer(portServer);
+        Task task = new Task<Void>() {
+            @Override public Void call() throws IOException {
+                server.acceptAndConnect();
+                
+                while(true){
+                    String msg = server.receiveMessage();
+                    String msgResp = protocolCONFIG.prepareResponse(protocolCONFIG.RESULT_OK, msg+" RECEBI A MENSAGEM");
+                    server.sendMessage(msgResp);
+                }
+            }
+        };
+        Thread threadSocket = new Thread(task);
+        threadSocket.setDaemon(true);//Mata a thread qdo fecha a janela
+        threadSocket.start();
+    }
+    
+    public void initThreadClient(){
+        //Cria o socket e inicializa a thread
+        client = new SocketClient(portClient);
+        Task task = new Task<Void>() {
+            @Override public Void call() throws IOException {
+                client.bindAndConnect();
+                initThreadServer();
+                
+                while(true){
+                    String msg = client.receiveMessage();
+                    String msgResp = protocolCONFIG.prepareResponse(protocolCONFIG.RESULT_OK, msg+"CLIENTE JOGO RECEBI A MENSAGEM");
+                    client.sendMessage(msgResp);
+                }
+            }
+        };
+        Thread threadSocket = new Thread(task);
+        threadSocket.setDaemon(true);//Mata a thread qdo fecha a janela
+        threadSocket.start();
+    }
 }

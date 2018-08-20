@@ -27,11 +27,11 @@ public class SocketServer{
     /**
      * Constructor
      */
-    public SocketServer() {
+    public SocketServer(int port) {
         this.server = null;
         this.outputClient = null;
         this.inputClient = null; 
-        this.port = 8080;
+        this.port = port;
     }
     
     public void acceptAndConnect() throws IOException{
@@ -48,9 +48,8 @@ public class SocketServer{
         String data = protocolCONFIG.getDataFromMessage(msgFromClient);
         
         //envia mensagem para o servidor
-        String msgToClient = protocolCONFIG.prepareResponse(protocolCONFIG.CONNECTED, "sim, posso conectar?");
+        String msgToClient = protocolCONFIG.prepareResponse(protocolCONFIG.CONNECTED, "Servidor conectado com cliente");
         sendMessage(msgToClient);
-        
     }
     
     public void sendMessage(String message){
@@ -75,7 +74,7 @@ public class SocketServer{
     }
     
     private void log(String text){
-        String msg = "*** SERVERSOCKET *** "+text;
+        String msg = "*** SERVERSOCKET "+port+" *** "+text;
         System.out.println(msg);
     }
     

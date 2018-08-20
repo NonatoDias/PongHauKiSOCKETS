@@ -22,29 +22,24 @@ public class SocketClient {
     private DataOutputStream output;
     private DataInputStream input; 
 
-    public SocketClient() {
+    public SocketClient(int port) {
         this.socket = null;
         this.output = null;
         this.input = null;
         
         host = "127.0.0.1";
-        port = 8080;
+        this.port = port;
     }
     
-    public void bindAndConnect() throws IOException{
+    public String bindAndConnect() throws IOException{
         this.socket = new Socket(host,port);
-        
         this.output = new DataOutputStream(this.socket.getOutputStream());
         this.input = new DataInputStream(this.socket.getInputStream());
         
-        String msgToServer = protocolCONFIG.prepareRequest(protocolCONFIG.CONNECT, "posso conectar?");
+        String msgToServer = protocolCONFIG.prepareRequest(protocolCONFIG.CONNECT, "cliente conectado com servidor");
         sendMessage(msgToServer);
         
-        String msgFromServer = this.receiveMessage();
-        String action = protocolCONFIG.getActionFromMessage(msgFromServer);
-        String data = protocolCONFIG.getDataFromMessage(msgFromServer);
-        
-        
+        return this.receiveMessage();
     }
     
     public void sendMessage(String message){
@@ -70,7 +65,7 @@ public class SocketClient {
     
     
     private void log(String text){
-        String msg = "*** CLIENTSOCKET *** "+text;
+        String msg = "*** CLIENTSOCKET "+port+" *** "+text;
         System.out.println(msg);
     }
 }
