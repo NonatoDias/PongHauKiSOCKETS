@@ -1,0 +1,82 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package ponghaukisockets;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.ServerSocket;
+import ponghaukisockets.protocolCONFIG;
+
+/**
+ *
+ * @author Nonato Dias
+ */
+public class SocketServer{
+    private ServerSocket server;
+    private java.net.Socket client = null;
+    
+    private DataOutputStream outputClient;
+    private DataInputStream inputClient; 
+    
+    private static int port;
+    
+    /**
+     * Constructor
+     */
+    public SocketServer() {
+        this.server = null;
+        this.outputClient = null;
+        this.inputClient = null; 
+        
+        this.port = 8080;
+    }
+    
+    public void acceptAndConnect() throws IOException{
+        this.server = new ServerSocket(port);
+        this.client = this.server.accept();
+        
+        this.outputClient = new DataOutputStream(this.client.getOutputStream());
+        this.inputClient = new DataInputStream(this.client.getInputStream());
+        
+        String msgFromClient = this.receiveMessage();
+        String action = protocolCONFIG.getActionFromMessage(msgFromClient);
+        String data = protocolCONFIG.getDataFromMessage(msgFromClient);
+        
+        log(msgFromClient);
+        
+        String msgToClient = protocolCONFIG.prepareResponse(protocolCONFIG.CONNECTED, "sim, posso conectar?");
+        sendMessage(msgToClient);
+        
+    }
+    
+    public void sendMessage(String message){
+        try{
+            log(" send --- "+message);
+            this.outputClient.writeUTF(message);
+            this.outputClient.flush();
+        }catch (IOException ex) {
+            System.out.println("ERROR "+ex.toString());
+        }
+    }
+    
+    public String receiveMessage(){
+        String message = null;
+        try{
+            message = this.inputClient.readUTF();
+            log(" receive --- "+message);
+        }catch (IOException ex) {
+            System.out.println("ERROR "+ex.toString());
+        }
+        return message;
+    }
+    
+    private void log(String text){
+        String msg = "*** SERVERSOCKET *** "+text;
+        System.out.println(msg);
+    }
+    
+}

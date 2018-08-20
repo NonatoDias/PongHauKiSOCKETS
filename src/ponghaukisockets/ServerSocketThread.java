@@ -69,7 +69,7 @@ public class ServerSocketThread extends Thread{
             @Override public Void call() {
                 while(true){
                     String request = getRequestFromClient(CLIENT_ONE);
-                    String action = protocolCONFIG.getActionFromRequest(request);
+                    String action = protocolCONFIG.getActionFromMessage(request);
                     String data = protocolCONFIG.getDataFromRequest(request);
                     resolveRequest(CLIENT_ONE, action, data);
                 }
@@ -92,7 +92,7 @@ public class ServerSocketThread extends Thread{
             @Override public Void call() {
                 while(true){
                     String request = getRequestFromClient(CLIENT_TWO);
-                    String action = protocolCONFIG.getActionFromRequest(request);
+                    String action = protocolCONFIG.getActionFromMessage(request);
                     String data = protocolCONFIG.getDataFromRequest(request);
                     resolveRequest(CLIENT_TWO, action, data);
                 }

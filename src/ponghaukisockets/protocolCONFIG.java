@@ -14,6 +14,8 @@ public interface protocolCONFIG {
     * Status
     */
     public static String RESULT_OK = "200";
+    public static String CONNECT = "CONNECT";
+    public static String CONNECTED = "CONNECTED";
     
     /**
     * Separador entre code e data
@@ -22,9 +24,22 @@ public interface protocolCONFIG {
     public static String and_ = "&amp;";
     
     
-    public static String getActionFromRequest(String request){
+    public static String getActionFromMessage(String request){
         return request.substring(0, request.indexOf(separator_));
     }
+    
+    public static String getDataFromMessage(String request){
+        return request.substring(request.indexOf(separator_)+separator_.length(), request.length());
+    }  
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     public static String getCodeFromResponse(String request){
         return request.substring(0, request.indexOf(separator_));

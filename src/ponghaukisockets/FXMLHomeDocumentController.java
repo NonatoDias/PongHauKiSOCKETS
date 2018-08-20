@@ -37,7 +37,7 @@ import javafx.stage.Stage;
  */
 public class FXMLHomeDocumentController implements Initializable {
     
-    private ServerSocketThread serverSocketThread;
+    //private ServerSocketThread serverSocketThread;
     private int maxAllowedClients = 2;
     
     @FXML
@@ -59,8 +59,8 @@ public class FXMLHomeDocumentController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         //Conexao
-        serverSocketThread = new ServerSocketThread();
-        serverSocketThread.setDaemon(true);
+        //serverSocketThread = new ServerSocketThread();
+        //serverSocketThread.setDaemon(true);
 
         //Eventos da view
         addEventsToTheView();
@@ -82,7 +82,7 @@ public class FXMLHomeDocumentController implements Initializable {
         
         btnServer.setOnAction((e)->{
             log("SERVIDOR inicializado");
-            serverSocketThread.start();
+            //serverSocketThread.start();
             btnServer.setDisable(true);
         });
     }

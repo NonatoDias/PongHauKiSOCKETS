@@ -43,7 +43,7 @@ import javafx.util.Duration;
  */
 public class FXMLGameDocumentController implements Initializable {
     
-    private ClientSocket clientSocket;
+    //private ClientSocket clientSocket;
     
     private PieceMap pieceMap;
     private int PLAYER_BLUE = 1;
@@ -80,9 +80,6 @@ public class FXMLGameDocumentController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        //Conexao
-        clientSocket = new ClientSocket();
-              
         //Peças do jogo
         pieceMap = new PieceMap();
         pieceMap.setPieceblueA(new Piece(circuloAzulA, 1));
@@ -95,17 +92,9 @@ public class FXMLGameDocumentController implements Initializable {
         
         //run
         showDialog("Arguardando comunicação com o servidor ...");
-        clientSocket.connect();
+        //clientSocket.connect();
         
-        Timeline syncPeriodicaly = new Timeline(new KeyFrame(Duration.seconds(2),
-            //this is called every 3 seconds on UI thread
-            (ActionEvent event) -> {
-                getMessagesAndAddToTheView();
-            }
-        ));
-        syncPeriodicaly.setCycleCount(Timeline.INDEFINITE);
-        syncPeriodicaly.play();
-        
+
     }   
     
     public void circleClick(){
@@ -186,7 +175,7 @@ public class FXMLGameDocumentController implements Initializable {
         jfxTf_message.setOnKeyPressed((e)->{
             if(e.getCode().equals(KeyCode.ENTER)){
                 String colorPlayer = "#1e90ff";
-                addMessageToTheServer(jfxTf_message.getText()+"&amp;"+colorPlayer+"\n");
+                //addMessageToTheServer(jfxTf_message.getText()+"&amp;"+colorPlayer+"\n");
                 jfxTf_message.setText("");
             }
         });
@@ -199,13 +188,13 @@ public class FXMLGameDocumentController implements Initializable {
             
         });
         
-        clientSocket.setOnConnect(()->{
+        /*clientSocket.setOnConnect(()->{
             dialogStackPane.setVisible(false);
             return 1;
-        });
+        });*/
     }
 
-    private void addMessageToTheServer(String message) {
+    /*private void addMessageToTheServer(String message) {
         //Chamada Assicrona
         GameService service = new GameService();
         service.setClientSocket(clientSocket);
@@ -236,5 +225,5 @@ public class FXMLGameDocumentController implements Initializable {
             }
         });
         service.start();
-    }
+    }*/
 }
