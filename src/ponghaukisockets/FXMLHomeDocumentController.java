@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -37,7 +38,8 @@ import javafx.stage.Stage;
  */
 public class FXMLHomeDocumentController implements Initializable {
     
-    //private ServerSocketThread serverSocketThread;
+    private SocketServer server;
+    private SocketClient client;
     private int maxAllowedClients = 2;
     
     @FXML
@@ -58,12 +60,68 @@ public class FXMLHomeDocumentController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        server = new SocketServer();
+        client = new SocketClient();
+        /*client.bindAndConnect();*/
+
+        
+        
+        
+        Task task = new Task<Void>() {
+            @Override public Void call() throws IOException {
+                server.acceptAndConnect();
+                
+                while(true){
+                    String msg = server.receiveMessage();
+                    String msgResp = protocolCONFIG.prepareResponse(protocolCONFIG.RESULT_OK, msg+" RECEBI A MENSAGEM");
+                    server.sendMessage(msgResp);
+                }
+            }
+        };
+        Thread t = new Thread(task);
+        t.setDaemon(true);
+        t.start();
+        
+
+        Task task2 = new Task<Void>() {
+            @Override public Void call() throws IOException {
+                client.bindAndConnect();
+                
+                
+                
+                
+                SocketClientService service = new SocketClientService();
+                service.setSocket(client);
+                service.setAction("addmessage");
+                service.setData("teste");
+                service.setOnSucceeded((e)->{
+                    String message = e.getSource().getValue().toString();
+                    String action = protocolCONFIG.getCodeFromResponse(message);
+                    if(action.equals(protocolCONFIG.RESULT_OK)){
+                        
+                        System.out.println("Resposta "+message);
+                    }       
+                });
+                service.start();
+                
+                
+                
+                
+                return null;
+            }
+        };
+        Thread t2= new Thread(task2);
+        t2.setDaemon(true);
+        t2.start();
+        
+        
+        
         //Conexao
         //serverSocketThread = new ServerSocketThread();
         //serverSocketThread.setDaemon(true);
 
         //Eventos da view
-        addEventsToTheView();
+        //addEventsToTheView();
     }    
     
     private void addEventsToTheView() {

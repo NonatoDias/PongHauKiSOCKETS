@@ -61,7 +61,7 @@ public class SocketClient {
         String message = null;
         try{
             message = this.input.readUTF();
-            log(" receive --- "+message);
+            //log(" receive --- "+message);
         }catch (IOException ex) {
             System.out.println("ERROR "+ex.toString());
         }

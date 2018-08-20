@@ -31,23 +31,23 @@ public class SocketServer{
         this.server = null;
         this.outputClient = null;
         this.inputClient = null; 
-        
         this.port = 8080;
     }
     
     public void acceptAndConnect() throws IOException{
         this.server = new ServerSocket(port);
+        log("inicializado na porta "+port+", aguardando cliente");
         this.client = this.server.accept();
         
         this.outputClient = new DataOutputStream(this.client.getOutputStream());
         this.inputClient = new DataInputStream(this.client.getInputStream());
         
+        //recebe primeira mensagem do cliente
         String msgFromClient = this.receiveMessage();
         String action = protocolCONFIG.getActionFromMessage(msgFromClient);
         String data = protocolCONFIG.getDataFromMessage(msgFromClient);
         
-        log(msgFromClient);
-        
+        //envia mensagem para o servidor
         String msgToClient = protocolCONFIG.prepareResponse(protocolCONFIG.CONNECTED, "sim, posso conectar?");
         sendMessage(msgToClient);
         
@@ -67,7 +67,7 @@ public class SocketServer{
         String message = null;
         try{
             message = this.inputClient.readUTF();
-            log(" receive --- "+message);
+            //log(" receive --- "+message);
         }catch (IOException ex) {
             System.out.println("ERROR "+ex.toString());
         }
