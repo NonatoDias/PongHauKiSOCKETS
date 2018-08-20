@@ -33,10 +33,12 @@ public class SocketClient {
     
     public String bindAndConnect() throws IOException{
         this.socket = new Socket(host,port);
+        log("cliente inicializado na porta "+port);
+        
         this.output = new DataOutputStream(this.socket.getOutputStream());
         this.input = new DataInputStream(this.socket.getInputStream());
         
-        String msgToServer = protocolCONFIG.prepareRequest(protocolCONFIG.CONNECT, "cliente conectado com servidor");
+        String msgToServer = ProtocolCONFIG.prepareRequest(ProtocolCONFIG.CONNECT, "cliente conectado com servidor");
         sendMessage(msgToServer);
         
         return this.receiveMessage();
@@ -56,7 +58,7 @@ public class SocketClient {
         String message = null;
         try{
             message = this.input.readUTF();
-            //log(" receive --- "+message);
+            log(" receive --- "+message);
         }catch (IOException ex) {
             System.out.println("ERROR "+ex.toString());
         }

@@ -9,7 +9,7 @@ package ponghaukisockets;
  *
  * @author Nonato
  */
-public interface protocolCONFIG {
+public interface ProtocolCONFIG {
    /**
     * Status
     */

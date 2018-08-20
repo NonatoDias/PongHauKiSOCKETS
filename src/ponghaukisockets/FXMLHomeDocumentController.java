@@ -96,7 +96,7 @@ public class FXMLHomeDocumentController implements Initializable {
                 
                 while(true){
                     String msg = server.receiveMessage();
-                    String msgResp = protocolCONFIG.prepareResponse(protocolCONFIG.RESULT_OK, msg+" RECEBI A MENSAGEM");
+                    String msgResp = ProtocolCONFIG.prepareResponse(ProtocolCONFIG.RESULT_OK, msg+" RECEBI A MENSAGEM");
                     server.sendMessage(msgResp);
                 }
             }
@@ -115,7 +115,7 @@ public class FXMLHomeDocumentController implements Initializable {
                 
                 while(true){
                     String msg = client.receiveMessage();
-                    String msgResp = protocolCONFIG.prepareResponse(protocolCONFIG.RESULT_OK, msg+" RECEBI A MENSAGEM");
+                    String msgResp = ProtocolCONFIG.prepareResponse(ProtocolCONFIG.RESULT_OK, msg+" RECEBI A MENSAGEM");
                     client.sendMessage(msgResp);
                 }
             }

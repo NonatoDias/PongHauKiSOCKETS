@@ -9,7 +9,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
-import ponghaukisockets.protocolCONFIG;
+import ponghaukisockets.ProtocolCONFIG;
 
 /**
  *
@@ -44,11 +44,11 @@ public class SocketServer{
         
         //recebe primeira mensagem do cliente
         String msgFromClient = this.receiveMessage();
-        String action = protocolCONFIG.getActionFromMessage(msgFromClient);
-        String data = protocolCONFIG.getDataFromMessage(msgFromClient);
+        String action = ProtocolCONFIG.getActionFromMessage(msgFromClient);
+        String data = ProtocolCONFIG.getDataFromMessage(msgFromClient);
         
         //envia mensagem para o servidor
-        String msgToClient = protocolCONFIG.prepareResponse(protocolCONFIG.CONNECTED, "Servidor conectado com cliente");
+        String msgToClient = ProtocolCONFIG.prepareResponse(ProtocolCONFIG.CONNECTED, "Servidor conectado com cliente");
         sendMessage(msgToClient);
     }
     
@@ -66,7 +66,7 @@ public class SocketServer{
         String message = null;
         try{
             message = this.inputClient.readUTF();
-            //log(" receive --- "+message);
+            log(" receive --- "+message);
         }catch (IOException ex) {
             System.out.println("ERROR "+ex.toString());
         }

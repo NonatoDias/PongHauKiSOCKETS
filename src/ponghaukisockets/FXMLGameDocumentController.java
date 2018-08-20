@@ -195,9 +195,9 @@ public class FXMLGameDocumentController implements Initializable {
         service.setData(message);
         service.setOnSucceeded((e)->{
             String resp = e.getSource().getValue().toString();
-            String code = protocolCONFIG.getCodeFromResponse(resp);
-            if(code.equals(protocolCONFIG.RESULT_OK)){
-                String data = protocolCONFIG.getDataFromResponse(resp);
+            String code = ProtocolCONFIG.getCodeFromResponse(resp);
+            if(code.equals(ProtocolCONFIG.RESULT_OK)){
+                String data = ProtocolCONFIG.getDataFromResponse(resp);
                 System.out.println("Resposta "+data);
             }       
         });
@@ -211,9 +211,9 @@ public class FXMLGameDocumentController implements Initializable {
         service.setData("");
         service.setOnSucceeded((e)->{
             String resp = e.getSource().getValue().toString();
-            String code = protocolCONFIG.getCodeFromResponse(resp);
-            if(code.equals(protocolCONFIG.RESULT_OK)){
-                String data = protocolCONFIG.getDataFromResponse(resp);
+            String code = ProtocolCONFIG.getCodeFromResponse(resp);
+            if(code.equals(ProtocolCONFIG.RESULT_OK)){
+                String data = ProtocolCONFIG.getDataFromResponse(resp);
                 writeMessages(data);
             }
         });
@@ -229,7 +229,7 @@ public class FXMLGameDocumentController implements Initializable {
                 
                 while(true){
                     String msg = server.receiveMessage();
-                    String msgResp = protocolCONFIG.prepareResponse(protocolCONFIG.RESULT_OK, msg+" RECEBI A MENSAGEM");
+                    String msgResp = ProtocolCONFIG.prepareResponse(ProtocolCONFIG.RESULT_OK, msg+" RECEBI A MENSAGEM");
                     server.sendMessage(msgResp);
                 }
             }
@@ -249,7 +249,7 @@ public class FXMLGameDocumentController implements Initializable {
                 
                 while(true){
                     String msg = client.receiveMessage();
-                    String msgResp = protocolCONFIG.prepareResponse(protocolCONFIG.RESULT_OK, msg+"CLIENTE JOGO RECEBI A MENSAGEM");
+                    String msgResp = ProtocolCONFIG.prepareResponse(ProtocolCONFIG.RESULT_OK, msg+"CLIENTE JOGO RECEBI A MENSAGEM");
                     client.sendMessage(msgResp);
                 }
             }

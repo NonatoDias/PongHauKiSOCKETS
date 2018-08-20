@@ -45,7 +45,7 @@ public class SocketServerService extends Service<String>{
         return new Task<String>() {
             
             protected String call() throws Exception {
-                String message = protocolCONFIG.prepareRequest(action, data);
+                String message = ProtocolCONFIG.prepareRequest(action, data);
                 server.sendMessage(message);
                 return server.receiveMessage();
             }
