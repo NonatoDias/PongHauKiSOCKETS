@@ -9,6 +9,9 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 import ponghaukisockets.ProtocolCONFIG;
 
 /**
@@ -17,55 +20,66 @@ import ponghaukisockets.ProtocolCONFIG;
  */
 public class SocketServer{
     private ServerSocket server;
-    private java.net.Socket client = null;
+    private List<Socket> clients = null;
     
-    private DataOutputStream outputClient;
-    private DataInputStream inputClient; 
+    private List<DataOutputStream> outputClient;
+    private List<DataInputStream> inputClient;
     
     private static int port;
+    private int count_connections = 0;
     
     /**
      * Constructor
      */
-    public SocketServer(int port) {
+    public SocketServer() {
         this.server = null;
         this.outputClient = null;
         this.inputClient = null; 
+        
+        clients = new ArrayList<>();
+        outputClient = new ArrayList<>();
+        inputClient = new ArrayList<>();
+    }
+    
+    public void init(int port) throws IOException{
         this.port = port;
+        this.server = new ServerSocket(port);
     }
     
     public void acceptAndConnect() throws IOException{
-        this.server = new ServerSocket(port);
-        log("inicializado na porta "+port+", aguardando cliente");
-        this.client = this.server.accept();
+        count_connections++;
+        int indexClient = count_connections-1;
         
-        this.outputClient = new DataOutputStream(this.client.getOutputStream());
-        this.inputClient = new DataInputStream(this.client.getInputStream());
+        log("inicializado na porta "+port+", aguardando cliente");
+        this.clients.add(this.server.accept());
+        
+        this.outputClient.add(new DataOutputStream(this.clients.get(indexClient).getOutputStream()));
+        this.inputClient.add(new DataInputStream(this.clients.get(indexClient).getInputStream()));
         
         //recebe primeira mensagem do cliente
-        String msgFromClient = this.receiveMessage();
+        String msgFromClient = this.receiveMessage(indexClient);
         String action = ProtocolCONFIG.getActionFromMessage(msgFromClient);
         String data = ProtocolCONFIG.getDataFromMessage(msgFromClient);
         
         //envia mensagem para o servidor
         String msgToClient = ProtocolCONFIG.prepareResponse(ProtocolCONFIG.CONNECTED, "Servidor conectado com cliente");
-        sendMessage(msgToClient);
+        sendMessage(indexClient, msgToClient);
     }
     
-    public void sendMessage(String message){
+    public void sendMessage(int indexClient, String message){
         try{
             log(" send --- "+message);
-            this.outputClient.writeUTF(message);
-            this.outputClient.flush();
+            this.outputClient.get(indexClient).writeUTF(message);
+            this.outputClient.get(indexClient).flush();
         }catch (IOException ex) {
             System.out.println("ERROR "+ex.toString());
         }
     }
     
-    public String receiveMessage(){
+    public String receiveMessage(int indexClient){
         String message = null;
         try{
-            message = this.inputClient.readUTF();
+            message = this.inputClient.get(indexClient).readUTF();
             log(" receive --- "+message);
         }catch (IOException ex) {
             System.out.println("ERROR "+ex.toString());

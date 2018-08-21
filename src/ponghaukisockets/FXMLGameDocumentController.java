@@ -220,17 +220,18 @@ public class FXMLGameDocumentController implements Initializable {
         service.start();
     }*/
     
-    public void initThreadServer(){
+    public void initThreadServer() throws IOException{
         //Cria o socket e inicializa a thread
-        server = new SocketServer(portServer);
+        server = new SocketServer();
+        server.init(portServer);
         Task task = new Task<Void>() {
             @Override public Void call() throws IOException {
                 server.acceptAndConnect();
                 
                 while(true){
-                    String msg = server.receiveMessage();
+                    String msg = server.receiveMessage(0);
                     String msgResp = ProtocolCONFIG.prepareResponse(ProtocolCONFIG.RESULT_OK, msg+" RECEBI A MENSAGEM");
-                    server.sendMessage(msgResp);
+                    server.sendMessage(0, msgResp);
                 }
             }
         };

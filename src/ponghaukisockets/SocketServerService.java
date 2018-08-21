@@ -46,8 +46,8 @@ public class SocketServerService extends Service<String>{
             
             protected String call() throws Exception {
                 String message = ProtocolCONFIG.prepareRequest(action, data);
-                server.sendMessage(message);
-                return server.receiveMessage();
+                server.sendMessage(0, message);
+                return server.receiveMessage(0);
             }
         };
         
