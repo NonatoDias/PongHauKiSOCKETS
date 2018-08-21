@@ -120,9 +120,9 @@ public class PongHauKiSERVER {
         service.setData(msg);
         service.setOnSucceeded((e)->{
             String resp = e.getSource().getValue().toString();
-            String code = ProtocolCONFIG.getCodeFromResponse(resp);
+            String code = ProtocolCONFIG.getActionFromMessage(resp);
             if(code.equals(ProtocolCONFIG.RESULT_OK)){
-                String data = ProtocolCONFIG.getDataFromResponse(resp);
+                String data = ProtocolCONFIG.getDataFromMessage(resp);
                 System.out.println("Resposta "+data);
             }       
         });
