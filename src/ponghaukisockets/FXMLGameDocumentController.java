@@ -114,7 +114,7 @@ public class FXMLGameDocumentController implements Initializable {
         jfxTf_message.setOnKeyPressed((e)->{
             if(e.getCode().equals(KeyCode.ENTER)){
                 String colorPlayer = "#1e90ff";
-                addMessageToTheServer(jfxTf_message.getText()+"&amp;"+colorPlayer+"\n");
+                addMessageToTheServer(jfxTf_message.getText()+"&amp;"+PLAYER_BLUE);
                 jfxTf_message.setText("");
             }
         });
@@ -131,7 +131,6 @@ public class FXMLGameDocumentController implements Initializable {
         showDialog();
         //dialogStackPane.setVisible(false);
         //clientSocket.connect();
-        addMessageBlue("TEste");
     }   
     
     public void circleClick(){
@@ -147,31 +146,11 @@ public class FXMLGameDocumentController implements Initializable {
     }
     
     public void addMessage(String msg, Paint value){
-        /*DateFormat df = new SimpleDateFormat("HH:mm:ss");
-        Text dth = new Text(df.format(new Date()).toString() +" -- ");
-        dth.setFont(Font.font("Helvetica", FontPosture.REGULAR, 16));*/
-        
         Text text = new Text(msg+"\n");
         text.setFill(value);
-        text.setFont(Font.font("Helvetica", FontPosture.REGULAR, 20));
-        
+        text.setFont(Font.font("Helvetica", FontPosture.REGULAR, 20));    
         String message = msg+"&amp;"+value;
         msgTextFlow.getChildren().addAll(text);
-    }
-    
-    private void writeMessages(String data) {
-        if(data.length()>0){
-            msgTextFlow.getChildren().setAll(new Text(""));
-            String[] messagesArray = data.split("\n");
-            for (int i = 0; i < messagesArray.length; i++) {
-                String [] aux = messagesArray[i].split("&amp;");
-                
-                Text text = new Text(aux[0]+"\n");
-                text.setFill(Paint.valueOf(aux[1]));
-                text.setFont(Font.font("Helvetica", FontPosture.REGULAR, 20));
-                msgTextFlow.getChildren().addAll(text);
-            }
-        }
     }
     
     private void showDialog(){
@@ -216,25 +195,8 @@ public class FXMLGameDocumentController implements Initializable {
         });
         service.start();
     }
-/*
-    private void getMessagesAndAddToTheView() {
-        GameService service = new GameService();
-        service.setClientSocket(clientSocket);
-        service.setAction("getallmessages");
-        service.setData("");
-        service.setOnSucceeded((e)->{
-            String resp = e.getSource().getValue().toString();
-            String code = ProtocolCONFIG.getCodeFromResponse(resp);
-            if(code.equals(ProtocolCONFIG.RESULT_OK)){
-                String data = ProtocolCONFIG.getDataFromResponse(resp);
-                writeMessages(data);
-            }
-        });
-        service.start();
-    }*/
     
     public void initThreadServer() throws IOException{
-        //Cria o socket e inicializa a thread    
         server = new SocketServer();
         server.init(portServer);
         Task task = new Task<Void>() {
@@ -257,27 +219,9 @@ public class FXMLGameDocumentController implements Initializable {
         try {
             client.bindAndConnect();
             initThreadServer();
-
-        } catch (IOException ex) {
-            
+        } catch (Exception ex) {
+            System.out.println("ERROR "+ex.toString());
         } 
-        
-        
-        /*Task task = new Task<Void>() {
-            @Override public Void call() throws IOException {
-                client.bindAndConnect();
-                initThreadServer();
-                
-                while(true){
-                    String msg = client.receiveMessage();
-                    String msgResp = ProtocolCONFIG.prepareResponse(ProtocolCONFIG.RESULT_OK, msg+"CLIENTE JOGO RECEBI A MENSAGEM");
-                    client.sendMessage(msgResp);
-                }
-            }
-        };
-        Thread threadSocket = new Thread(task);
-        threadSocket.setDaemon(true);//Mata a thread qdo fecha a janela
-        threadSocket.start();*/
     }
     
     public void resolveMessages(String msg){
@@ -290,10 +234,10 @@ public class FXMLGameDocumentController implements Initializable {
                     addMessageBlue(dataFrom);
                 });
                 break;
+                
             default: 
                 break;
         }
-        
         String msgResp = ProtocolCONFIG.prepareResponse(ProtocolCONFIG.RESULT_OK, "ok");
         server.sendMessage(0, msgResp);
     }

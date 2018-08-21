@@ -73,12 +73,6 @@ public class PongHauKiSERVER {
         Task task = new Task<Void>() {
             @Override public Void call() throws IOException {
                 socketClients.get(indexClient).bindAndConnect();
-                
-                /*while(true){
-                    String msg = socketClients.get(indexClient).receiveMessage();
-                    String msgResp = ProtocolCONFIG.prepareResponse(ProtocolCONFIG.RESULT_OK, msg+" RECEBI A MENSAGEM");
-                    socketClients.get(indexClient).sendMessage(msgResp);
-                }*/
                 return null;
             }
         };
@@ -93,12 +87,6 @@ public class PongHauKiSERVER {
         Task task = new Task<Void>() {
             @Override public Void call() throws IOException {
                 socketClients.get(indexClient).bindAndConnect();
-                
-                /*while(true){
-                    String msg = socketClients.get(indexClient).receiveMessage();
-                    String msgResp = ProtocolCONFIG.prepareResponse(ProtocolCONFIG.RESULT_OK, msg+" RECEBI A MENSAGEM");
-                    socketClients.get(indexClient).sendMessage(msgResp);
-                }*/
                 return null;
             }
         };
@@ -115,7 +103,7 @@ public class PongHauKiSERVER {
             case "addmessage": 
                 System.out.println("Messagem recebida aqui "+dataFrom);
                 returnMessageToChat(client_ONE_index, dataFrom);
-                returnMessageToChat(client_TWO_index, dataFrom);
+                //returnMessageToChat(client_TWO_index, dataFrom);
                 break;
             default: 
                 break;
