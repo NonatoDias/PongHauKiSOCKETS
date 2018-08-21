@@ -115,7 +115,7 @@ public class FXMLGameDocumentController implements Initializable {
         });
         
         dialogStackPane.setOnMouseClicked((e)->{
-            showDialog("Arguardando comunicação com o servidor ...");
+            showDialog();
         });
         
         btnStart.setOnAction((e)->{
@@ -123,10 +123,10 @@ public class FXMLGameDocumentController implements Initializable {
         });
         
         //run
-        //showDialog("Arguardando comunicação com o servidor ...");
+        showDialog();
         //dialogStackPane.setVisible(false);
         //clientSocket.connect();
-        initThreadClient();
+        
     }   
     
     public void circleClick(){
@@ -169,10 +169,12 @@ public class FXMLGameDocumentController implements Initializable {
         }
     }
     
-    private void showDialog(String text){
+    private void showDialog(){
         JFXDialogLayout content = new JFXDialogLayout();
-        content.setHeading(new Text("Atenção"));
-        content.setBody(new Text(text));
+        JFXTextField portServerField = new JFXTextField("8080");
+        //JFXTextField portField = new JFXTextField("Porta do processo servidor");
+        content.setHeading(new Text("Porta do socket cliente"));
+        content.setBody(portServerField);
         
         JFXDialog dialog = new JFXDialog(dialogStackPane, content, JFXDialog.DialogTransition.CENTER);
         JFXButton btn = new JFXButton("OK");
@@ -180,6 +182,12 @@ public class FXMLGameDocumentController implements Initializable {
 	//btn.setPrefHeight(32);
         
         btn.setOnAction((e)->{
+            int x = Integer.parseInt(portServerField.getText());
+            if(x > 0){
+                portServer = x;
+                dialogStackPane.setVisible(false);
+            }
+            initThreadClient();
             dialog.close();
         });
         content.setActions(btn);
