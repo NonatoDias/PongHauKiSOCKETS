@@ -80,7 +80,7 @@ public class SocketServer{
         String message = null;
         try{
             message = this.inputClient.get(indexClient).readUTF();
-            log(" receive --- "+message);
+            log(indexClient+" receive --- "+message);
         }catch (IOException ex) {
             System.out.println("ERROR "+ex.toString());
         }
@@ -88,7 +88,7 @@ public class SocketServer{
     }
     
     private void log(String text){
-        String msg = "*** SERVERSOCKET "+port+" *** "+text;
+        String msg = "*** SOCKETSERVER "+port+" *** "+text;
         System.out.println(msg);
     }
     

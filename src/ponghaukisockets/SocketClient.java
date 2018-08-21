@@ -67,7 +67,7 @@ public class SocketClient {
     
     
     private void log(String text){
-        String msg = "*** CLIENTSOCKET "+port+" *** "+text;
+        String msg = "*** SOCKETCLIENT "+port+" *** "+text;
         System.out.println(msg);
     }
 }

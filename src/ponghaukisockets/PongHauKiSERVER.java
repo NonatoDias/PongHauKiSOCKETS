@@ -36,24 +36,35 @@ public class PongHauKiSERVER {
     public void initThreadServer() throws IOException{
         //Cria o socket e inicializa a thread
         server.init(portServer);
+               
         Task task = new Task<Void>() {
             @Override public Void call() throws IOException {
                 server.acceptAndConnect();
                 initThreadClient1();
-                
-                server.acceptAndConnect();
-                initThreadClient2();
-                
                 while(true){
                     String msg = server.receiveMessage(client_ONE_index);
-                    String msgResp = ProtocolCONFIG.prepareResponse(ProtocolCONFIG.RESULT_OK, msg+" RECEBI A MENSAGEM");
-                    server.sendMessage(client_ONE_index, msgResp);
+                    resolveMessages(client_ONE_index, msg);
                 }
             }
         };
         Thread threadSocket = new Thread(task);
         threadSocket.setDaemon(true);//Mata a thread qdo fecha a janela
         threadSocket.start();
+        
+        
+        Task task2 = new Task<Void>() {
+            @Override public Void call() throws IOException { 
+                server.acceptAndConnect();
+                initThreadClient2();
+                while(true){
+                    String msg = server.receiveMessage(client_TWO_index);
+                    resolveMessages(client_TWO_index, msg);
+                }
+            }
+        };
+        Thread threadSocket2 = new Thread(task2);
+        threadSocket2.setDaemon(true);//Mata a thread qdo fecha a janela
+        threadSocket2.start();
     }
     
     public void initThreadClient1(){
@@ -63,11 +74,12 @@ public class PongHauKiSERVER {
             @Override public Void call() throws IOException {
                 socketClients.get(indexClient).bindAndConnect();
                 
-                while(true){
+                /*while(true){
                     String msg = socketClients.get(indexClient).receiveMessage();
                     String msgResp = ProtocolCONFIG.prepareResponse(ProtocolCONFIG.RESULT_OK, msg+" RECEBI A MENSAGEM");
                     socketClients.get(indexClient).sendMessage(msgResp);
-                }
+                }*/
+                return null;
             }
         };
         Thread threadSocket = new Thread(task);
@@ -82,15 +94,50 @@ public class PongHauKiSERVER {
             @Override public Void call() throws IOException {
                 socketClients.get(indexClient).bindAndConnect();
                 
-                while(true){
+                /*while(true){
                     String msg = socketClients.get(indexClient).receiveMessage();
                     String msgResp = ProtocolCONFIG.prepareResponse(ProtocolCONFIG.RESULT_OK, msg+" RECEBI A MENSAGEM");
                     socketClients.get(indexClient).sendMessage(msgResp);
-                }
+                }*/
+                return null;
             }
         };
         Thread threadSocket = new Thread(task);
         threadSocket.setDaemon(true);//Mata a thread qdo fecha a janela
         threadSocket.start();
+    }
+    
+    public void resolveMessages(int clientNum, String msg){
+        String dataFrom = ProtocolCONFIG.getDataFromMessage(msg);
+        String dataTo = "";
+        
+        switch(ProtocolCONFIG.getActionFromMessage(msg)){
+            case "addmessage": 
+                System.out.println("Messagem recebida aqui "+dataFrom);
+                returnMessageToChat(client_ONE_index, dataFrom);
+                returnMessageToChat(client_TWO_index, dataFrom);
+                break;
+            default: 
+                break;
+        }
+        
+        String msgResp = ProtocolCONFIG.prepareResponse(ProtocolCONFIG.RESULT_OK, "ok");
+        server.sendMessage(clientNum, msgResp);
+    }
+    
+    public void returnMessageToChat(int clientNum, String msg){
+        SocketClientService service = new SocketClientService();
+        service.setSocket(socketClients.get(clientNum));
+        service.setAction("returnmessagetochat");
+        service.setData(msg);
+        service.setOnSucceeded((e)->{
+            String resp = e.getSource().getValue().toString();
+            String code = ProtocolCONFIG.getCodeFromResponse(resp);
+            if(code.equals(ProtocolCONFIG.RESULT_OK)){
+                String data = ProtocolCONFIG.getDataFromResponse(resp);
+                System.out.println("Resposta "+data);
+            }       
+        });
+        service.start();
     }
 }
