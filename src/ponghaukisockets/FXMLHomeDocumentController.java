@@ -31,16 +31,16 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 
+import ponghaukisockets.PongHauKiSERVER;
+
 /**
  * FXML Controller class
  *
  * @author Nonato Dias
  */
 public class FXMLHomeDocumentController implements Initializable {
-    
-    private SocketServer server;
-    private SocketClient client;
     private int maxAllowedClients = 2;
+    private PongHauKiSERVER pongHauKiSERVER;
     
     @FXML
     private JFXButton btnServer;
@@ -54,8 +54,7 @@ public class FXMLHomeDocumentController implements Initializable {
     @FXML
     private StackPane dialogStackPane;
     
-    int portClient = 8080;
-    int portServer = 8000;
+
    
 
     /**
@@ -63,6 +62,8 @@ public class FXMLHomeDocumentController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        pongHauKiSERVER = new PongHauKiSERVER();
+        
         
         //Eventos da view
         //Cria window game
@@ -81,49 +82,12 @@ public class FXMLHomeDocumentController implements Initializable {
         //Inicia thread server
         btnServer.setOnAction((e)->{
             log("SERVIDOR inicializado");
-            initThreadServer();
+            pongHauKiSERVER.initThreadServer();
             btnServer.setDisable(true);
         });
     }    
     
-    public void initThreadServer(){
-        //Cria o socket e inicializa a thread
-        server = new SocketServer(portServer);
-        Task task = new Task<Void>() {
-            @Override public Void call() throws IOException {
-                server.acceptAndConnect();
-                initThreadClient();
-                
-                while(true){
-                    String msg = server.receiveMessage();
-                    String msgResp = ProtocolCONFIG.prepareResponse(ProtocolCONFIG.RESULT_OK, msg+" RECEBI A MENSAGEM");
-                    server.sendMessage(msgResp);
-                }
-            }
-        };
-        Thread threadSocket = new Thread(task);
-        threadSocket.setDaemon(true);//Mata a thread qdo fecha a janela
-        threadSocket.start();
-    }
     
-    public void initThreadClient(){
-        //Cria o socket e inicializa a thread
-        client = new SocketClient(portClient);
-        Task task = new Task<Void>() {
-            @Override public Void call() throws IOException {
-                client.bindAndConnect();
-                
-                while(true){
-                    String msg = client.receiveMessage();
-                    String msgResp = ProtocolCONFIG.prepareResponse(ProtocolCONFIG.RESULT_OK, msg+" RECEBI A MENSAGEM");
-                    client.sendMessage(msgResp);
-                }
-            }
-        };
-        Thread threadSocket = new Thread(task);
-        threadSocket.setDaemon(true);//Mata a thread qdo fecha a janela
-        threadSocket.start();
-    }
     
     public void createWindowGame(){
         Parent game = null;
