@@ -43,6 +43,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 /**
@@ -93,7 +94,7 @@ public class FXMLGameDocumentController implements Initializable {
     private Circle circuloAmareloB;
     
     @FXML
-    private JFXButton btnStart;
+    private JFXButton btnQuit;
     
     @FXML
     private Label labelGameTitle;
@@ -132,8 +133,8 @@ public class FXMLGameDocumentController implements Initializable {
             showDialog();
         });
         
-        btnStart.setOnAction((e)->{
-            
+        btnQuit.setOnAction((e)->{
+            quitGame();
         });
         
         //run
@@ -187,9 +188,6 @@ public class FXMLGameDocumentController implements Initializable {
         Thread threadSocket = new Thread(task);
         threadSocket.setDaemon(true);//Mata a thread qdo fecha a janela
         threadSocket.start();
-        
-     
-
     }
     
     public void resolveMessages(String msg){
@@ -206,6 +204,19 @@ public class FXMLGameDocumentController implements Initializable {
                             break;
                         case "PLAYER_YELLOW":
                             addMessageYellow(params[0]);
+                            break;
+                    }
+                });
+                break;
+            case "returnwinningplayer":
+                String [] params = ProtocolCONFIG.getParamsFromData(dataFrom);
+                Platform.runLater(() -> { 
+                    switch(params[0]){
+                        case "PLAYER_BLUE":
+                            alertWinner("O jogador AZUL ganhou a partida. "+params[1]);
+                            break;
+                        case "PLAYER_YELLOW":
+                            alertWinner("O jogador AMARELO ganhou a partida. "+params[1]);
                             break;
                     }
                 });
@@ -256,13 +267,31 @@ public class FXMLGameDocumentController implements Initializable {
                 portServer = x;
                 initClientAndCloseDialog();
             }
-            
-            
-            
         });
         content.setActions(btnDialogOK);
-        
         dialog.show();
+    }
+    
+    private void alertWinner(String msg){
+        JFXDialogLayout content = new JFXDialogLayout();
+        content.setHeading(new Text("FIM DE JOGO"));
+        content.setBody(new Text(msg));
+        
+        JFXDialog dialogAlert = new JFXDialog(dialogStackPane, content, JFXDialog.DialogTransition.CENTER);
+        btnDialogOK = new JFXButton("OK");
+        
+        btnDialogOK.setOnAction((e)->{
+            dialogAlert.close();
+            dialogStackPane.setVisible(false);
+        });
+        
+        dialogStackPane.setOnMouseClicked((e)->{
+            alertWinner(msg);
+        });
+        
+        content.setActions(btnDialogOK);
+        dialogStackPane.setVisible(true);
+        dialogAlert.show();
     }
     
     private void addMessageToTheServer(String message) {
@@ -296,8 +325,28 @@ public class FXMLGameDocumentController implements Initializable {
                 player = data;
                 String title = data.equals("PLAYER_BLUE") ? "Você é o AZUL" : "Você é o AMARELO";
                 String color = data.equals("PLAYER_BLUE") ? "#1e90ff" : "#c3c310";
-                labelGameTitle.setText(title);
-                labelGameTitle.setTextFill(Paint.valueOf(color));
+                Platform.runLater(() -> {
+                    labelGameTitle.setText(title);
+                    labelGameTitle.setTextFill(Paint.valueOf(color));
+                });
+            }       
+        });
+        service.start();
+    }
+    
+    private void quitGame() {
+        //Chamada Assicrona
+        SocketClientService service = new SocketClientService();
+        service.setSocket(client);
+        service.setAction("quitgame");
+        service.setData("");
+        service.setOnSucceeded((e)->{
+            String resp = e.getSource().getValue().toString();
+            String code = ProtocolCONFIG.getActionFromMessage(resp);
+            if(code.equals(ProtocolCONFIG.RESULT_OK)){
+                String data = ProtocolCONFIG.getDataFromMessage(resp);
+                /*Stage stage = (Stage) btnQuit.getScene().getWindow();
+                stage.close();*/
             }       
         });
         service.start();

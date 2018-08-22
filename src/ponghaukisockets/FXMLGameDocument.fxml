@@ -76,7 +76,7 @@
                   <Font name="Calibri Bold" size="30.0" />
                </font>
             </Label>
-            <JFXButton fx:id="btnStart" buttonType="RAISED" layoutX="303.0" layoutY="607.0" prefHeight="21.0" prefWidth="142.0" ripplerFill="#b5b0b0" style="-fx-background-color: #ffffff;" text="DESISTIR">
+            <JFXButton fx:id="btnQuit" buttonType="RAISED" layoutX="303.0" layoutY="607.0" prefHeight="21.0" prefWidth="142.0" ripplerFill="#b5b0b0" style="-fx-background-color: #ffffff;" text="DESISTIR">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>

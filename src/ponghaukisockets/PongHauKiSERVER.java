@@ -124,6 +124,19 @@ public class PongHauKiSERVER {
                 msgResp = ProtocolCONFIG.prepareResponse(ProtocolCONFIG.RESULT_OK, player);
                 server.sendMessage(clientNum, msgResp);
                 break;
+            
+            case "quitgame":
+                String player_ = clientNum == client_ONE_index ? "PLAYER_BLUE" : "PLAYER_YELLOW";
+                String winner = clientNum == client_TWO_index ? "PLAYER_BLUE" : "PLAYER_YELLOW";
+                msgResp = ProtocolCONFIG.prepareResponse(ProtocolCONFIG.RESULT_OK, "jogador desitiu "+player_);
+                
+                server.sendMessage(client_ONE_index, msgResp);
+                returnWinningPlayer(client_ONE_index, winner+ProtocolCONFIG.and_+"Houve desistência do outro jogador");
+                server.sendMessage(client_TWO_index, msgResp);
+                returnWinningPlayer(client_TWO_index, winner+ProtocolCONFIG.and_+"Houve desistência do outro jogador");
+                
+                break;
+             
             default: 
                 break;
         }
@@ -134,6 +147,22 @@ public class PongHauKiSERVER {
         SocketClientService service = new SocketClientService();
         service.setSocket(socketClients.get(clientNum));
         service.setAction("returnmessagetochat");
+        service.setData(msg);
+        service.setOnSucceeded((e)->{
+            String resp = e.getSource().getValue().toString();
+            String code = ProtocolCONFIG.getActionFromMessage(resp);
+            if(code.equals(ProtocolCONFIG.RESULT_OK)){
+                String data = ProtocolCONFIG.getDataFromMessage(resp);
+                System.out.println("Resposta "+data);
+            }       
+        });
+        service.start();
+    }
+    
+    public void returnWinningPlayer(int clientNum, String msg){
+        SocketClientService service = new SocketClientService();
+        service.setSocket(socketClients.get(clientNum));
+        service.setAction("returnwinningplayer");
         service.setData(msg);
         service.setOnSucceeded((e)->{
             String resp = e.getSource().getValue().toString();
