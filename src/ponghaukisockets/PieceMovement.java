@@ -18,16 +18,16 @@ public class PieceMovement {
     
     public static final int CENTER  = 0;
     
-    private static double centerGemeX = 337;
-    private static double centerGemeY = 325;
-    private static boolean isAnyMoving = false;
-    private static int delay_ = 1500;
+    private double centerGemeX = 337;
+    private double centerGemeY = 325;
+    private  boolean isAnyMoving = false;
+    private  int delay_ = 1500;
     
-    public static void moveCircle(Circle circ){
+    public void moveCircle(Circle circ){
         moveVertically(circ);
     }
     
-    public static void moveToCenter(Circle circ){
+    public void moveToCenter(Circle circ){
         if(isAnyMoving == true) return; isAnyMoving = true;//só uma peça movimenta por vez 
         
         double x = circ.localToScene(circ.getBoundsInLocal()).getMinX();
@@ -47,7 +47,7 @@ public class PieceMovement {
         translateTransition.play();
     }
     
-    public static void moveVertically(Circle circ){
+    public void moveVertically(Circle circ){
         if(isAnyMoving == true) return; isAnyMoving = true;//só uma peça movimenta por vez 
         
         double y = circ.localToScene(circ.getBoundsInLocal()).getMinY();
@@ -63,7 +63,7 @@ public class PieceMovement {
         translateTransition.play();
     }
     
-    public static void moveHorizontally(Circle circ){
+    public void moveHorizontally(Circle circ){
         if(isAnyMoving == true) return; isAnyMoving = true;//só uma peça movimenta por vez 
         
         double x = circ.localToScene(circ.getBoundsInLocal()).getMinX();
@@ -83,7 +83,7 @@ public class PieceMovement {
     }
     
     
-    public static void moveToTopLeft(Circle circ){
+    public void moveToTopLeft(Circle circ){
         if(isAnyMoving == true) return; isAnyMoving = true;//só uma peça movimenta por vez 
         
         double x = circ.localToScene(circ.getBoundsInLocal()).getMinX();
@@ -103,7 +103,7 @@ public class PieceMovement {
         translateTransition.play();
     }
     
-    public static void moveToTopRight(Circle circ){
+    public void moveToTopRight(Circle circ){
         if(isAnyMoving == true) return; isAnyMoving = true;//só uma peça movimenta por vez 
         
         double x = circ.localToScene(circ.getBoundsInLocal()).getMinX();
@@ -123,7 +123,7 @@ public class PieceMovement {
     }
     
     
-    public static void moveToBottomLeft(Circle circ){
+    public void moveToBottomLeft(Circle circ){
         if(isAnyMoving == true) return; isAnyMoving = true;//só uma peça movimenta por vez 
         
         double x = circ.localToScene(circ.getBoundsInLocal()).getMinX();
@@ -142,7 +142,7 @@ public class PieceMovement {
         translateTransition.play();
     }
     
-    public static void moveToBottomRight(Circle circ){
+    public void moveToBottomRight(Circle circ){
         if(isAnyMoving == true) return; isAnyMoving = true;//só uma peça movimenta por vez 
         
         double x = circ.localToScene(circ.getBoundsInLocal()).getMinX();

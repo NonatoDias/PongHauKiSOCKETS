@@ -16,6 +16,7 @@ public class PieceMap {
     public Piece pieceblueB;
     public Piece pieceYellowA;
     public Piece pieceYellowB;
+    public PieceMovement pm = new PieceMovement();
     
     private boolean positionsStatus [];
     
@@ -86,37 +87,37 @@ public class PieceMap {
     private void moveFromPosition1(Piece p) {
         if(this.positionsStatus[3] == false){
             togglePosition(p, 3);
-            PieceMovement.moveVertically(p.circle);
+            pm.moveVertically(p.circle);
             
        }else if(this.positionsStatus[5] == false){
            togglePosition(p, 5);
-           PieceMovement.moveToCenter(p.circle);
+           pm.moveToCenter(p.circle);
        }
     }
     
     private void moveFromPosition2(Piece p) {
         if(this.positionsStatus[4] == false){
             togglePosition(p, 4);
-            PieceMovement.moveVertically(p.circle);
+            pm.moveVertically(p.circle);
             
        }else if(this.positionsStatus[5] == false){
            togglePosition(p, 5);
-           PieceMovement.moveToCenter(p.circle);
+           pm.moveToCenter(p.circle);
        }
     }
     
     private void moveFromPosition3(Piece p) {
         if(this.positionsStatus[1] == false){
             togglePosition(p, 1);
-            PieceMovement.moveVertically(p.circle);
+            pm.moveVertically(p.circle);
             
        }else if(this.positionsStatus[5] == false){
            togglePosition(p, 5);
-           PieceMovement.moveToCenter(p.circle);
+           pm.moveToCenter(p.circle);
            
        }else if(this.positionsStatus[4] == false){
            togglePosition(p, 4);
-           PieceMovement.moveHorizontally(p.circle);
+           pm.moveHorizontally(p.circle);
        }
     }
     
@@ -124,34 +125,34 @@ public class PieceMap {
     private void moveFromPosition4(Piece p) {
         if(this.positionsStatus[2] == false){
             togglePosition(p, 2);
-            PieceMovement.moveVertically(p.circle);
+            pm.moveVertically(p.circle);
             
        }else if(this.positionsStatus[5] == false){
            togglePosition(p, 5);
-           PieceMovement.moveToCenter(p.circle);
+           pm.moveToCenter(p.circle);
            
        }else if(this.positionsStatus[3] == false){
            togglePosition(p, 3);
-           PieceMovement.moveHorizontally(p.circle);
+           pm.moveHorizontally(p.circle);
        }
     }
     
     private void moveFromPosition5(Piece p) {
         if(this.positionsStatus[1] == false){
             togglePosition(p, 1);
-            PieceMovement.moveToTopLeft(p.circle);
+            pm.moveToTopLeft(p.circle);
             
        }else if(this.positionsStatus[2] == false){
             togglePosition(p, 2);
-            PieceMovement.moveToTopRight(p.circle);
+            pm.moveToTopRight(p.circle);
             
        }else if(this.positionsStatus[3] == false){
             togglePosition(p, 3);
-            PieceMovement.moveToBottomLeft(p.circle);
+            pm.moveToBottomLeft(p.circle);
            
        }else if(this.positionsStatus[4] == false){
             togglePosition(p, 4);
-            PieceMovement.moveToBottomRight(p.circle);
+            pm.moveToBottomRight(p.circle);
        }
     }
     

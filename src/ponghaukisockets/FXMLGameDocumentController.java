@@ -113,16 +113,20 @@ public class FXMLGameDocumentController implements Initializable {
   
         //Events
         circuloAzulA.setOnMouseClicked((e)->{
-            pieceMap.moveBlueA();
+            //pieceMap.moveBlueA();
+            sendMovimentToServer("BLUE_A");
         });
         circuloAzulB.setOnMouseClicked((e)->{
-            pieceMap.moveBlueB();
+            //pieceMap.moveBlueB();
+            sendMovimentToServer("BLUE_B");
         });
         circuloAmareloA.setOnMouseClicked((e)->{
-            pieceMap.moveYellowA();
+            //pieceMap.moveYellowA();
+            sendMovimentToServer("YELLOW_A");
         });
         circuloAmareloB.setOnMouseClicked((e)->{
-            pieceMap.moveYellowB();
+            //pieceMap.moveYellowB();
+            sendMovimentToServer("YELLOW_B");
         });
         jfxTf_message.setOnKeyPressed((e)->{
             if(e.getCode().equals(KeyCode.ENTER)){
@@ -195,12 +199,12 @@ public class FXMLGameDocumentController implements Initializable {
     
     public void resolveMessages(String msg){
         String dataFrom = ProtocolCONFIG.getDataFromMessage(msg);
+        String [] params = ProtocolCONFIG.getParamsFromData(dataFrom);
         String dataTo = "";
         
         switch(ProtocolCONFIG.getActionFromMessage(msg)){
             case "returnmessagetochat": 
                 Platform.runLater(() -> {
-                    String [] params = ProtocolCONFIG.getParamsFromData(dataFrom);
                     switch(params[1]){
                         case "PLAYER_BLUE":
                             addMessageBlue(params[0]);
@@ -212,7 +216,6 @@ public class FXMLGameDocumentController implements Initializable {
                 });
                 break;
             case "returnwinningplayer":
-                String [] params = ProtocolCONFIG.getParamsFromData(dataFrom);
                 Platform.runLater(() -> { 
                     switch(params[0]){
                         case "PLAYER_BLUE":
@@ -222,6 +225,11 @@ public class FXMLGameDocumentController implements Initializable {
                             alertWinner("O jogador AMARELO ganhou a partida. "+params[1]);
                             break;
                     }
+                });
+                break;
+            case "returnmovimentcontrol":
+                Platform.runLater(() -> { 
+                    movePieceControl(params[0]);
                 });
                 break;
                 
@@ -376,5 +384,39 @@ public class FXMLGameDocumentController implements Initializable {
             }       
         });
         service.start();
+    }
+    
+    public void sendMovimentToServer(String pieceName){
+        SocketClientService service = new SocketClientService();
+        service.setSocket(client);
+        service.setAction("movepiece");
+        service.setData(pieceName);
+        service.setOnSucceeded((e)->{
+            String resp = e.getSource().getValue().toString();
+            String code = ProtocolCONFIG.getActionFromMessage(resp);
+            if(code.equals(ProtocolCONFIG.RESULT_OK)){
+                String data = ProtocolCONFIG.getDataFromMessage(resp);
+                /*Stage stage = (Stage) btnQuit.getScene().getWindow();
+                stage.close();*/
+            }       
+        });
+        service.start();
+    }
+    
+    public void movePieceControl(String pieceName){
+        switch(pieceName){
+            case "BLUE_A":
+                pieceMap.moveBlueA();
+                break;
+            case "BLUE_B":
+                pieceMap.moveBlueB();
+                break;
+            case "YELLOW_A":
+                pieceMap.moveYellowA();
+                break;
+            case "YELLOW_B":
+                pieceMap.moveYellowB();
+                break;
+        }
     }
 }

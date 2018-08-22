@@ -140,6 +140,16 @@ public class PongHauKiSERVER {
                 returnWinningPlayer(client_TWO_index, winner+ProtocolCONFIG.and_+"Houve desistência do outro jogador");
                 
                 break;
+            case "movepiece":
+                msgResp = ProtocolCONFIG.prepareResponse(ProtocolCONFIG.RESULT_OK, "ok movimente "+dataFrom);
+                //server.sendMessage(clientNum, msgResp);
+                server.sendMessage(client_ONE_index, msgResp);
+                returnMovimentControl(client_ONE_index, dataFrom);
+                
+                server.sendMessage(client_TWO_index, msgResp);
+                returnMovimentControl(client_TWO_index, dataFrom);
+                
+                break;
              
             default: 
                 break;
@@ -151,6 +161,22 @@ public class PongHauKiSERVER {
         SocketClientService service = new SocketClientService();
         service.setSocket(socketClients.get(clientNum));
         service.setAction("returnmessagetochat");
+        service.setData(msg);
+        service.setOnSucceeded((e)->{
+            String resp = e.getSource().getValue().toString();
+            String code = ProtocolCONFIG.getActionFromMessage(resp);
+            if(code.equals(ProtocolCONFIG.RESULT_OK)){
+                String data = ProtocolCONFIG.getDataFromMessage(resp);
+                System.out.println("Resposta "+data);
+            }       
+        });
+        service.start();
+    }
+    
+    public void returnMovimentControl(int clientNum, String msg){
+        SocketClientService service = new SocketClientService();
+        service.setSocket(socketClients.get(clientNum));
+        service.setAction("returnmovimentcontrol");
         service.setData(msg);
         service.setOnSucceeded((e)->{
             String resp = e.getSource().getValue().toString();
