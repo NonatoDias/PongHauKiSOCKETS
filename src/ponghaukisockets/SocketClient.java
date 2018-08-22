@@ -22,12 +22,12 @@ public class SocketClient {
     private DataOutputStream output;
     private DataInputStream input; 
 
-    public SocketClient(int port) {
+    public SocketClient(String host, int port) {
         this.socket = null;
         this.output = null;
         this.input = null;
         
-        host = "172.168.0.100";
+        this.host = host;
         this.port = port;
     }
     

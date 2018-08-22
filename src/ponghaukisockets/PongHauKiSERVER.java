@@ -25,13 +25,17 @@ public class PongHauKiSERVER {
     int portClient_ONE = 8080;
     int portClient_TWO = 9090;
     int portServer = 8000;
-    
+    String host = "localhost";
     int client_ONE_index = 0;
     int client_TWO_index = 1;
     
     int countPlaying = 0;
 
-    public PongHauKiSERVER() {
+    public PongHauKiSERVER(int portServer, int portClient1, int portClient2) {
+        this.portServer = portServer;
+        this.portClient_ONE = portClient1;
+        this.portClient_TWO = portClient2;
+        
         this.socketClients = new ArrayList<>();
         server = new SocketServer();
     }
@@ -73,7 +77,7 @@ public class PongHauKiSERVER {
     
     public void initThreadClient1(){
         int indexClient = client_ONE_index;
-        socketClients.add(new SocketClient(portClient_ONE));
+        socketClients.add(new SocketClient(host, portClient_ONE));
         Task task = new Task<Void>() {
             @Override public Void call() throws IOException {
                 socketClients.get(indexClient).bindAndConnect();
@@ -87,7 +91,7 @@ public class PongHauKiSERVER {
     
     public void initThreadClient2(){
         int indexClient = client_TWO_index;
-        socketClients.add(new SocketClient(portClient_TWO));
+        socketClients.add(new SocketClient(host, portClient_TWO));
         Task task = new Task<Void>() {
             @Override public Void call() throws IOException {
                 socketClients.get(indexClient).bindAndConnect();

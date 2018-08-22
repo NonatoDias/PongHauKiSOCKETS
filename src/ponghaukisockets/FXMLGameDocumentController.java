@@ -11,8 +11,10 @@ import com.jfoenix.controls.JFXDialogLayout;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -60,6 +62,7 @@ public class FXMLGameDocumentController implements Initializable {
     
     int portClient = 8000;
     int portServer = 8080;
+    private String host;
     
     @FXML
     private JFXDialog dialog;
@@ -130,7 +133,7 @@ public class FXMLGameDocumentController implements Initializable {
         });
         
         dialogStackPane.setOnMouseClicked((e)->{
-            showDialog();
+            showDialogHost();
         });
         
         btnQuit.setOnAction((e)->{
@@ -138,7 +141,7 @@ public class FXMLGameDocumentController implements Initializable {
         });
         
         //run
-        showDialog();
+        showDialogHost();
         //dialogStackPane.setVisible(false);
         //clientSocket.connect();
     }   
@@ -163,7 +166,7 @@ public class FXMLGameDocumentController implements Initializable {
     
     boolean isClientConected = false;
     public void initClientAndCloseDialog(){
-        client = new SocketClient(portClient);
+        client = new SocketClient(host, portClient);
         
         Task task = new Task<Void>() {
             @Override public Void call() throws IOException {
@@ -249,7 +252,7 @@ public class FXMLGameDocumentController implements Initializable {
         msgTextFlow.getChildren().addAll(text);
     }
     
-    private void showDialog(){
+    private void showDialogPort(){
         JFXDialogLayout content = new JFXDialogLayout();
         JFXTextField portServerField = new JFXTextField("8080");
         //JFXTextField portField = new JFXTextField("Porta do processo servidor");
@@ -272,13 +275,36 @@ public class FXMLGameDocumentController implements Initializable {
         dialog.show();
     }
     
+    private void showDialogHost(){
+        JFXDialogLayout content = new JFXDialogLayout();
+        JFXTextField hostServerField = new JFXTextField();
+        try {
+            InetAddress inetAddress = InetAddress.getLocalHost();
+            hostServerField.setText(""+inetAddress.getHostAddress());
+            content.setHeading(new Text("Host do servidor(ipadress)"));
+            content.setBody(hostServerField);
+            
+        } catch (UnknownHostException ex) {
+            
+        }
+        dialog = new JFXDialog(dialogStackPane, content, JFXDialog.DialogTransition.CENTER);
+        btnDialogOK = new JFXButton("OK");
+        btnDialogOK.setOnAction((e)->{
+            host = hostServerField.getText();
+            dialog.close();
+            showDialogPort();
+        });
+        content.setActions(btnDialogOK);
+        dialog.show();
+    }
+    
     private void alertWinner(String msg){
         JFXDialogLayout content = new JFXDialogLayout();
         content.setHeading(new Text("FIM DE JOGO"));
         content.setBody(new Text(msg));
         
         JFXDialog dialogAlert = new JFXDialog(dialogStackPane, content, JFXDialog.DialogTransition.CENTER);
-        btnDialogOK = new JFXButton("OK");
+        btnDialogOK = new JFXButton("Reiniciar partida");
         
         btnDialogOK.setOnAction((e)->{
             dialogAlert.close();

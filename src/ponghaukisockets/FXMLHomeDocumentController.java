@@ -8,6 +8,7 @@ package ponghaukisockets;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXDialogLayout;
+import com.jfoenix.controls.JFXTextField;
 import java.io.IOException;
 import java.net.URL;
 import java.text.DateFormat;
@@ -54,7 +55,14 @@ public class FXMLHomeDocumentController implements Initializable {
     @FXML
     private StackPane dialogStackPane;
     
+    @FXML
+    private JFXTextField jfxTextFieldServerPort;
+    
+    @FXML
+    private JFXTextField jfxTextFieldGamePort1;
 
+    @FXML
+    private JFXTextField jfxTextFieldGamePort2;
    
 
     /**
@@ -62,8 +70,9 @@ public class FXMLHomeDocumentController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        pongHauKiSERVER = new PongHauKiSERVER();
-        
+        jfxTextFieldServerPort.setText("8000");
+        jfxTextFieldGamePort1.setText("8080");
+        jfxTextFieldGamePort2.setText("9090");
         
         //Eventos da view
         //Cria window game
@@ -81,14 +90,24 @@ public class FXMLHomeDocumentController implements Initializable {
         
         //Inicia thread server
         btnServer.setOnAction((e)->{
-            log("SERVIDOR inicializado");
-            try {
-                log("SERVIDOR IP:  "+pongHauKiSERVER.getLocalIp());
-                pongHauKiSERVER.initThreadServer();
-            } catch (Exception ex) {
+            int portServer = Integer.parseInt(jfxTextFieldServerPort.getText());
+            int portClient1 = Integer.parseInt(jfxTextFieldGamePort1.getText());
+            int portClient2 = Integer.parseInt(jfxTextFieldGamePort2.getText());
+            
+            if(portServer > 0){
+                
+                pongHauKiSERVER = new PongHauKiSERVER(portServer, portClient1, portClient2);
+                log("SERVIDOR inicializado, porta "+portServer);
+                try {
+                    log("SERVIDOR IP:  "+pongHauKiSERVER.getLocalIp());
+                    pongHauKiSERVER.initThreadServer();
+                } catch (Exception ex) {
+
+                }
+                btnServer.setDisable(true);
+            }else{
                 
             }
-            btnServer.setDisable(true);
         });
     }    
     
