@@ -24,6 +24,7 @@ public class PongHauKiSOCKETS extends Application {
         Scene scene = new Scene(home);
         
         stage.setScene(scene);
+        //stage.setResizable(false);
         stage.show();
     }
 

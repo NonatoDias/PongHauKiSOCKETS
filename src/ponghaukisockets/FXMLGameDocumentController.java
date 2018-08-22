@@ -36,7 +36,10 @@ import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -164,8 +167,34 @@ public class FXMLGameDocumentController implements Initializable {
         });
         
         //run
+        startGame();
         showDialogHost();
     }   
+    
+    
+    public void startGame(){
+        msgTextFlow.getChildren().setAll(new Text(""));
+    }
+    
+    public void restartGame(){
+        //msgTextFlow.getChildren().setAll(new Text(""));
+        //dialogStackPane.setVisible(true);
+        //alertGameStatus("Esperando o outro jogador iniciar...");         
+        Parent game = null;
+        try {
+            game = FXMLLoader.load(getClass().getResource("FXMLGameDocument.fxml"));
+        } catch (IOException ex) {
+            //log("ERROR: "+ex.toString());
+        }
+        Stage stage2 = new Stage();
+        Scene scene2 = new Scene(game);
+        stage2.setScene(scene2);
+        stage2.setResizable(false);
+        stage2.show();
+        
+        Stage stage = (Stage) btnQuit.getScene().getWindow();
+        stage.close();
+    }
     
     public void initThreadServer() throws IOException{
         server = new SocketServer();
@@ -365,6 +394,7 @@ public class FXMLGameDocumentController implements Initializable {
         btnDialogOK = new JFXButton("Reiniciar partida");
         
         btnDialogOK.setOnAction((e)->{
+            restartGame();
             dialogAlert.close();
             dialogStackPane.setVisible(false);
         });

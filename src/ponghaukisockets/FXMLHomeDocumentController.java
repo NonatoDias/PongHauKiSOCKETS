@@ -123,6 +123,7 @@ public class FXMLHomeDocumentController implements Initializable {
         Stage stage2 = new Stage();
         Scene scene2 = new Scene(game);
         stage2.setScene(scene2);
+        stage2.setResizable(false);
         stage2.show();
     }
     
