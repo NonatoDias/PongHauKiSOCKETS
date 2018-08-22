@@ -54,8 +54,7 @@ public class FXMLGameDocumentController implements Initializable {
     private SocketClient client;
     
     private PieceMap pieceMap;
-    private int PLAYER_BLUE = 1;
-    private int PLAYER_YELLOW = 2;
+    private String player = ""; //"PLAYER_BLUE" or "PLAYER_YELLOW"
     
     int portClient = 8000;
     int portServer = 8080;
@@ -114,7 +113,7 @@ public class FXMLGameDocumentController implements Initializable {
         jfxTf_message.setOnKeyPressed((e)->{
             if(e.getCode().equals(KeyCode.ENTER)){
                 String colorPlayer = "#1e90ff";
-                addMessageToTheServer(jfxTf_message.getText()+"&amp;"+PLAYER_BLUE);
+                addMessageToTheServer(jfxTf_message.getText()+"&amp;"+player);
                 jfxTf_message.setText("");
             }
         });
@@ -132,6 +131,61 @@ public class FXMLGameDocumentController implements Initializable {
         //dialogStackPane.setVisible(false);
         //clientSocket.connect();
     }   
+    
+    public void initThreadServer() throws IOException{
+        server = new SocketServer();
+        server.init(portServer);
+        Task task = new Task<Void>() {
+            @Override public Void call() throws IOException {
+                server.acceptAndConnect();
+                
+                while(true){
+                    String msg = server.receiveMessage(0);
+                    resolveMessages(msg);
+                }
+            }
+        };
+        Thread threadSocket = new Thread(task);
+        threadSocket.setDaemon(true);//Mata a thread qdo fecha a janela
+        threadSocket.start();
+    }
+    
+    public void initClient(){
+        client = new SocketClient(portClient);
+        try {
+            client.bindAndConnect();
+            initThreadServer();
+            
+        } catch (Exception ex) {
+            System.out.println("ERROR "+ex.toString());
+        } 
+    }
+    
+    public void resolveMessages(String msg){
+        String dataFrom = ProtocolCONFIG.getDataFromMessage(msg);
+        String dataTo = "";
+        
+        switch(ProtocolCONFIG.getActionFromMessage(msg)){
+            case "returnmessagetochat": 
+                Platform.runLater(() -> {
+                    String [] params = ProtocolCONFIG.getParamsFromData(dataFrom);
+                    switch(params[1]){
+                        case "PLAYER_BLUE":
+                            addMessageBlue(params[0]);
+                            break;
+                        case "PLAYER_YELLOW":
+                            addMessageYellow(params[0]);
+                            break;
+                    }
+                });
+                break;
+                
+            default: 
+                break;
+        }
+        String msgResp = ProtocolCONFIG.prepareResponse(ProtocolCONFIG.RESULT_OK, "ok");
+        server.sendMessage(0, msgResp);
+    }
     
     public void circleClick(){
         
@@ -171,8 +225,12 @@ public class FXMLGameDocumentController implements Initializable {
                 portServer = x;
                 dialogStackPane.setVisible(false);
             }
-            initClient();
-            dialog.close();
+            Platform.runLater(() -> {
+                initClient();
+                getGameConfigs();
+                dialog.close();
+            });
+            
         });
         content.setActions(btn);
         
@@ -196,49 +254,20 @@ public class FXMLGameDocumentController implements Initializable {
         service.start();
     }
     
-    public void initThreadServer() throws IOException{
-        server = new SocketServer();
-        server.init(portServer);
-        Task task = new Task<Void>() {
-            @Override public Void call() throws IOException {
-                server.acceptAndConnect();
-                
-                while(true){
-                    String msg = server.receiveMessage(0);
-                    resolveMessages(msg);
-                }
-            }
-        };
-        Thread threadSocket = new Thread(task);
-        threadSocket.setDaemon(true);//Mata a thread qdo fecha a janela
-        threadSocket.start();
-    }
-    
-    public void initClient(){
-        client = new SocketClient(portClient);
-        try {
-            client.bindAndConnect();
-            initThreadServer();
-        } catch (Exception ex) {
-            System.out.println("ERROR "+ex.toString());
-        } 
-    }
-    
-    public void resolveMessages(String msg){
-        String dataFrom = ProtocolCONFIG.getDataFromMessage(msg);
-        String dataTo = "";
-        
-        switch(ProtocolCONFIG.getActionFromMessage(msg)){
-            case "returnmessagetochat": 
-                Platform.runLater(() -> {
-                    addMessageBlue(dataFrom);
-                });
-                break;
-                
-            default: 
-                break;
-        }
-        String msgResp = ProtocolCONFIG.prepareResponse(ProtocolCONFIG.RESULT_OK, "ok");
-        server.sendMessage(0, msgResp);
+    private void getGameConfigs() {
+        //Chamada Assicrona
+        SocketClientService service = new SocketClientService();
+        service.setSocket(client);
+        service.setAction("getgameconfigs");
+        service.setData("");
+        service.setOnSucceeded((e)->{
+            String resp = e.getSource().getValue().toString();
+            String code = ProtocolCONFIG.getActionFromMessage(resp);
+            if(code.equals(ProtocolCONFIG.RESULT_OK)){
+                String data = ProtocolCONFIG.getDataFromMessage(resp);
+                player = data;
+            }       
+        });
+        service.start();
     }
 }

@@ -26,6 +26,8 @@ public class PongHauKiSERVER {
     
     int client_ONE_index = 0;
     int client_TWO_index = 1;
+    
+    int countPlaying = 0;
 
     public PongHauKiSERVER() {
         this.socketClients = new ArrayList<>();
@@ -98,19 +100,32 @@ public class PongHauKiSERVER {
     public void resolveMessages(int clientNum, String msg){
         String dataFrom = ProtocolCONFIG.getDataFromMessage(msg);
         String dataTo = "";
+        String msgResp = "";
         
         switch(ProtocolCONFIG.getActionFromMessage(msg)){
             case "addmessage": 
-                System.out.println("Messagem recebida aqui "+dataFrom);
-                returnMessageToChat(client_ONE_index, dataFrom);
-                //returnMessageToChat(client_TWO_index, dataFrom);
+                msgResp = ProtocolCONFIG.prepareResponse(ProtocolCONFIG.RESULT_OK, "ok message");
+                if(countPlaying < 2){
+                    returnMessageToChat(clientNum, dataFrom);
+                    server.sendMessage(clientNum, msgResp);
+                }else{
+                    server.sendMessage(client_ONE_index, msgResp);
+                    returnMessageToChat(client_ONE_index, dataFrom);
+                    server.sendMessage(client_TWO_index, msgResp);
+                    returnMessageToChat(client_TWO_index, dataFrom);
+                }
+                break;
+                
+            case "getgameconfigs":
+                countPlaying++;
+                String player = countPlaying > 1 ? "PLAYER_YELLOW" : "PLAYER_BLUE";
+                msgResp = ProtocolCONFIG.prepareResponse(ProtocolCONFIG.RESULT_OK, player);
+                server.sendMessage(clientNum, msgResp);
                 break;
             default: 
                 break;
         }
         
-        String msgResp = ProtocolCONFIG.prepareResponse(ProtocolCONFIG.RESULT_OK, "ok");
-        server.sendMessage(clientNum, msgResp);
     }
     
     public void returnMessageToChat(int clientNum, String msg){

@@ -33,6 +33,10 @@ public interface ProtocolCONFIG {
     }  
     
     
+    public static String [] getParamsFromData(String data){
+        return data.split(and_);
+    }
+    
     public static String prepareRequest(String code, String data){
         return code+separator_+data;
     }
