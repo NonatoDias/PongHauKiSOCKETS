@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.ResourceBundle;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.KeyFrame;
@@ -60,6 +61,12 @@ public class FXMLGameDocumentController implements Initializable {
     int portServer = 8080;
     
     @FXML
+    private JFXDialog dialog;
+    
+    @FXML
+    private JFXButton btnDialogOK;
+    
+    @FXML
     private AnchorPane an_message;
     @FXML
     private AnchorPane an_content;
@@ -87,6 +94,9 @@ public class FXMLGameDocumentController implements Initializable {
     
     @FXML
     private JFXButton btnStart;
+    
+    @FXML
+    private Label labelGameTitle;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -150,15 +160,36 @@ public class FXMLGameDocumentController implements Initializable {
         threadSocket.start();
     }
     
-    public void initClient(){
+    boolean isClientConected = false;
+    public void initClientAndCloseDialog(){
         client = new SocketClient(portClient);
-        try {
-            client.bindAndConnect();
-            initThreadServer();
-            
-        } catch (Exception ex) {
-            System.out.println("ERROR "+ex.toString());
-        } 
+        
+        Task task = new Task<Void>() {
+            @Override public Void call() throws IOException {
+                client.bindAndConnect();
+                if(isClientConected){
+                    return null;
+                }
+                isClientConected = true;
+                Platform.runLater(() -> {
+                    try {
+                        initThreadServer();
+                        getGameConfigs();
+                        dialog.close();
+                        dialogStackPane.setVisible(false);
+                    } catch (Exception ex) {
+                        System.out.println("ERROR "+ex.toString());
+                    } 
+                }); 
+                return null;
+            }
+        };
+        Thread threadSocket = new Thread(task);
+        threadSocket.setDaemon(true);//Mata a thread qdo fecha a janela
+        threadSocket.start();
+        
+     
+
     }
     
     public void resolveMessages(String msg){
@@ -214,25 +245,22 @@ public class FXMLGameDocumentController implements Initializable {
         content.setHeading(new Text("Porta do socket cliente"));
         content.setBody(portServerField);
         
-        JFXDialog dialog = new JFXDialog(dialogStackPane, content, JFXDialog.DialogTransition.CENTER);
-        JFXButton btn = new JFXButton("OK");
+        dialog = new JFXDialog(dialogStackPane, content, JFXDialog.DialogTransition.CENTER);
+        btnDialogOK = new JFXButton("OK");
         //btn.setButtonType(com.jfoenix.controls.JFXButton.ButtonType.RAISED);
 	//btn.setPrefHeight(32);
         
-        btn.setOnAction((e)->{
+        btnDialogOK.setOnAction((e)->{
             int x = Integer.parseInt(portServerField.getText());
             if(x > 0){
                 portServer = x;
-                dialogStackPane.setVisible(false);
+                initClientAndCloseDialog();
             }
-            Platform.runLater(() -> {
-                initClient();
-                getGameConfigs();
-                dialog.close();
-            });
+            
+            
             
         });
-        content.setActions(btn);
+        content.setActions(btnDialogOK);
         
         dialog.show();
     }
@@ -266,6 +294,10 @@ public class FXMLGameDocumentController implements Initializable {
             if(code.equals(ProtocolCONFIG.RESULT_OK)){
                 String data = ProtocolCONFIG.getDataFromMessage(resp);
                 player = data;
+                String title = data.equals("PLAYER_BLUE") ? "Você é o AZUL" : "Você é o AMARELO";
+                String color = data.equals("PLAYER_BLUE") ? "#1e90ff" : "#c3c310";
+                labelGameTitle.setText(title);
+                labelGameTitle.setTextFill(Paint.valueOf(color));
             }       
         });
         service.start();

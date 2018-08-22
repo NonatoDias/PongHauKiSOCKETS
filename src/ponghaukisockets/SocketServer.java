@@ -8,8 +8,10 @@ package ponghaukisockets;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import ponghaukisockets.ProtocolCONFIG;
@@ -61,6 +63,7 @@ public class SocketServer{
         String action = ProtocolCONFIG.getActionFromMessage(msgFromClient);
         String data = ProtocolCONFIG.getDataFromMessage(msgFromClient);
         
+        
         //envia mensagem para o servidor
         String msgToClient = ProtocolCONFIG.prepareResponse(ProtocolCONFIG.CONNECTED, "Servidor conectado com cliente");
         sendMessage(indexClient, msgToClient);
@@ -72,7 +75,7 @@ public class SocketServer{
             this.outputClient.get(indexClient).writeUTF(message);
             this.outputClient.get(indexClient).flush();
         }catch (IOException ex) {
-            System.out.println("ERROR "+ex.toString());
+            System.out.println("ERROR sendMessage "+ex.toString());
         }
     }
     
@@ -82,14 +85,19 @@ public class SocketServer{
             message = this.inputClient.get(indexClient).readUTF();
             log(indexClient+" receive --- "+message);
         }catch (IOException ex) {
-            System.out.println("ERROR "+ex.toString());
+            System.out.println("ERROR receiveMessage "+ex.toString());
         }
         return message;
     }
     
     private void log(String text){
-        String msg = "*** SOCKETSERVER "+port+" *** "+text;
+        String msg = "*** SOCKET-SERVER "+port+" *** "+text;
         System.out.println(msg);
     }
     
+    
+    public String getLocalIp() throws UnknownHostException{
+        InetAddress inetAddress = InetAddress.getLocalHost();
+        return inetAddress.getHostAddress();
+    }
 }

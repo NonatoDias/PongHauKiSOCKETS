@@ -83,8 +83,9 @@ public class FXMLHomeDocumentController implements Initializable {
         btnServer.setOnAction((e)->{
             log("SERVIDOR inicializado");
             try {
+                log("SERVIDOR IP:  "+pongHauKiSERVER.getLocalIp());
                 pongHauKiSERVER.initThreadServer();
-            } catch (IOException ex) {
+            } catch (Exception ex) {
                 
             }
             btnServer.setDisable(true);

@@ -2,7 +2,9 @@ package ponghaukisockets;
 
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.concurrent.Task;
@@ -142,5 +144,9 @@ public class PongHauKiSERVER {
             }       
         });
         service.start();
+    }
+    
+    public String getLocalIp() throws UnknownHostException{
+        return server.getLocalIp();
     }
 }

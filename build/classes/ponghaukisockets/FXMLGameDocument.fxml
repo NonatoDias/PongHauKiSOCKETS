@@ -64,7 +64,7 @@
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor></Circle>
-                  <Label alignment="CENTER" layoutX="143.0" layoutY="32.0" prefHeight="41.0" prefWidth="283.0" text="Clique nas peças" textAlignment="CENTER" textFill="#656565">
+                  <Label fx:id="labelGameTitle" alignment="CENTER" layoutX="143.0" layoutY="32.0" prefHeight="41.0" prefWidth="283.0" text="Clique nas peças" textAlignment="CENTER" textFill="#656565">
                      <font>
                         <Font name="Calibri Bold" size="24.0" />
                      </font>

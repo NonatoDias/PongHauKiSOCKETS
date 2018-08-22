@@ -27,12 +27,16 @@ public class SocketClient {
         this.output = null;
         this.input = null;
         
-        host = "127.0.0.1";
+        host = "172.168.0.100";
         this.port = port;
     }
     
+    //@todo timeout
     public String bindAndConnect() throws IOException{
-        this.socket = new Socket(host,port);
+        if(this.socket == null || !this.socket.isConnected()){
+            this.socket = new Socket(host,port);
+        }
+        
         log("cliente inicializado na porta "+port);
         
         this.output = new DataOutputStream(this.socket.getOutputStream());
@@ -40,6 +44,14 @@ public class SocketClient {
         
         String msgToServer = ProtocolCONFIG.prepareRequest(ProtocolCONFIG.CONNECT, "cliente conectado com servidor");
         sendMessage(msgToServer);
+        sendMessage(msgToServer);
+        sendMessage(msgToServer);
+        sendMessage(msgToServer);
+        sendMessage(msgToServer);
+        sendMessage(msgToServer);
+        
+        
+        
         
         return this.receiveMessage();
     }
