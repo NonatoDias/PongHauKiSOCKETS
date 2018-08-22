@@ -69,6 +69,11 @@
                         <Font name="Calibri Bold" size="24.0" />
                      </font>
                   </Label>
+                  <Label fx:id="labelGameStatus" alignment="CENTER" layoutX="153.0" layoutY="322.0" prefHeight="41.0" prefWidth="283.0" text="Azul começa!" textAlignment="CENTER" textFill="#656565">
+                     <font>
+                        <Font name="Calibri Bold" size="24.0" />
+                     </font>
+                  </Label>
                </children>
             </Pane>
             <Label alignment="CENTER" layoutX="225.0" layoutY="66.0" prefHeight="41.0" prefWidth="283.0" text="PONG-HAU-KI" textAlignment="CENTER" textFill="WHITE">

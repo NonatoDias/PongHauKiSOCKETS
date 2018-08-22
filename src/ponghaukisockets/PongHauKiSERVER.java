@@ -160,10 +160,10 @@ public class PongHauKiSERVER {
                 msgResp = ProtocolCONFIG.prepareResponse(ProtocolCONFIG.RESULT_OK, "ok movimente "+dataFrom);
                 //server.sendMessage(clientNum, msgResp);
                 server.sendMessage(client_ONE_index, msgResp);
-                returnMovimentControl(client_ONE_index, dataFrom);
+                returnMovimentControl(client_ONE_index, dataFrom+ProtocolCONFIG.and_+clientNum);
                 
                 server.sendMessage(client_TWO_index, msgResp);
-                returnMovimentControl(client_TWO_index, dataFrom);
+                returnMovimentControl(client_TWO_index, dataFrom+ProtocolCONFIG.and_+clientNum);
                 
                 break;
                 

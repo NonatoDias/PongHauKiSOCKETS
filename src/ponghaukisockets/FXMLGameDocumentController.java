@@ -59,6 +59,7 @@ public class FXMLGameDocumentController implements Initializable {
     
     private PieceMap pieceMap;
     private String player = ""; //"PLAYER_BLUE" or "PLAYER_YELLOW"
+    private String whoDidLastMove = "PLAYER_YELLOW";
     
     int portClient = 8000;
     int portServer = 8080;
@@ -105,6 +106,9 @@ public class FXMLGameDocumentController implements Initializable {
     @FXML
     private Label labelGameTitle;
     
+    @FXML
+    private Label labelGameStatus;
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         //Peças do jogo
@@ -116,20 +120,32 @@ public class FXMLGameDocumentController implements Initializable {
   
         //Events
         circuloAzulA.setOnMouseClicked((e)->{
-            //pieceMap.moveBlueA();
-            sendMovimentToServer("BLUE_A");
+            if(!player.equals(whoDidLastMove)){
+                sendMovimentToServer("BLUE_A");
+            }else{
+                
+            }
         });
         circuloAzulB.setOnMouseClicked((e)->{
-            //pieceMap.moveBlueB();
-            sendMovimentToServer("BLUE_B");
+            if(!player.equals(whoDidLastMove)){
+                sendMovimentToServer("BLUE_B");
+            }else{
+                
+            }
         });
         circuloAmareloA.setOnMouseClicked((e)->{
-            //pieceMap.moveYellowA();
-            sendMovimentToServer("YELLOW_A");
+            if(!player.equals(whoDidLastMove)){
+                sendMovimentToServer("YELLOW_A");
+            }else{
+                
+            }
         });
         circuloAmareloB.setOnMouseClicked((e)->{
-            //pieceMap.moveYellowB();
-            sendMovimentToServer("YELLOW_B");
+            if(!player.equals(whoDidLastMove)){
+                sendMovimentToServer("YELLOW_B");
+            }else{
+                
+            }
         });
         jfxTf_message.setOnKeyPressed((e)->{
             if(e.getCode().equals(KeyCode.ENTER)){
@@ -149,6 +165,7 @@ public class FXMLGameDocumentController implements Initializable {
         
         //run
         showDialogHost();
+        //renderStatus();
         //dialogStackPane.setVisible(false);
         //clientSocket.connect();
     }   
@@ -200,6 +217,10 @@ public class FXMLGameDocumentController implements Initializable {
         threadSocket.start();
     }
     
+    /**
+     * Trata as mensagens
+     * @param msg 
+     */
     public void resolveMessages(String msg){
         String dataFrom = ProtocolCONFIG.getDataFromMessage(msg);
         String [] params = ProtocolCONFIG.getParamsFromData(dataFrom);
@@ -231,7 +252,11 @@ public class FXMLGameDocumentController implements Initializable {
                 });
                 break;
             case "returnmovimentcontrol":
+                whoDidLastMove = params[1].equals("0") ? "PLAYER_BLUE" : "PLAYER_YELLOW";
+                System.out.println("\nFez o ultimo movimento: "+whoDidLastMove);
+                
                 Platform.runLater(() -> { 
+                    renderStatus();
                     movePieceControl(params[0]);
                 });
                 break;
@@ -501,6 +526,17 @@ public class FXMLGameDocumentController implements Initializable {
                 break;
             case "YELLOW_B":
                 pieceMap.moveYellowB();
+                break;
+        }
+    }
+    
+    public void renderStatus(){
+        switch(whoDidLastMove){
+            case "PLAYER_BLUE":
+                labelGameStatus.setText("Amarelo joga agora");
+                break;
+            case "PLAYER_YELLOW":
+                labelGameStatus.setText("Azul joga agora");
                 break;
         }
     }
