@@ -68,6 +68,9 @@ public class FXMLGameDocumentController implements Initializable {
     private JFXDialog dialog;
     
     @FXML
+    private JFXDialog dialogAlert;
+    
+    @FXML
     private JFXButton btnDialogOK;
     
     @FXML
@@ -233,6 +236,15 @@ public class FXMLGameDocumentController implements Initializable {
                 });
                 break;
                 
+            case "returncangamestart":
+                if(params[0].equals("TRUE")){
+                    Platform.runLater(() -> { 
+                        dialogAlert.close();
+                        dialogStackPane.setVisible(false);
+                    });
+                }
+                break;
+                
             default: 
                 break;
         }
@@ -264,7 +276,7 @@ public class FXMLGameDocumentController implements Initializable {
         JFXDialogLayout content = new JFXDialogLayout();
         JFXTextField portServerField = new JFXTextField("8080");
         //JFXTextField portField = new JFXTextField("Porta do processo servidor");
-        content.setHeading(new Text("Porta do socket cliente"));
+        content.setHeading(new Text("Porta do GAME"));
         content.setBody(portServerField);
         
         dialog = new JFXDialog(dialogStackPane, content, JFXDialog.DialogTransition.CENTER);
@@ -277,6 +289,27 @@ public class FXMLGameDocumentController implements Initializable {
             if(x > 0){
                 portServer = x;
                 initClientAndCloseDialog();
+            }
+        });
+        content.setActions(btnDialogOK);
+        dialog.show();
+    }
+    
+    private void showDialogPortClient(){
+        JFXDialogLayout content = new JFXDialogLayout();
+        JFXTextField portClientField = new JFXTextField("8000");
+        content.setHeading(new Text("Porta do SERVIDOR"));
+        content.setBody(portClientField);
+        
+        dialog = new JFXDialog(dialogStackPane, content, JFXDialog.DialogTransition.CENTER);
+        btnDialogOK = new JFXButton("OK");
+        btnDialogOK.setOnAction((e)->{
+            int x = Integer.parseInt(portClientField.getText());
+            if(x > 0){
+                portClient = x;
+                dialog.close();
+                showDialogPort();
+                //initClientAndCloseDialog();
             }
         });
         content.setActions(btnDialogOK);
@@ -300,7 +333,8 @@ public class FXMLGameDocumentController implements Initializable {
         btnDialogOK.setOnAction((e)->{
             host = hostServerField.getText();
             dialog.close();
-            showDialogPort();
+            showDialogPortClient();
+            //showDialogPort();
         });
         content.setActions(btnDialogOK);
         dialog.show();
@@ -311,7 +345,7 @@ public class FXMLGameDocumentController implements Initializable {
         content.setHeading(new Text("FIM DE JOGO"));
         content.setBody(new Text(msg));
         
-        JFXDialog dialogAlert = new JFXDialog(dialogStackPane, content, JFXDialog.DialogTransition.CENTER);
+        dialogAlert = new JFXDialog(dialogStackPane, content, JFXDialog.DialogTransition.CENTER);
         btnDialogOK = new JFXButton("Reiniciar partida");
         
         btnDialogOK.setOnAction((e)->{
@@ -321,6 +355,30 @@ public class FXMLGameDocumentController implements Initializable {
         
         dialogStackPane.setOnMouseClicked((e)->{
             alertWinner(msg);
+        });
+        
+        content.setActions(btnDialogOK);
+        dialogStackPane.setVisible(true);
+        dialogAlert.show();
+    }
+    
+    
+    private void alertGameStatus(String msg){
+        JFXDialogLayout content = new JFXDialogLayout();
+        content.setHeading(new Text("Por favor aguarde!"));
+        content.setBody(new Text(msg));
+        
+        dialogAlert = new JFXDialog(dialogStackPane, content, JFXDialog.DialogTransition.CENTER);
+        btnDialogOK = new JFXButton("Atualizar");
+        
+        btnDialogOK.setOnAction((e)->{
+            dialogAlert.close();
+            alertGameStatus(msg);
+        });
+        
+        dialogStackPane.setOnMouseClicked((e)->{
+            dialogAlert.close();
+            alertGameStatus(msg);
         });
         
         content.setActions(btnDialogOK);
@@ -362,11 +420,38 @@ public class FXMLGameDocumentController implements Initializable {
                 Platform.runLater(() -> {
                     labelGameTitle.setText(title);
                     labelGameTitle.setTextFill(Paint.valueOf(color));
+                    alertGameStatus("Esperando o outro jogador conectar...");
                 });
+               
             }       
         });
         service.start();
     }
+    
+    /*
+    private void canGameStart() {
+        //Chamada Assicrona
+        SocketClientService service = new SocketClientService();
+        service.setSocket(client);
+        service.setAction("cangamestart");
+        service.setData("");
+        service.setOnSucceeded((e)->{
+            String resp = e.getSource().getValue().toString();
+            String code = ProtocolCONFIG.getActionFromMessage(resp);
+            if(code.equals(ProtocolCONFIG.RESULT_OK)){
+                String data = ProtocolCONFIG.getDataFromMessage(resp);
+                if(data.equals("TRUE")){
+                    Platform.runLater(() -> {
+                        dialog.close();
+                        dialogStackPane.setVisible(false);
+                    });
+                }else{
+                    alertGameStatus("Esperando o outro jogador conectar...");
+                }
+            }       
+        });
+        service.start();
+    }*/
     
     private void quitGame() {
         //Chamada Assicrona

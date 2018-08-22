@@ -40,7 +40,10 @@ public class PongHauKiSERVER {
         server = new SocketServer();
     }
     
-    
+    /**
+     * Método principal para inciar 
+     * @throws IOException 
+     */
     public void initServer() throws IOException{
         //Cria o socket e inicializa a thread
         server.init(portServer);
@@ -102,6 +105,7 @@ public class PongHauKiSERVER {
         Task task = new Task<Void>() {
             @Override public Void call() throws IOException {
                 socketClients.get(indexClient).bindAndConnect();
+                triggerInitGame();
                 return null;
             }
         };
@@ -110,6 +114,11 @@ public class PongHauKiSERVER {
         threadSocket.start();
     }
     
+    /**
+     * Trata as mensagens e dispara eventos
+     * @param clientNum
+     * @param msg 
+     */
     public void resolveMessages(int clientNum, String msg){
         String dataFrom = ProtocolCONFIG.getDataFromMessage(msg);
         String dataTo = "";
@@ -156,6 +165,9 @@ public class PongHauKiSERVER {
                 server.sendMessage(client_TWO_index, msgResp);
                 returnMovimentControl(client_TWO_index, dataFrom);
                 
+                break;
+                
+            case "cangamestart":
                 break;
              
             default: 
@@ -212,7 +224,33 @@ public class PongHauKiSERVER {
         service.start();
     }
     
+    public void returnCanGameStart(int clientNum, String msg){
+        SocketClientService service = new SocketClientService();
+        service.setSocket(socketClients.get(clientNum));
+        service.setAction("returncangamestart");
+        service.setData(msg);
+        service.setOnSucceeded((e)->{
+            String resp = e.getSource().getValue().toString();
+            String code = ProtocolCONFIG.getActionFromMessage(resp);
+            if(code.equals(ProtocolCONFIG.RESULT_OK)){
+                String data = ProtocolCONFIG.getDataFromMessage(resp);
+                System.out.println("Resposta "+data);
+            }       
+        });
+        service.start();
+    }
+    
     public String getLocalIp() throws UnknownHostException{
         return server.getLocalIp();
+    }
+    
+    public void triggerInitGame(){
+        String msgResp = ProtocolCONFIG.prepareResponse(ProtocolCONFIG.RESULT_OK, "TRUE");
+        
+        server.sendMessage(client_ONE_index, msgResp);
+        returnCanGameStart(client_ONE_index, "TRUE");
+
+        server.sendMessage(client_TWO_index, msgResp);
+        returnCanGameStart(client_TWO_index, "TRUE");
     }
 }

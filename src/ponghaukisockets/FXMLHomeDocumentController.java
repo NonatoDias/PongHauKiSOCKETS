@@ -80,7 +80,7 @@ public class FXMLHomeDocumentController implements Initializable {
             if(maxAllowedClients == 0){
                 return;
             }
-            log("CLIENTE inicializado");
+            log("GAME inicializado");
             createWindowGame();
             maxAllowedClients--;
             if(maxAllowedClients == 0){
