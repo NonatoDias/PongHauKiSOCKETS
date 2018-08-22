@@ -59,7 +59,7 @@ public class FXMLGameDocumentController implements Initializable {
     
     private PieceMap pieceMap;
     private String player = ""; //"PLAYER_BLUE" or "PLAYER_YELLOW"
-    private String whoDidLastMove = "PLAYER_YELLOW";
+    private String whoDidLastMove = "PLAYER_YELLOW";//Começa com azul
     
     int portClient = 8000;
     int portServer = 8080;
@@ -120,28 +120,28 @@ public class FXMLGameDocumentController implements Initializable {
   
         //Events
         circuloAzulA.setOnMouseClicked((e)->{
-            if(!player.equals(whoDidLastMove)){
+            if(player.equals("PLAYER_BLUE") && !player.equals(whoDidLastMove)){
                 sendMovimentToServer("BLUE_A");
             }else{
                 
             }
         });
         circuloAzulB.setOnMouseClicked((e)->{
-            if(!player.equals(whoDidLastMove)){
+            if(player.equals("PLAYER_BLUE") && !player.equals(whoDidLastMove)){
                 sendMovimentToServer("BLUE_B");
             }else{
                 
             }
         });
         circuloAmareloA.setOnMouseClicked((e)->{
-            if(!player.equals(whoDidLastMove)){
+            if(player.equals("PLAYER_YELLOW") && !player.equals(whoDidLastMove)){
                 sendMovimentToServer("YELLOW_A");
             }else{
                 
             }
         });
         circuloAmareloB.setOnMouseClicked((e)->{
-            if(!player.equals(whoDidLastMove)){
+            if(player.equals("PLAYER_YELLOW") && !player.equals(whoDidLastMove)){
                 sendMovimentToServer("YELLOW_B");
             }else{
                 
@@ -165,9 +165,6 @@ public class FXMLGameDocumentController implements Initializable {
         
         //run
         showDialogHost();
-        //renderStatus();
-        //dialogStackPane.setVisible(false);
-        //clientSocket.connect();
     }   
     
     public void initThreadServer() throws IOException{
@@ -188,17 +185,11 @@ public class FXMLGameDocumentController implements Initializable {
         threadSocket.start();
     }
     
-    boolean isClientConected = false;
     public void initClientAndCloseDialog(){
         client = new SocketClient(host, portClient);
-        
         Task task = new Task<Void>() {
             @Override public Void call() throws IOException {
                 client.bindAndConnect();
-                if(isClientConected){
-                    return null;
-                }
-                isClientConected = true;
                 Platform.runLater(() -> {
                     try {
                         initThreadServer();
