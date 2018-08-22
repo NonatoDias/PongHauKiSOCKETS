@@ -44,11 +44,11 @@ public class SocketClient {
         
         String msgToServer = ProtocolCONFIG.prepareRequest(ProtocolCONFIG.CONNECT, "cliente conectado com servidor");
         sendMessage(msgToServer);
+        /*sendMessage(msgToServer);
         sendMessage(msgToServer);
         sendMessage(msgToServer);
         sendMessage(msgToServer);
-        sendMessage(msgToServer);
-        sendMessage(msgToServer);
+        sendMessage(msgToServer);*/
         
         
         

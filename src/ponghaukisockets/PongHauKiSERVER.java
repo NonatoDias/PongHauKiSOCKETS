@@ -41,14 +41,20 @@ public class PongHauKiSERVER {
     }
     
     
-    public void initThreadServer() throws IOException{
+    public void initServer() throws IOException{
         //Cria o socket e inicializa a thread
         server.init(portServer);
-               
+        initThreadServer1(); 
+    }
+    
+    public void initThreadServer1(){
         Task task = new Task<Void>() {
             @Override public Void call() throws IOException {
                 server.acceptAndConnect();
                 initThreadClient1();
+                
+                initThreadServer2();
+                
                 while(true){
                     String msg = server.receiveMessage(client_ONE_index);
                     resolveMessages(client_ONE_index, msg);
@@ -58,8 +64,9 @@ public class PongHauKiSERVER {
         Thread threadSocket = new Thread(task);
         threadSocket.setDaemon(true);//Mata a thread qdo fecha a janela
         threadSocket.start();
-        
-        
+    }
+    
+    public void initThreadServer2(){
         Task task2 = new Task<Void>() {
             @Override public Void call() throws IOException { 
                 server.acceptAndConnect();

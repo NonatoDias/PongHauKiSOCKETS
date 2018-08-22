@@ -100,7 +100,7 @@ public class FXMLHomeDocumentController implements Initializable {
                 log("SERVIDOR inicializado, porta "+portServer);
                 try {
                     log("SERVIDOR IP:  "+pongHauKiSERVER.getLocalIp());
-                    pongHauKiSERVER.initThreadServer();
+                    pongHauKiSERVER.initServer();
                 } catch (Exception ex) {
 
                 }
