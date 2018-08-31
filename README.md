@@ -1,5 +1,5 @@
-# PongHauKiSOCKETS
-A game using sockets
+# PongHauKi Parallel and Distributed
+A game using Parallel and Distributed concepts
 
 ![exemple](https://j.gifs.com/RoAGNw.gif)
 
@@ -16,3 +16,7 @@ adversário.
 - Detecção de desistência
 - Chat para comunicação durante toda a partida
 - Reiniciar partida
+
+## Composição do projeto
+- Parte 1 - usando comunicação via sockets
+- Parte 2 - usando RMI
