@@ -17,6 +17,8 @@ adversário.
 - Chat para comunicação durante toda a partida
 - Reiniciar partida
 
+![Screenshot](exemple.png)
+
 ## Composição do projeto
 - Parte 1 - usando comunicação via sockets
 - Parte 2 - usando RMI
