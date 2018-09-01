@@ -15,7 +15,7 @@ import javafx.stage.Stage;
  *
  * @author Nonato Dias
  */
-public class PongHauKiSOCKETS extends Application {
+public class PongHauKiMAIN extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
