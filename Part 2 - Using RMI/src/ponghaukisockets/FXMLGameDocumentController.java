@@ -64,6 +64,8 @@ public class FXMLGameDocumentController implements Initializable {
     private String player = ""; //"PLAYER_BLUE" or "PLAYER_YELLOW"
     private String whoDidLastMove = "PLAYER_YELLOW";//Começa com azul
     
+    private ChatRemoteInterface chatInterface;
+    
     @FXML
     private JFXDialog dialog;
     
@@ -116,6 +118,14 @@ public class FXMLGameDocumentController implements Initializable {
         pieceMap.setPieceblueB(new Piece(circuloAzulB, 2));
         pieceMap.setPieceYellowA(new Piece(circuloAmareloA, 3));
         pieceMap.setPieceYellowB(new Piece(circuloAmareloB, 4));
+        
+        //RMI
+        try {
+            chatInterface =  (ChatRemoteInterface)Naming.lookup("//localhost/chatMethodsRef");
+        } catch (Exception ex){
+            
+        } 
+        
   
         //Events
         circuloAzulA.setOnMouseClicked((e)->{
@@ -150,9 +160,9 @@ public class FXMLGameDocumentController implements Initializable {
             if(e.getCode().equals(KeyCode.ENTER)){
                 String colorPlayer = "#1e90ff";
                 try {
-                    //addMessageToTheServer(jfxTf_message.getText()+"&amp;"+player);
-                    ChatRemoteInterface Inv =  (ChatRemoteInterface)Naming.lookup("//localhost/chatMethodsRef");
-                    Inv.writeMessage(jfxTf_message.getText());
+                    chatInterface.writeMessage(jfxTf_message.getText());
+                    
+                    
                 } catch (Exception ex) {
                     
                 } 

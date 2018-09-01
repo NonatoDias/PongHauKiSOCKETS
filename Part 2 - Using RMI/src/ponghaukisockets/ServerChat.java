@@ -15,7 +15,8 @@ import java.rmi.server.UnicastRemoteObject;
  * @author Nonato Dias
  */
 public class ServerChat extends UnicastRemoteObject implements ChatRemoteInterface{
-
+    private String lastMessage = "";
+    
     public ServerChat() throws RemoteException {
         super();
         System.out.println("Servidor chat criado!");
@@ -23,8 +24,8 @@ public class ServerChat extends UnicastRemoteObject implements ChatRemoteInterfa
 
     @Override
     public void writeMessage(String msg) throws RemoteException {
-         System.out.println("====================== Recebido: "+msg);
-        
+        this.lastMessage = msg;
+        System.out.println("====================== Recebido: "+msg);
+
     }
-    
 }

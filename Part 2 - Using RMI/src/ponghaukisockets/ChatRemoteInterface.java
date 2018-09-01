@@ -13,5 +13,5 @@ import java.rmi.RemoteException;
  * @author Nonato Dias
  */
 public interface ChatRemoteInterface extends Remote{
-    void writeMessage(String msg) throws  RemoteException;;
+    void writeMessage(String msg) throws  RemoteException;
 }

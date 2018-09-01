@@ -32,6 +32,7 @@ public class PongHauKiREGISTRY {
      * @throws IOException 
      */
     public void init() throws RemoteException, MalformedURLException{
+        /** @TODO destruir thread ao fechar programa */
         this.registry = LocateRegistry.createRegistry(this.port);
         ServerChat serverChat = new ServerChat();
         
