@@ -27,6 +27,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
@@ -57,6 +58,12 @@ public class FXMLHomeDocumentController implements Initializable {
     @FXML
     private StackPane dialogStackPane;
     
+    @FXML
+    private Label labelHost;
+
+    @FXML
+    private JFXTextField textFieldPort;
+    
 
     /**
      * Initializes the controller class.
@@ -64,6 +71,11 @@ public class FXMLHomeDocumentController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         pongHauKiREGISTRY = new PongHauKiREGISTRY();
+        
+        labelHost.setText(pongHauKiREGISTRY.getHost());
+        textFieldPort.setStyle("-fx-text-inner-color: white");
+        textFieldPort.setText(""+pongHauKiREGISTRY.getPort());
+        
         addEventsToTheView();
     }    
     
@@ -146,8 +158,11 @@ public class FXMLHomeDocumentController implements Initializable {
 
     private void initServer() {
         try {
-            pongHauKiREGISTRY.initRMIRegistry();
+            pongHauKiREGISTRY.initRMIRegistry(Integer.parseInt(textFieldPort.getText()));
+            textFieldPort.setDisable(true);
             log("RMIRegistry iniciado pelo usuario");
+            log("HOST: "+pongHauKiREGISTRY.getHost());
+            log("PORT: "+pongHauKiREGISTRY.getPort());
             pongHauKiREGISTRY.createAndRegisterGameServer();
             log("GameServer iniciado pelo usuario");
         } catch (Exception ex) {

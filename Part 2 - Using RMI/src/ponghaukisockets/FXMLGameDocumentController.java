@@ -69,9 +69,9 @@ public class FXMLGameDocumentController implements Initializable {
     private PieceMap pieceMap;
     private Player player  = null; //"PLAYER_BLUE" or "PLAYER_YELLOW"
     private String whoDidLastMove = "PLAYER_YELLOW";//Começa com azul
+    private String hostServerName = "localhost";//DEfinido no modal ao iniciar o jogo
     
     private PongHauKiREGISTRY pongHauKiREGISTRY;
-    
     private GameRemoteInterface gameControl;
     
     @FXML
@@ -128,18 +128,15 @@ public class FXMLGameDocumentController implements Initializable {
         //Inicia PongHauKiREGISTRY
         createRegistries();
         
-        //RMI
-        try {
-            gameControl =  (GameRemoteInterface)Naming.lookup("//localhost/gameServerRef");
-            gameControl.connect(player.getIdPlayer(), null);
-            
-        } catch (Exception ex){
-            
-        }
+        //Eventos
         addEventsToTheView();
         startGame();
     }   
     
+    /**
+     * Cria instacia cliente local 
+     * com referencias aos elementos da view
+     */
     private void createRegistries() {
         pongHauKiREGISTRY = new PongHauKiREGISTRY();
         try {
@@ -149,11 +146,30 @@ public class FXMLGameDocumentController implements Initializable {
         }
     }
     
+    /**
+     * Conecta com processo servidor
+     * Pega referencia rmi
+     */
+    private void connect() {
+        try {
+            gameControl =  (GameRemoteInterface)Naming.lookup("//"+hostServerName+"/gameServerRef");
+            gameControl.connect(player.getIdPlayer(), null);
+            
+        } catch (Exception ex){
+            
+        }
+    }
     
+    /**
+     * Inicia o jogo
+     */
     public void startGame(){
         msgTextFlow.getChildren().setAll(new Text(""));
-        dialogStackPane.setVisible(false);
-        //showDialogHost();
+        //dialogStackPane.setVisible(false);
+        dialogStackPane.setOnMouseClicked((e)->{
+            showDialogHost();
+        });
+        showDialogHost();
     }
     
     public void restartGame(){        
@@ -176,6 +192,33 @@ public class FXMLGameDocumentController implements Initializable {
     
     public void circleClick(){
         
+    }
+    
+    
+    private void showDialogHost(){
+        JFXDialogLayout content = new JFXDialogLayout();
+        JFXTextField hostServerField = new JFXTextField();
+        try {
+            hostServerField.setText(""+InetAddress.getLocalHost().getHostAddress());
+            content.setHeading(new Text("Host do servidor de nomes(ipadress)"));
+            content.setBody(hostServerField);
+            
+        } catch (UnknownHostException ex) {
+            
+        }
+        dialog = new JFXDialog(dialogStackPane, content, JFXDialog.DialogTransition.CENTER);
+        btnDialogOK = new JFXButton("OK");
+        btnDialogOK.setOnAction((e)->{
+            hostServerName = hostServerField.getText();
+            
+            //RMI
+            connect();
+            dialog.close();
+            dialogStackPane.setVisible(false);
+            //showDialogPort();
+        });
+        content.setActions(btnDialogOK);
+        dialog.show();
     }
     
     
@@ -315,4 +358,6 @@ public class FXMLGameDocumentController implements Initializable {
             
         }
     }
+
+    
 }

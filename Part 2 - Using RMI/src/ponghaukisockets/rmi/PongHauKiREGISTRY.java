@@ -15,6 +15,8 @@ import java.util.List;
 import javafx.concurrent.Task;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.scene.text.TextFlow;
 
 /**
@@ -34,9 +36,10 @@ public class PongHauKiREGISTRY {
      * Método principal para inciar 
      * @throws IOException 
      */
-    public void initRMIRegistry() throws RemoteException, MalformedURLException{
+    public void initRMIRegistry(int port) throws RemoteException, MalformedURLException{
         /** @TODO destruir thread ao fechar programa */
-        this.registry = LocateRegistry.createRegistry(this.port);
+        this.port = port;
+        this.registry = LocateRegistry.createRegistry(port);
         log("RMIRegistry iniciado");
     }
     
@@ -58,6 +61,19 @@ public class PongHauKiREGISTRY {
     
     private void log(String msg){
         System.out.println("*** REGISTRY ***" + msg);
+    }
+    
+    public String getHost(){
+        try {
+            return InetAddress.getLocalHost().getHostAddress();
+        } catch (UnknownHostException ex) {
+            
+        }
+        return "ERROR";
+    }
+
+    public int getPort() {
+        return 1099;
     }
 
 }
