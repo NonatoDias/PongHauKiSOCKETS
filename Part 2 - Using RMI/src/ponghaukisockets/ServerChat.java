@@ -6,8 +6,13 @@
 package ponghaukisockets;
 
 
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -16,6 +21,8 @@ import java.rmi.server.UnicastRemoteObject;
  */
 public class ServerChat extends UnicastRemoteObject implements ChatRemoteInterface{
     private String lastMessage = "";
+    private ChatRemoteInterface chatInterface = null;
+
     
     public ServerChat() throws RemoteException {
         super();
@@ -25,7 +32,13 @@ public class ServerChat extends UnicastRemoteObject implements ChatRemoteInterfa
     @Override
     public void writeMessage(String msg) throws RemoteException {
         this.lastMessage = msg;
-        System.out.println("====================== Recebido: "+msg);
-
+        if(chatInterface == null){
+            try {
+                chatInterface =  (ChatRemoteInterface)Naming.lookup("//localhost/clientChatRef");
+            } catch (Exception ex) {
+                
+            } 
+        }
+        chatInterface.writeMessage(msg);
     }
 }

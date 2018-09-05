@@ -13,6 +13,7 @@ import java.util.List;
 import javafx.concurrent.Task;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import javafx.scene.text.TextFlow;
 
 /**
  *
@@ -31,31 +32,27 @@ public class PongHauKiREGISTRY {
      * Método principal para inciar 
      * @throws IOException 
      */
-    public void init() throws RemoteException, MalformedURLException{
+    public void initRMIRegistry() throws RemoteException, MalformedURLException{
         /** @TODO destruir thread ao fechar programa */
         this.registry = LocateRegistry.createRegistry(this.port);
-        ServerChat serverChat = new ServerChat();
-        
-        Naming.rebind("//localhost/chatMethodsRef",serverChat);
+        log("RMIRegistry iniciado");
     }
     
-    /*public void initThreadServer1(){
-        Task task = new Task<Void>() {
-            @Override public Void call() throws IOException {
-                server.acceptAndConnect();
-                initThreadClient1();
-                
-                initThreadServer2();
-                
-                while(true){
-                    String msg = server.receiveMessage(client_ONE_index);
-                    resolveMessages(client_ONE_index, msg);
-                }
-            }
-        };
-        Thread threadSocket = new Thread(task);
-        threadSocket.setDaemon(true);//Mata a thread qdo fecha a janela
-        threadSocket.start();
-    }*/
+    public void createAndRegisterServerChat() throws RemoteException, MalformedURLException{
+        ServerChat serverChat = new ServerChat();
+        Naming.rebind("//localhost/chatMethodsRef",serverChat);
+        log("serverChatRef bind");
+    }    
     
+    
+    public void createAndRegisterClientChat(TextFlow textflow) throws RemoteException, MalformedURLException{
+        ClientChat clientChat = new ClientChat(textflow);
+        Naming.rebind("//localhost/clientChatRef",clientChat);
+        log("clientChatRef bind");
+    }    
+    
+    
+    private void log(String msg){
+        System.out.println(msg);
+    }
 }

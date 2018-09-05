@@ -45,6 +45,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -63,6 +64,8 @@ public class FXMLGameDocumentController implements Initializable {
     private PieceMap pieceMap;
     private String player = ""; //"PLAYER_BLUE" or "PLAYER_YELLOW"
     private String whoDidLastMove = "PLAYER_YELLOW";//Começa com azul
+    
+    private PongHauKiREGISTRY pongHauKiREGISTRY;
     
     private ChatRemoteInterface chatInterface;
     
@@ -112,6 +115,13 @@ public class FXMLGameDocumentController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        pongHauKiREGISTRY = new PongHauKiREGISTRY();
+        try {
+            pongHauKiREGISTRY.createAndRegisterClientChat(msgTextFlow);
+        } catch (Exception ex) {
+            
+        }
+        
         //Peças do jogo
         pieceMap = new PieceMap();
         pieceMap.setPieceblueA(new Piece(circuloAzulA, 1));
@@ -156,12 +166,11 @@ public class FXMLGameDocumentController implements Initializable {
                 
             }
         });
-        jfxTf_message.setOnKeyPressed((e)->{
+        jfxTf_message.setOnKeyPressed((KeyEvent e)->{
             if(e.getCode().equals(KeyCode.ENTER)){
                 String colorPlayer = "#1e90ff";
                 try {
                     chatInterface.writeMessage(jfxTf_message.getText());
-                    
                     
                 } catch (Exception ex) {
                     
@@ -213,84 +222,9 @@ public class FXMLGameDocumentController implements Initializable {
         
     }
     
-    /**
-     * Trata as mensagens
-     * @param msg 
-     */
-    public void resolveMessages(String msg){
-        /*String dataFrom = ProtocolCONFIG.getDataFromMessage(msg);
-        String [] params = ProtocolCONFIG.getParamsFromData(dataFrom);
-        String dataTo = "";
-        
-        switch(ProtocolCONFIG.getActionFromMessage(msg)){
-            case "returnmessagetochat": 
-                Platform.runLater(() -> {
-                    switch(params[1]){
-                        case "PLAYER_BLUE":
-                            addMessageBlue(params[0]);
-                            break;
-                        case "PLAYER_YELLOW":
-                            addMessageYellow(params[0]);
-                            break;
-                    }
-                });
-                break;
-            case "returnwinningplayer":
-                Platform.runLater(() -> { 
-                    switch(params[0]){
-                        case "PLAYER_BLUE":
-                            alertWinner("O jogador AZUL ganhou a partida. "+params[1]);
-                            break;
-                        case "PLAYER_YELLOW":
-                            alertWinner("O jogador AMARELO ganhou a partida. "+params[1]);
-                            break;
-                    }
-                });
-                break;
-            case "returnmovimentcontrol":
-                whoDidLastMove = params[1].equals("0") ? "PLAYER_BLUE" : "PLAYER_YELLOW";
-                System.out.println("\nFez o ultimo movimento: "+whoDidLastMove);
-                
-                Platform.runLater(() -> { 
-                    renderStatus();
-                    movePieceControl(params[0]);
-                });
-                break;
-                
-            case "returncangamestart":
-                if(params[0].equals("TRUE")){
-                    Platform.runLater(() -> { 
-                        dialogAlert.close();
-                        dialogStackPane.setVisible(false);
-                    });
-                }
-                break;
-                
-            default: 
-                break;
-        }
-        String msgResp = ProtocolCONFIG.prepareResponse(ProtocolCONFIG.RESULT_OK, "ok");
-        //server.sendMessage(0, msgResp);*/
-    }
     
     public void circleClick(){
         
-    }
-    
-    public void addMessageBlue(String msg){
-        addMessage(msg, Paint.valueOf("#1e90ff"));
-    }
-    
-    public void addMessageYellow(String msg){
-       addMessage(msg, Paint.valueOf("#c3c310"));
-    }
-    
-    public void addMessage(String msg, Paint value){
-        Text text = new Text(msg+"\n");
-        text.setFill(value);
-        text.setFont(Font.font("Helvetica", FontPosture.REGULAR, 20));    
-        String message = msg+"&amp;"+value;
-        msgTextFlow.getChildren().addAll(text);
     }
     
     

@@ -10,6 +10,7 @@ import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXDialogLayout;
 import com.jfoenix.controls.JFXTextField;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.text.DateFormat;
@@ -72,6 +73,11 @@ public class FXMLHomeDocumentController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         pongHauKiREGISTRY = new PongHauKiREGISTRY();
+        try {
+            pongHauKiREGISTRY.initRMIRegistry();
+        } catch (Exception ex) {
+            
+        } 
         
         //Eventos da view
         //Cria window game
@@ -90,7 +96,7 @@ public class FXMLHomeDocumentController implements Initializable {
         //Inicia thread server
         btnServer.setOnAction((e)->{
             try {
-                pongHauKiREGISTRY.init();
+                pongHauKiREGISTRY.createAndRegisterServerChat();
             } catch (Exception ex) {
                 log("ERROR: "+ex.toString());
             }
