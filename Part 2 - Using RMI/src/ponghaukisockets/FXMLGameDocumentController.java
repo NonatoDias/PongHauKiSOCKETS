@@ -5,6 +5,11 @@
  */
 package ponghaukisockets;
 
+import ponghaukisockets.rmi.GameRemoteInterface;
+import ponghaukisockets.rmi.PongHauKiREGISTRY;
+import ponghaukisockets.model.PieceMap;
+import ponghaukisockets.model.Piece;
+import ponghaukisockets.model.Player;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXDialogLayout;

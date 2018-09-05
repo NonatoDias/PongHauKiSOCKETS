@@ -1,6 +1,8 @@
-package ponghaukisockets;
+package ponghaukisockets.rmi;
 
 
+import ponghaukisockets.model.PieceMap;
+import ponghaukisockets.model.Player;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.MalformedURLException;

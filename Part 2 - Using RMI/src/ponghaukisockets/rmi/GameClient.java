@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ponghaukisockets;
+package ponghaukisockets.rmi;
 
+import ponghaukisockets.model.PieceMap;
+import ponghaukisockets.model.Player;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import javafx.application.Platform;

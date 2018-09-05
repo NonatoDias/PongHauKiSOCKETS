@@ -34,7 +34,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 
-import ponghaukisockets.PongHauKiREGISTRY;
+import ponghaukisockets.rmi.PongHauKiREGISTRY;
 
 /**
  * FXML Controller class
