@@ -115,16 +115,10 @@ public class FXMLGameDocumentController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        pongHauKiREGISTRY = new PongHauKiREGISTRY();
-        try {
-            Player playerBlue = new Player("PLAYER_BLUE");
-            playerBlue.setChatColor(Paint.valueOf("#1e90ff"));
-            
-            pongHauKiREGISTRY.createAndRegisterClientChat(playerBlue, msgTextFlow);
-        } catch (Exception ex) {
-            
-        }
-        
+        //Jogador
+        Player playerBlue = new Player("PLAYER_BLUE");
+        playerBlue.setChatColor(Paint.valueOf("#1e90ff"));
+                
         //Peças do jogo
         pieceMap = new PieceMap();
         pieceMap.setPieceblueA(new Piece(circuloAzulA, 1));
@@ -132,67 +126,28 @@ public class FXMLGameDocumentController implements Initializable {
         pieceMap.setPieceYellowA(new Piece(circuloAmareloA, 3));
         pieceMap.setPieceYellowB(new Piece(circuloAmareloB, 4));
         
+        //Inicia PongHauKiREGISTRY
+        createRegistries(playerBlue);
+        
         //RMI
         try {
             chatInterface =  (ChatRemoteInterface)Naming.lookup("//localhost/serverChatRef");
         } catch (Exception ex){
             
         }
-  
-        //Events
-        circuloAzulA.setOnMouseClicked((e)->{
-            if(player.equals("PLAYER_BLUE") && !player.equals(whoDidLastMove)){
-                //sendMovimentToServer("BLUE_A");
-            }else{
-                
-            }
-        });
-        circuloAzulB.setOnMouseClicked((e)->{
-            if(player.equals("PLAYER_BLUE") && !player.equals(whoDidLastMove)){
-                //sendMovimentToServer("BLUE_B");
-            }else{
-                
-            }
-        });
-        circuloAmareloA.setOnMouseClicked((e)->{
-            if(player.equals("PLAYER_YELLOW") && !player.equals(whoDidLastMove)){
-                //sendMovimentToServer("YELLOW_A");
-            }else{
-                
-            }
-        });
-        circuloAmareloB.setOnMouseClicked((e)->{
-            if(player.equals("PLAYER_YELLOW") && !player.equals(whoDidLastMove)){
-                //sendMovimentToServer("YELLOW_B");
-            }else{
-                
-            }
-        });
-        jfxTf_message.setOnKeyPressed((KeyEvent e)->{
-            if(e.getCode().equals(KeyCode.ENTER)){
-                String colorPlayer = "#1e90ff";
-                try {
-                    chatInterface.writeMessage(jfxTf_message.getText());
-                    
-                } catch (Exception ex) {
-                    
-                } 
-                jfxTf_message.setText("");
-            }
-        });
-        
-        dialogStackPane.setOnMouseClicked((e)->{
-            //showDialogHost();
-        });
-        
-        btnQuit.setOnAction((e)->{
-            quitGame();
-        });
-        
-        //run
+        addEventsToTheView();
         startGame();
         //showDialogHost();
     }   
+    
+    private void createRegistries(Player player) {
+        pongHauKiREGISTRY = new PongHauKiREGISTRY();
+        try {
+            pongHauKiREGISTRY.createAndRegisterClientChat(player, msgTextFlow);
+        } catch (Exception ex) {
+            
+        }
+    }
     
     
     public void startGame(){
@@ -214,14 +169,6 @@ public class FXMLGameDocumentController implements Initializable {
         
         Stage stage = (Stage) btnQuit.getScene().getWindow();
         stage.close();
-    }
-    
-    public void initThreadServer() throws IOException{
-        
-    }
-    
-    public void initClientAndCloseDialog(){
-        
     }
     
     
@@ -286,27 +233,6 @@ public class FXMLGameDocumentController implements Initializable {
         
     }
     
-    public void sendMovimentToServer(String pieceName){
-        
-    }
-    
-    public void movePieceControl(String pieceName){
-        switch(pieceName){
-            case "BLUE_A":
-                pieceMap.moveBlueA();
-                break;
-            case "BLUE_B":
-                pieceMap.moveBlueB();
-                break;
-            case "YELLOW_A":
-                pieceMap.moveYellowA();
-                break;
-            case "YELLOW_B":
-                pieceMap.moveYellowB();
-                break;
-        }
-    }
-    
     public void renderStatus(){
         switch(whoDidLastMove){
             case "PLAYER_BLUE":
@@ -316,5 +242,57 @@ public class FXMLGameDocumentController implements Initializable {
                 labelGameStatus.setText("Azul joga agora");
                 break;
         }
+    } 
+
+    private void addEventsToTheView() {
+        //Events
+        circuloAzulA.setOnMouseClicked((e)->{
+            if(player.equals("PLAYER_BLUE") && !player.equals(whoDidLastMove)){
+                //sendMovimentToServer("BLUE_A");
+            }else{
+                
+            }
+        });
+        circuloAzulB.setOnMouseClicked((e)->{
+            if(player.equals("PLAYER_BLUE") && !player.equals(whoDidLastMove)){
+                //sendMovimentToServer("BLUE_B");
+            }else{
+                
+            }
+        });
+        circuloAmareloA.setOnMouseClicked((e)->{
+            if(player.equals("PLAYER_YELLOW") && !player.equals(whoDidLastMove)){
+                //sendMovimentToServer("YELLOW_A");
+            }else{
+                
+            }
+        });
+        circuloAmareloB.setOnMouseClicked((e)->{
+            if(player.equals("PLAYER_YELLOW") && !player.equals(whoDidLastMove)){
+                //sendMovimentToServer("YELLOW_B");
+            }else{
+                
+            }
+        });
+        jfxTf_message.setOnKeyPressed((KeyEvent e)->{
+            if(e.getCode().equals(KeyCode.ENTER)){
+                String colorPlayer = "#1e90ff";
+                try {
+                    chatInterface.writeMessage(jfxTf_message.getText());
+                    
+                } catch (Exception ex) {
+                    
+                } 
+                jfxTf_message.setText("");
+            }
+        });
+        
+        dialogStackPane.setOnMouseClicked((e)->{
+            //showDialogHost();
+        });
+        
+        btnQuit.setOnAction((e)->{
+            quitGame();
+        });
     }
 }

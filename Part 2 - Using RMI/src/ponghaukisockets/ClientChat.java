@@ -52,11 +52,4 @@ public class ClientChat extends UnicastRemoteObject implements ChatRemoteInterfa
         String message = msg+"&amp;"+value;
         this.textflow.getChildren().addAll(text);
     }
-    
-    
-    /*public void onWriteMessage(Runnable runnable){
-        callbackMessage = runnable;
-    }*/
-    
-    
 }

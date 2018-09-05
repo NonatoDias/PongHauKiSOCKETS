@@ -78,30 +78,7 @@ public class FXMLHomeDocumentController implements Initializable {
         } catch (Exception ex) {
             
         } 
-        
-        //Eventos da view
-        //Cria window game
-         btnClient.setOnAction((e)->{
-            if(maxAllowedClients == 0){
-                return;
-            }
-            log("GAME inicializado");
-            createWindowGame();
-            maxAllowedClients--;
-            if(maxAllowedClients == 0){
-                btnClient.setDisable(true);
-            }
-        });
-        
-        //Inicia thread server
-        btnServer.setOnAction((e)->{
-            try {
-                pongHauKiREGISTRY.createAndRegisterServerChat();
-            } catch (Exception ex) {
-                log("ERROR: "+ex.toString());
-            }
-            btnServer.setDisable(true);
-        });
+        addEventsToTheView();
     }    
     
     
@@ -152,5 +129,30 @@ public class FXMLHomeDocumentController implements Initializable {
         Text text1 = new Text(text+"\n");
         text1.setFont(Font.font("Helvetica", FontPosture.REGULAR, 16));
         logTextFlow.getChildren().addAll(dth, text1);
+    }
+
+    private void addEventsToTheView() {
+         //Cria window game
+         btnClient.setOnAction((e)->{
+            if(maxAllowedClients == 0){
+                return;
+            }
+            log("GAME inicializado");
+            createWindowGame();
+            maxAllowedClients--;
+            if(maxAllowedClients == 0){
+                btnClient.setDisable(true);
+            }
+        });
+        
+        //Inicia thread server
+        btnServer.setOnAction((e)->{
+            try {
+                pongHauKiREGISTRY.createAndRegisterServerChat();
+            } catch (Exception ex) {
+                log("ERROR: "+ex.toString());
+            }
+            btnServer.setDisable(true);
+        });
     }
 }

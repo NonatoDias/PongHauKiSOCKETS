@@ -19,8 +19,5 @@ public class Piece {
     public Piece(Circle circle, int position) {
         this.circle = circle;
         this.position = position;
-    }
-    
-    
-    
+    } 
 }

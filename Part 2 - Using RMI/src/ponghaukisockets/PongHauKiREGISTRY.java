@@ -45,6 +45,12 @@ public class PongHauKiREGISTRY {
     }    
     
     
+    public void createAndRegisterServerPieceControl(PieceMap pieceMap) throws RemoteException, MalformedURLException{
+        ServerPieceControl server = new ServerPieceControl(pieceMap);
+        Naming.rebind("//localhost/serverPieceControlRef",server);
+        log("serverPieceControlRef bind");
+    }    
+    
     public void createAndRegisterClientChat(Player p, TextFlow textflow) throws RemoteException, MalformedURLException{
         ClientChat clientChat = new ClientChat(p, textflow);
         Naming.rebind("//localhost/clientChatRef",clientChat);
