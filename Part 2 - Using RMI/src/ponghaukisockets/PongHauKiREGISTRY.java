@@ -45,16 +45,17 @@ public class PongHauKiREGISTRY {
     }    
      
     
-    public void createAndRegisterGameClient(Player p, TextFlow textflow) throws RemoteException, MalformedURLException{
+    public void createAndRegisterGameClient(Player p, PieceMap PieceMap, TextFlow textflow) throws RemoteException, MalformedURLException{
         GameClient client = new GameClient(textflow);
         client.setPlayer(p);
+        client.setPieceMap(PieceMap);
         String name = "//localhost/gameClientRef"+p.getIdPlayer();
         Naming.rebind(name,client);
         log("gameClientRef bind");
     }    
     
     private void log(String msg){
-        System.out.println(msg);
+        System.out.println("*** REGISTRY ***" + msg);
     }
 
 }

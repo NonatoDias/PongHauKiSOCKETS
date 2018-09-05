@@ -57,7 +57,16 @@ public class GameServer extends UnicastRemoteObject implements GameRemoteInterfa
 
     @Override
     public void movePieceControl(String idPlayer, String pieceName) throws RemoteException {
-        
+        try {
+            if(players.size() >= 0 && players.size() <= 2){
+                for(GameRemoteInterface gameInterface: players.getAllGameInterface()){
+                    gameInterface.movePieceControl(idPlayer, pieceName);
+                }
+            }
+            
+        }catch (Exception ex) {
+            log("Error movePieceControl: "+ex.toString());
+        } 
     }
     
     /**

@@ -34,6 +34,10 @@ public class GameClient extends UnicastRemoteObject implements GameRemoteInterfa
         this.player = whoDidIt;
     }
     
+    public void setPieceMap(PieceMap pieceMap) throws RemoteException {
+        this.pieceMap = pieceMap;
+    }
+    
     @Override
     public void connect(String idPlayer) throws RemoteException {
         log("CLIENT "+idPlayer+" connectado SERVIDOR ");
@@ -48,20 +52,22 @@ public class GameClient extends UnicastRemoteObject implements GameRemoteInterfa
     
     @Override
     public void movePieceControl(String idPlayer, String pieceName) throws RemoteException {
-        switch(pieceName){
-            case "BLUE_A":
-                pieceMap.moveBlueA();
-                break;
-            case "BLUE_B":
-                pieceMap.moveBlueB();
-                break;
-            case "YELLOW_A":
-                pieceMap.moveYellowA();
-                break;
-            case "YELLOW_B":
-                pieceMap.moveYellowB();
-                break;
-        }
+        Platform.runLater(()->{
+            switch(pieceName){
+                case "BLUE_A":
+                    pieceMap.moveBlueA();
+                    break;
+                case "BLUE_B":
+                    pieceMap.moveBlueB();
+                    break;
+                case "YELLOW_A":
+                    pieceMap.moveYellowA();
+                    break;
+                case "YELLOW_B":
+                    pieceMap.moveYellowB();
+                    break;
+            }
+        });
     }
     
     public void addMessageToTheView(String msg, Paint value){
@@ -77,7 +83,7 @@ public class GameClient extends UnicastRemoteObject implements GameRemoteInterfa
      * @param text 
      */
     private void log(String text){
-        String msg = "*** GameServer *** "+text;
+        String msg = "*** GameClient *** "+text;
         System.out.println(msg);
     }
 }

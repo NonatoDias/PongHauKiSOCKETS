@@ -57,15 +57,6 @@ public class FXMLHomeDocumentController implements Initializable {
     @FXML
     private StackPane dialogStackPane;
     
-    @FXML
-    private JFXTextField jfxTextFieldServerPort;
-    
-    @FXML
-    private JFXTextField jfxTextFieldGamePort1;
-
-    @FXML
-    private JFXTextField jfxTextFieldGamePort2;
-   
 
     /**
      * Initializes the controller class.
@@ -73,12 +64,6 @@ public class FXMLHomeDocumentController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         pongHauKiREGISTRY = new PongHauKiREGISTRY();
-        try {
-            pongHauKiREGISTRY.initRMIRegistry();
-            log("RMIRegistry iniciado pelo usuario");
-        } catch (Exception ex) {
-            
-        } 
         addEventsToTheView();
     }    
     
@@ -154,13 +139,19 @@ public class FXMLHomeDocumentController implements Initializable {
         
         //Inicia thread server
         btnServer.setOnAction((e)->{
-            try {
-                pongHauKiREGISTRY.createAndRegisterGameServer();
-                log("GameServer iniciado pelo usuario");
-            } catch (Exception ex) {
-                log("ERROR: "+ex.toString());
-            }
+            initServer();
             btnServer.setDisable(true);
         });
+    }
+
+    private void initServer() {
+        try {
+            pongHauKiREGISTRY.initRMIRegistry();
+            log("RMIRegistry iniciado pelo usuario");
+            pongHauKiREGISTRY.createAndRegisterGameServer();
+            log("GameServer iniciado pelo usuario");
+        } catch (Exception ex) {
+            log("ERROR: "+ex.toString());
+        }
     }
 }

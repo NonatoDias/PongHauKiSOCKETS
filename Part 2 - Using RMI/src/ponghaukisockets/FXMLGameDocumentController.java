@@ -67,7 +67,7 @@ public class FXMLGameDocumentController implements Initializable {
     
     private PongHauKiREGISTRY pongHauKiREGISTRY;
     
-    private GameRemoteInterface gameInterface;
+    private GameRemoteInterface gameControl;
     
     @FXML
     private JFXDialog dialog;
@@ -120,32 +120,26 @@ public class FXMLGameDocumentController implements Initializable {
         player.setChatColor(Paint.valueOf("#1e90ff"));
                 
         //Peças do jogo
-        pieceMap = new PieceMap();
-        pieceMap.setPieceblueA(new Piece(circuloAzulA, 1));
-        pieceMap.setPieceblueB(new Piece(circuloAzulB, 2));
-        pieceMap.setPieceYellowA(new Piece(circuloAmareloA, 3));
-        pieceMap.setPieceYellowB(new Piece(circuloAmareloB, 4));
-        
+        createPieceMap();
         //Inicia PongHauKiREGISTRY
         createRegistries();
         
         //RMI
         try {
-            gameInterface =  (GameRemoteInterface)Naming.lookup("//localhost/gameServerRef");
-            gameInterface.connect(player.getIdPlayer());
+            gameControl =  (GameRemoteInterface)Naming.lookup("//localhost/gameServerRef");
+            gameControl.connect(player.getIdPlayer());
             
         } catch (Exception ex){
             
         }
         addEventsToTheView();
         startGame();
-        //showDialogHost();
     }   
     
     private void createRegistries() {
         pongHauKiREGISTRY = new PongHauKiREGISTRY();
         try {
-            pongHauKiREGISTRY.createAndRegisterGameClient(player, msgTextFlow);
+            pongHauKiREGISTRY.createAndRegisterGameClient(player, pieceMap, msgTextFlow);
         } catch (Exception ex) {
             
         }
@@ -154,6 +148,8 @@ public class FXMLGameDocumentController implements Initializable {
     
     public void startGame(){
         msgTextFlow.getChildren().setAll(new Text(""));
+        dialogStackPane.setVisible(false);
+        //showDialogHost();
     }
     
     public void restartGame(){        
@@ -249,29 +245,30 @@ public class FXMLGameDocumentController implements Initializable {
     private void addEventsToTheView() {
         //Events
         circuloAzulA.setOnMouseClicked((e)->{
-            if(player.equals("PLAYER_BLUE") && !player.equals(whoDidLastMove)){
-                //sendMovimentToServer("BLUE_A");
+            movePiece("BLUE_A");
+            /*if(player.equals("PLAYER_BLUE") && !player.equals(whoDidLastMove)){
+                movePiece("BLUE_A");
             }else{
                 
-            }
+            }*/
         });
         circuloAzulB.setOnMouseClicked((e)->{
             if(player.equals("PLAYER_BLUE") && !player.equals(whoDidLastMove)){
-                //sendMovimentToServer("BLUE_B");
+                movePiece("BLUE_B");
             }else{
                 
             }
         });
         circuloAmareloA.setOnMouseClicked((e)->{
             if(player.equals("PLAYER_YELLOW") && !player.equals(whoDidLastMove)){
-                //sendMovimentToServer("YELLOW_A");
+                movePiece("YELLOW_A");
             }else{
                 
             }
         });
         circuloAmareloB.setOnMouseClicked((e)->{
             if(player.equals("PLAYER_YELLOW") && !player.equals(whoDidLastMove)){
-                //sendMovimentToServer("YELLOW_B");
+                movePiece("YELLOW_B");
             }else{
                 
             }
@@ -280,7 +277,7 @@ public class FXMLGameDocumentController implements Initializable {
             if(e.getCode().equals(KeyCode.ENTER)){
                 String colorPlayer = "#1e90ff";
                 try {
-                    gameInterface.writeChatMessage(player.getIdPlayer(), jfxTf_message.getText());
+                    gameControl.writeChatMessage(player.getIdPlayer(), jfxTf_message.getText());
                     
                 } catch (Exception ex) {
                     
@@ -296,5 +293,22 @@ public class FXMLGameDocumentController implements Initializable {
         btnQuit.setOnAction((e)->{
             quitGame();
         });
+    }
+
+    private void createPieceMap() {
+        pieceMap = new PieceMap();
+        pieceMap.setPieceblueA(new Piece(circuloAzulA, 1));
+        pieceMap.setPieceblueB(new Piece(circuloAzulB, 2));
+        pieceMap.setPieceYellowA(new Piece(circuloAmareloA, 3));
+        pieceMap.setPieceYellowB(new Piece(circuloAmareloB, 4));
+        
+    }
+
+    private void movePiece(String move) {
+        try {
+            gameControl.movePieceControl(player.getIdPlayer(), move);
+        } catch (RemoteException ex) {
+            
+        }
     }
 }
