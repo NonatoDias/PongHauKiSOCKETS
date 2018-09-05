@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
-<?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -19,7 +18,7 @@
                   <Font name="Calibri Bold" size="30.0" />
                </font>
             </Label>
-            <JFXButton fx:id="btnServer" buttonType="RAISED" layoutX="40.0" layoutY="332.0" style="-fx-background-color: #ffffff;" text="INICIAR SERVIDOR" />
+            <JFXButton fx:id="btnServer" buttonType="RAISED" layoutX="40.0" layoutY="332.0" prefHeight="31.0" prefWidth="153.0" style="-fx-background-color: #ffffff;" text="RMIRegistry" />
             <JFXButton fx:id="btnClient" buttonType="RAISED" layoutX="323.0" layoutY="332.0" prefHeight="31.0" prefWidth="144.0" style="-fx-background-color: #ffffff;" text="INICIAR JOGO" />
             <ScrollPane hbarPolicy="NEVER" layoutX="38.0" layoutY="90.0" prefHeight="172.0" prefWidth="432.0" style="-fx-background-color: #ffffff; -fx-border-width: 0;">
                <content>
@@ -27,8 +26,6 @@
                </content>
             </ScrollPane>
             <StackPane fx:id="dialogStackPane" layoutY="6.0" prefHeight="400.0" prefWidth="506.0" visible="false" />
-            <JFXTextField fx:id="jfxTextFieldServerPort" focusColor="WHITE" layoutX="195.0" layoutY="278.0" prefHeight="31.0" prefWidth="269.0" promptText="8000" />
-            <Label layoutX="40.0" layoutY="287.0" text="PORTA RMIREGISTRY" textFill="WHITE" />
          </children>
       </Pane>
    </children>

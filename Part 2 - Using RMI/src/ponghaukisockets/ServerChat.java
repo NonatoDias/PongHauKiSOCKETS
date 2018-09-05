@@ -20,7 +20,6 @@ import java.util.logging.Logger;
  * @author Nonato Dias
  */
 public class ServerChat extends UnicastRemoteObject implements ChatRemoteInterface{
-    private String lastMessage = "";
     private ChatRemoteInterface chatInterface = null;
 
     
@@ -31,7 +30,6 @@ public class ServerChat extends UnicastRemoteObject implements ChatRemoteInterfa
 
     @Override
     public void writeMessage(String msg) throws RemoteException {
-        this.lastMessage = msg;
         if(chatInterface == null){
             try {
                 chatInterface =  (ChatRemoteInterface)Naming.lookup("//localhost/clientChatRef");

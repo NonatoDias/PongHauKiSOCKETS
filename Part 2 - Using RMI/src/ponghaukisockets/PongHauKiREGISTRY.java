@@ -40,13 +40,13 @@ public class PongHauKiREGISTRY {
     
     public void createAndRegisterServerChat() throws RemoteException, MalformedURLException{
         ServerChat serverChat = new ServerChat();
-        Naming.rebind("//localhost/chatMethodsRef",serverChat);
+        Naming.rebind("//localhost/serverChatRef",serverChat);
         log("serverChatRef bind");
     }    
     
     
-    public void createAndRegisterClientChat(TextFlow textflow) throws RemoteException, MalformedURLException{
-        ClientChat clientChat = new ClientChat(textflow);
+    public void createAndRegisterClientChat(Player p, TextFlow textflow) throws RemoteException, MalformedURLException{
+        ClientChat clientChat = new ClientChat(p, textflow);
         Naming.rebind("//localhost/clientChatRef",clientChat);
         log("clientChatRef bind");
     }    
@@ -55,4 +55,5 @@ public class PongHauKiREGISTRY {
     private void log(String msg){
         System.out.println(msg);
     }
+
 }

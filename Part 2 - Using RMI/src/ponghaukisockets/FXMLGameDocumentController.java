@@ -117,7 +117,10 @@ public class FXMLGameDocumentController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         pongHauKiREGISTRY = new PongHauKiREGISTRY();
         try {
-            pongHauKiREGISTRY.createAndRegisterClientChat(msgTextFlow);
+            Player playerBlue = new Player("PLAYER_BLUE");
+            playerBlue.setChatColor(Paint.valueOf("#1e90ff"));
+            
+            pongHauKiREGISTRY.createAndRegisterClientChat(playerBlue, msgTextFlow);
         } catch (Exception ex) {
             
         }
@@ -131,11 +134,10 @@ public class FXMLGameDocumentController implements Initializable {
         
         //RMI
         try {
-            chatInterface =  (ChatRemoteInterface)Naming.lookup("//localhost/chatMethodsRef");
+            chatInterface =  (ChatRemoteInterface)Naming.lookup("//localhost/serverChatRef");
         } catch (Exception ex){
             
-        } 
-        
+        }
   
         //Events
         circuloAzulA.setOnMouseClicked((e)->{

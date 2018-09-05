@@ -5,10 +5,13 @@
  */
 package ponghaukisockets;
 
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
 /**
  *
  * @author Nonato Dias
  */
-public interface PieceRemoteInterface {
-    
+public interface PieceRemoteInterface extends Remote{
+    public void movePieceControl(String pieceName)  throws  RemoteException;
 }

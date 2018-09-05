@@ -19,39 +19,31 @@ import javafx.scene.text.TextFlow;
  * @author Nonato Dias
  */
 public class ClientChat extends UnicastRemoteObject implements ChatRemoteInterface{
-    private String lastMessage = "";
-    private String player = "PLAYER_BLUE";
+    private Player player = null;    
     private TextFlow textflow = null;
-    //private Runnable callbackMessage;
     
-    public ClientChat(TextFlow textflow) throws RemoteException {
+    
+    public ClientChat(Player p, TextFlow textflow) throws RemoteException {
         super();
+        this.player = p;
         this.textflow = textflow;
         System.out.println("Servidor chat criado!");
     }
 
     @Override
     public void writeMessage(String msg) throws RemoteException {
-        this.lastMessage = msg;
         Platform.runLater(()->{
-            switch(player){
-                case "PLAYER_BLUE":
-                    addMessageBlue(msg);
-                    break;
-                case "PLAYER_YELLOW":
-                    addMessageYellow(msg);
-                    break;
-            }
+            addMessage( msg, player.getChatColor());
         });
     }
     
-    public void addMessageBlue(String msg){
-        addMessage(msg, Paint.valueOf("#1e90ff"));
+    /*public void addMessageBlue(String msg){
+        addMessage(msg, );
     }
     
     public void addMessageYellow(String msg){
        addMessage(msg, Paint.valueOf("#c3c310"));
-    }
+    }*/
     
     public void addMessage(String msg, Paint value){
         Text text = new Text(msg+"\n");
