@@ -12,6 +12,8 @@ import java.rmi.RemoteException;
  *
  * @author Nonato Dias
  */
-public interface ChatRemoteInterface extends Remote{
-    void writeMessage(String msg) throws  RemoteException;
+public interface GameRemoteInterface extends Remote{
+    void connect(String idPlayer) throws  RemoteException;
+    void writeChatMessage(String idPlayer, String msg) throws  RemoteException;
+    void movePieceControl(String idPlayer, String pieceName)  throws  RemoteException;
 }

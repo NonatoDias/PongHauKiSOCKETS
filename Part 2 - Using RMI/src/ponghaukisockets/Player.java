@@ -5,17 +5,26 @@
  */
 package ponghaukisockets;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javafx.scene.paint.Paint;
+import javafx.scene.text.Text;
 
 /**
  *
  * @author Nonato Dias
  */
 public class Player {
-    public String name;
+    private String idPlayer;
+    private String name;
     private Paint chatColor;
 
     public Player(String name) {
+        DateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
+        String id = "ID"+df.format(new Date()).toString();
+           
+        this.idPlayer = id;
         this.name = name;
     }
 
@@ -26,6 +35,17 @@ public class Player {
     public Paint getChatColor() {
         return chatColor;
     }
-    
-    
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getIdPlayer() {
+        return idPlayer;
+    }
+
 }

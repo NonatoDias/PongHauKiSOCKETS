@@ -75,6 +75,7 @@ public class FXMLHomeDocumentController implements Initializable {
         pongHauKiREGISTRY = new PongHauKiREGISTRY();
         try {
             pongHauKiREGISTRY.initRMIRegistry();
+            log("RMIRegistry iniciado pelo usuario");
         } catch (Exception ex) {
             
         } 
@@ -82,7 +83,9 @@ public class FXMLHomeDocumentController implements Initializable {
     }    
     
     
-    
+    /**
+     * Cria tela de jogo 
+     */
     public void createWindowGame(){
         Parent game = null;
         try {
@@ -131,6 +134,10 @@ public class FXMLHomeDocumentController implements Initializable {
         logTextFlow.getChildren().addAll(dth, text1);
     }
 
+    
+    /**
+     * Adiciona eventos nos botoes da tela home
+     */
     private void addEventsToTheView() {
          //Cria window game
          btnClient.setOnAction((e)->{
@@ -148,7 +155,8 @@ public class FXMLHomeDocumentController implements Initializable {
         //Inicia thread server
         btnServer.setOnAction((e)->{
             try {
-                pongHauKiREGISTRY.createAndRegisterServerChat();
+                pongHauKiREGISTRY.createAndRegisterGameServer();
+                log("GameServer iniciado pelo usuario");
             } catch (Exception ex) {
                 log("ERROR: "+ex.toString());
             }

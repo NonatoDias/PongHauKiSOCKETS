@@ -38,25 +38,20 @@ public class PongHauKiREGISTRY {
         log("RMIRegistry iniciado");
     }
     
-    public void createAndRegisterServerChat() throws RemoteException, MalformedURLException{
-        ServerChat serverChat = new ServerChat();
-        Naming.rebind("//localhost/serverChatRef",serverChat);
-        log("serverChatRef bind");
+    public void createAndRegisterGameServer() throws RemoteException, MalformedURLException{
+        GameServer server = new GameServer();
+        Naming.rebind("//localhost/gameServerRef",server);
+        log("gameServerRef bind");
     }    
+     
     
-    
-    public void createAndRegisterServerPieceControl(PieceMap pieceMap) throws RemoteException, MalformedURLException{
-        ServerPieceControl server = new ServerPieceControl(pieceMap);
-        Naming.rebind("//localhost/serverPieceControlRef",server);
-        log("serverPieceControlRef bind");
+    public void createAndRegisterGameClient(Player p, TextFlow textflow) throws RemoteException, MalformedURLException{
+        GameClient client = new GameClient(textflow);
+        client.setPlayer(p);
+        String name = "//localhost/gameClientRef"+p.getIdPlayer();
+        Naming.rebind(name,client);
+        log("gameClientRef bind");
     }    
-    
-    public void createAndRegisterClientChat(Player p, TextFlow textflow) throws RemoteException, MalformedURLException{
-        ClientChat clientChat = new ClientChat(p, textflow);
-        Naming.rebind("//localhost/clientChatRef",clientChat);
-        log("clientChatRef bind");
-    }    
-    
     
     private void log(String msg){
         System.out.println(msg);

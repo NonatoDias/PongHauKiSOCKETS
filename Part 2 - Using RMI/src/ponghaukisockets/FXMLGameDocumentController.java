@@ -62,12 +62,12 @@ import javafx.util.Duration;
  */
 public class FXMLGameDocumentController implements Initializable {
     private PieceMap pieceMap;
-    private String player = ""; //"PLAYER_BLUE" or "PLAYER_YELLOW"
+    private Player player  = null; //"PLAYER_BLUE" or "PLAYER_YELLOW"
     private String whoDidLastMove = "PLAYER_YELLOW";//Começa com azul
     
     private PongHauKiREGISTRY pongHauKiREGISTRY;
     
-    private ChatRemoteInterface chatInterface;
+    private GameRemoteInterface gameInterface;
     
     @FXML
     private JFXDialog dialog;
@@ -116,8 +116,8 @@ public class FXMLGameDocumentController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         //Jogador
-        Player playerBlue = new Player("PLAYER_BLUE");
-        playerBlue.setChatColor(Paint.valueOf("#1e90ff"));
+        player = new Player("PLAYER_BLUE");
+        player.setChatColor(Paint.valueOf("#1e90ff"));
                 
         //Peças do jogo
         pieceMap = new PieceMap();
@@ -127,11 +127,13 @@ public class FXMLGameDocumentController implements Initializable {
         pieceMap.setPieceYellowB(new Piece(circuloAmareloB, 4));
         
         //Inicia PongHauKiREGISTRY
-        createRegistries(playerBlue);
+        createRegistries();
         
         //RMI
         try {
-            chatInterface =  (ChatRemoteInterface)Naming.lookup("//localhost/serverChatRef");
+            gameInterface =  (GameRemoteInterface)Naming.lookup("//localhost/gameServerRef");
+            gameInterface.connect(player.getIdPlayer());
+            
         } catch (Exception ex){
             
         }
@@ -140,10 +142,10 @@ public class FXMLGameDocumentController implements Initializable {
         //showDialogHost();
     }   
     
-    private void createRegistries(Player player) {
+    private void createRegistries() {
         pongHauKiREGISTRY = new PongHauKiREGISTRY();
         try {
-            pongHauKiREGISTRY.createAndRegisterClientChat(player, msgTextFlow);
+            pongHauKiREGISTRY.createAndRegisterGameClient(player, msgTextFlow);
         } catch (Exception ex) {
             
         }
@@ -278,7 +280,7 @@ public class FXMLGameDocumentController implements Initializable {
             if(e.getCode().equals(KeyCode.ENTER)){
                 String colorPlayer = "#1e90ff";
                 try {
-                    chatInterface.writeMessage(jfxTf_message.getText());
+                    gameInterface.writeChatMessage(player.getIdPlayer(), jfxTf_message.getText());
                     
                 } catch (Exception ex) {
                     
