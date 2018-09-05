@@ -121,8 +121,7 @@ public class FXMLGameDocumentController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         //Jogador
-        player = new Player("PLAYER_BLUE");
-        player.setChatColor(Paint.valueOf("#1e90ff"));
+        player = new Player();
                 
         //Peças do jogo
         createPieceMap();
@@ -132,7 +131,7 @@ public class FXMLGameDocumentController implements Initializable {
         //RMI
         try {
             gameControl =  (GameRemoteInterface)Naming.lookup("//localhost/gameServerRef");
-            gameControl.connect(player.getIdPlayer());
+            gameControl.connect(player.getIdPlayer(), null);
             
         } catch (Exception ex){
             
@@ -282,7 +281,7 @@ public class FXMLGameDocumentController implements Initializable {
             if(e.getCode().equals(KeyCode.ENTER)){
                 String colorPlayer = "#1e90ff";
                 try {
-                    gameControl.writeChatMessage(player.getIdPlayer(), jfxTf_message.getText());
+                    gameControl.writeChatMessage(player.getIdPlayer(), jfxTf_message.getText(), player.getChatColor().toString());
                     
                 } catch (Exception ex) {
                     

@@ -30,7 +30,7 @@ public class GameServer extends UnicastRemoteObject implements GameRemoteInterfa
     }
    
     @Override
-    public void connect(String idPlayer) throws RemoteException {
+    public void connect(String idPlayer, String data) throws RemoteException {
         try {
             if(players.size() >= 0 && players.size() <= 2){
                 addPlayer(idPlayer);
@@ -43,11 +43,11 @@ public class GameServer extends UnicastRemoteObject implements GameRemoteInterfa
     }
 
     @Override
-    public void writeChatMessage(String idPlayer, String msg) throws RemoteException {
+    public void writeChatMessage(String idPlayer, String msg, String color) throws RemoteException {
         try {
             if(players.size() >= 0 && players.size() <= 2){
                 for(GameRemoteInterface gameInterface: players.getAllGameInterface()){
-                    gameInterface.writeChatMessage(idPlayer, msg);
+                    gameInterface.writeChatMessage(idPlayer, msg, color);
                 }
             }
             
@@ -83,6 +83,13 @@ public class GameServer extends UnicastRemoteObject implements GameRemoteInterfa
         String baseUrl = "//localhost/gameClientRef";
         GameRemoteInterface intrf = (GameRemoteInterface)Naming.lookup(baseUrl+idPlayer);
         players.add(idPlayer, intrf);
-        intrf.connect(idPlayer);
+        intrf.connect(idPlayer, creatPlayName());
+    }
+    
+    private String creatPlayName(){
+        if(players.size()%2 > 0){
+            return "PLAYER_BLUE";
+        }
+        return "PLAYER_YELLOW";
     }
 }

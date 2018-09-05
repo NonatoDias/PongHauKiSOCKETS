@@ -20,12 +20,12 @@ public class Player {
     private String name;
     private Paint chatColor;
 
-    public Player(String name) {
+    public Player() {
         DateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
         String id = "ID"+df.format(new Date()).toString();
            
         this.idPlayer = id;
-        this.name = name;
+        //this.name = name;
     }
 
     public void setChatColor(Paint chatColor) {

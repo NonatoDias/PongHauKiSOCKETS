@@ -13,7 +13,7 @@ import java.rmi.RemoteException;
  * @author Nonato Dias
  */
 public interface GameRemoteInterface extends Remote{
-    void connect(String idPlayer) throws  RemoteException;
-    void writeChatMessage(String idPlayer, String msg) throws  RemoteException;
+    void connect(String idPlayer, String data) throws  RemoteException;
+    void writeChatMessage(String idPlayerSender, String msg, String color) throws  RemoteException;
     void movePieceControl(String idPlayer, String pieceName)  throws  RemoteException;
 }

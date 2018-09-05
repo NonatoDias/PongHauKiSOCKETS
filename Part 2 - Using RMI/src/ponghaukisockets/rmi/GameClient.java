@@ -41,14 +41,22 @@ public class GameClient extends UnicastRemoteObject implements GameRemoteInterfa
     }
     
     @Override
-    public void connect(String idPlayer) throws RemoteException {
+    public void connect(String idPlayer, String data) throws RemoteException {
+        switch(data){
+            case "PLAYER_BLUE":
+                player.setChatColor(Paint.valueOf("#1e90ff"));
+                break;
+            case "PLAYER_YELLOW":
+                player.setChatColor(Paint.valueOf("#c3c310"));
+                break;
+        }
         log("CLIENT "+idPlayer+" connectado SERVIDOR ");
     }
 
     @Override
-    public void writeChatMessage(String idPlayer, String msg) throws RemoteException {
+    public void writeChatMessage(String idPlayerSender, String msg, String color) throws RemoteException {
         Platform.runLater(()->{
-            addMessageToTheView( msg, player.getChatColor());
+            addMessageToTheView( msg, Paint.valueOf(color));
         });
     }
     
