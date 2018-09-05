@@ -10,6 +10,7 @@ import ponghaukisockets.model.Player;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import javafx.application.Platform;
+import javafx.scene.control.Label;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
@@ -21,9 +22,11 @@ import javafx.scene.text.TextFlow;
  * @author Nonato Dias
  */
 public class GameClient extends UnicastRemoteObject implements GameRemoteInterface{
-    private Player player = null;    
+    private Player player = null;   
+    private String IdPlayerFromLastMove;
     private PieceMap pieceMap;
     private TextFlow textflow = null;
+    private Label labelGameStatus;
     
     
     public GameClient(TextFlow textflow) throws RemoteException {
@@ -32,11 +35,15 @@ public class GameClient extends UnicastRemoteObject implements GameRemoteInterfa
         log("Servidor chat criado!");
     }
     
-    public void setPlayer(Player whoDidIt) throws RemoteException {
+    public void setPlayer(Player whoDidIt){
         this.player = whoDidIt;
     }
     
-    public void setPieceMap(PieceMap pieceMap) throws RemoteException {
+    public void setlabelGameStatus(Label labelGameStatus){
+        this.labelGameStatus = labelGameStatus;
+    }
+    
+    public void setPieceMap(PieceMap pieceMap){
         this.pieceMap = pieceMap;
     }
     
@@ -50,7 +57,12 @@ public class GameClient extends UnicastRemoteObject implements GameRemoteInterfa
                 player.setChatColor(Paint.valueOf("#c3c310"));
                 break;
         }
+        player.setName(data);
         log("CLIENT "+idPlayer+" connectado SERVIDOR ");
+        Platform.runLater(()->{
+            renderStatus();
+        });
+        
     }
 
     @Override
@@ -61,7 +73,14 @@ public class GameClient extends UnicastRemoteObject implements GameRemoteInterfa
     }
     
     @Override
+    public String getIdPlayerFromLastMove() throws RemoteException {
+        return this.IdPlayerFromLastMove;
+    }
+    
+    @Override
     public void movePieceControl(String idPlayer, String pieceName) throws RemoteException {
+        this.IdPlayerFromLastMove = idPlayer;
+        
         Platform.runLater(()->{
             switch(pieceName){
                 case "BLUE_A":
@@ -77,6 +96,7 @@ public class GameClient extends UnicastRemoteObject implements GameRemoteInterfa
                     pieceMap.moveYellowB();
                     break;
             }
+            renderStatus();
         });
     }
     
@@ -88,6 +108,25 @@ public class GameClient extends UnicastRemoteObject implements GameRemoteInterfa
         this.textflow.getChildren().addAll(text);
     }
     
+    public void renderStatus(){
+        try {
+            String idPlayer = player.getIdPlayer();
+            String idLast = getIdPlayerFromLastMove();
+            if(idLast == null){//Primeira jogada é do blue
+                labelGameStatus.setText("Azul joga agora");
+                
+            }else if(idPlayer.equals(idLast)){
+                String title = player.getName().equals("PLAYER_YELLOW") ? "Azul joga agora" : "Amarelo joga agora";
+                labelGameStatus.setText(title);
+            }else{
+                String title = player.getName().equals("PLAYER_BLUE") ? "Azul joga agora" : "Amarelo joga agora";
+                labelGameStatus.setText(title);
+            }
+        } catch (RemoteException ex) {
+            
+        }
+    } 
+    
     /**
      * Loga na view 
      * @param text 
@@ -96,4 +135,6 @@ public class GameClient extends UnicastRemoteObject implements GameRemoteInterfa
         String msg = "*** GameClient *** "+text;
         System.out.println(msg);
     }
+
+    
 }

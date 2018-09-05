@@ -22,6 +22,7 @@ import java.util.logging.Logger;
  */
 public class GameServer extends UnicastRemoteObject implements GameRemoteInterface{
     private PlayerRefecences players;
+    private String IdPlayerFromLastMove;
 
     public GameServer() throws RemoteException {
         super();
@@ -58,6 +59,7 @@ public class GameServer extends UnicastRemoteObject implements GameRemoteInterfa
 
     @Override
     public void movePieceControl(String idPlayer, String pieceName) throws RemoteException {
+        this.IdPlayerFromLastMove = idPlayer;
         try {
             if(players.size() >= 0 && players.size() <= 2){
                 for(GameRemoteInterface gameInterface: players.getAllGameInterface()){
@@ -68,6 +70,11 @@ public class GameServer extends UnicastRemoteObject implements GameRemoteInterfa
         }catch (Exception ex) {
             log("Error movePieceControl: "+ex.toString());
         } 
+    }
+    
+    @Override
+    public String getIdPlayerFromLastMove() throws RemoteException {
+        return this.IdPlayerFromLastMove;
     }
     
     /**

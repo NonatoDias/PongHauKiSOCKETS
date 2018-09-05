@@ -17,6 +17,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.control.Label;
 import javafx.scene.text.TextFlow;
 
 /**
@@ -50,10 +51,11 @@ public class PongHauKiREGISTRY {
     }    
      
     
-    public void createAndRegisterGameClient(Player p, PieceMap PieceMap, TextFlow textflow) throws RemoteException, MalformedURLException{
+    public void createAndRegisterGameClient(Player p, PieceMap PieceMap, TextFlow textflow, Label labelGameStatus) throws RemoteException, MalformedURLException{
         GameClient client = new GameClient(textflow);
         client.setPlayer(p);
         client.setPieceMap(PieceMap);
+        client.setlabelGameStatus(labelGameStatus);
         String name = "//localhost/gameClientRef"+p.getIdPlayer();
         Naming.rebind(name,client);
         log("gameClientRef bind");

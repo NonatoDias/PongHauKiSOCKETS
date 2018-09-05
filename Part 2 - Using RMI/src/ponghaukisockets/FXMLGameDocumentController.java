@@ -68,7 +68,6 @@ import javafx.util.Duration;
 public class FXMLGameDocumentController implements Initializable {
     private PieceMap pieceMap;
     private Player player  = null; //"PLAYER_BLUE" or "PLAYER_YELLOW"
-    private String whoDidLastMove = "PLAYER_YELLOW";//Começa com azul
     private String hostServerName = "localhost";//DEfinido no modal ao iniciar o jogo
     
     private PongHauKiREGISTRY pongHauKiREGISTRY;
@@ -140,7 +139,7 @@ public class FXMLGameDocumentController implements Initializable {
     private void createRegistries() {
         pongHauKiREGISTRY = new PongHauKiREGISTRY();
         try {
-            pongHauKiREGISTRY.createAndRegisterGameClient(player, pieceMap, msgTextFlow);
+            pongHauKiREGISTRY.createAndRegisterGameClient(player, pieceMap, msgTextFlow, labelGameStatus);
         } catch (Exception ex) {
             
         }
@@ -154,6 +153,12 @@ public class FXMLGameDocumentController implements Initializable {
         try {
             gameControl =  (GameRemoteInterface)Naming.lookup("//"+hostServerName+"/gameServerRef");
             gameControl.connect(player.getIdPlayer(), null);
+            
+            String title = player.getName().equals("PLAYER_BLUE") ? "Você é o AZUL" : "Você é o AMARELO";
+            labelGameTitle.setText(title);
+            labelGameTitle.setTextFill(player.getChatColor());
+            //alertGameStatus("Esperando o outro jogador conectar...");
+            
             
         } catch (Exception ex){
             
@@ -194,7 +199,9 @@ public class FXMLGameDocumentController implements Initializable {
         
     }
     
-    
+    /**
+     * Modal para definicao de host 
+     */
     private void showDialogHost(){
         JFXDialogLayout content = new JFXDialogLayout();
         JFXTextField hostServerField = new JFXTextField();
@@ -278,43 +285,31 @@ public class FXMLGameDocumentController implements Initializable {
         
     }
     
-    public void renderStatus(){
-        switch(whoDidLastMove){
-            case "PLAYER_BLUE":
-                labelGameStatus.setText("Amarelo joga agora");
-                break;
-            case "PLAYER_YELLOW":
-                labelGameStatus.setText("Azul joga agora");
-                break;
-        }
-    } 
-
     private void addEventsToTheView() {
         //Events
         circuloAzulA.setOnMouseClicked((e)->{
-            movePiece("BLUE_A");
-            /*if(player.equals("PLAYER_BLUE") && !player.equals(whoDidLastMove)){
+            if(player.getName().equals("PLAYER_BLUE")){
                 movePiece("BLUE_A");
             }else{
                 
-            }*/
+            }
         });
         circuloAzulB.setOnMouseClicked((e)->{
-            if(player.equals("PLAYER_BLUE") && !player.equals(whoDidLastMove)){
+            if(player.getName().equals("PLAYER_BLUE")){
                 movePiece("BLUE_B");
             }else{
                 
             }
         });
         circuloAmareloA.setOnMouseClicked((e)->{
-            if(player.equals("PLAYER_YELLOW") && !player.equals(whoDidLastMove)){
+            if(player.getName().equals("PLAYER_YELLOW")){
                 movePiece("YELLOW_A");
             }else{
                 
             }
         });
         circuloAmareloB.setOnMouseClicked((e)->{
-            if(player.equals("PLAYER_YELLOW") && !player.equals(whoDidLastMove)){
+            if(player.getName().equals("PLAYER_YELLOW")){
                 movePiece("YELLOW_B");
             }else{
                 
@@ -351,13 +346,20 @@ public class FXMLGameDocumentController implements Initializable {
         
     }
 
-    private void movePiece(String move) {
+    private void movePiece(String movement) {
         try {
-            gameControl.movePieceControl(player.getIdPlayer(), move);
+            String idPlayer = player.getIdPlayer();
+            String idLast = gameControl.getIdPlayerFromLastMove();
+            
+            if(idLast == null){//Primeira jogada é do blue
+                if(player.getName().equals("PLAYER_BLUE")){
+                    gameControl.movePieceControl(player.getIdPlayer(), movement);
+                }
+            }else if(idPlayer.equals(idLast) == false){
+                gameControl.movePieceControl(player.getIdPlayer(), movement);
+            }
         } catch (RemoteException ex) {
             
         }
     }
-
-    
 }
