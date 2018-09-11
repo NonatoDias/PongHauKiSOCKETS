@@ -73,19 +73,17 @@ public class GameServer extends UnicastRemoteObject implements GameRemoteInterfa
     }
     
     @Override
-    public String quitGame(String idPlayer) throws RemoteException {
-        String msg = "";
+    public void quitGame(String idPlayer) throws RemoteException {
         try {
             if(isAllPlayerReady()){
                 for(GameRemoteInterface gameInterface: players.getAllGameInterface()){
-                    msg += gameInterface.quitGame(idPlayer);
+                   gameInterface.quitGame(idPlayer);
                 }
             }
             
         }catch (Exception ex) {
             log("Error quitGame: "+ex.toString());
         } 
-        return msg;
     }
     
     @Override

@@ -1,6 +1,7 @@
 package ponghaukisockets.rmi;
 
 
+import com.jfoenix.controls.JFXDialog;
 import ponghaukisockets.model.PieceMap;
 import ponghaukisockets.model.Player;
 import java.io.IOException;
@@ -19,6 +20,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.control.Label;
 import javafx.scene.text.TextFlow;
+import ponghaukisockets.model.ModalAlert;
 
 /**
  *
@@ -56,14 +58,16 @@ public class PongHauKiREGISTRY {
      * @param PieceMap
      * @param textflow
      * @param labelGameStatus
+     * @param dialogAlert
      * @throws RemoteException
      * @throws MalformedURLException 
      */
-    public void createAndRegisterGameClient(Player p, PieceMap PieceMap, TextFlow textflow, Label labelGameStatus) throws RemoteException, MalformedURLException{
+    public void createAndRegisterGameClient(Player p, PieceMap PieceMap, TextFlow textflow, Label labelGameStatus, ModalAlert modalAlert) throws RemoteException, MalformedURLException{
         GameClient client = new GameClient(textflow);
         client.setPlayer(p);
         client.setPieceMap(PieceMap);
         client.setlabelGameStatus(labelGameStatus);
+        client.setModalAlert(modalAlert);
         String name = "//localhost/gameClientRef"+p.getIdPlayer();
         Naming.rebind(name,client);
         log("gameClientRef bind");

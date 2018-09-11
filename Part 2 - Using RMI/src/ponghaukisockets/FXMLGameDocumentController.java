@@ -60,6 +60,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import ponghaukisockets.model.ModalAlert;
 
 /**
  *
@@ -72,6 +73,8 @@ public class FXMLGameDocumentController implements Initializable {
     
     private PongHauKiREGISTRY pongHauKiREGISTRY;
     private GameRemoteInterface gameControl;
+    
+    private ModalAlert modalAlert;
     
     @FXML
     private JFXDialog dialog;
@@ -124,11 +127,12 @@ public class FXMLGameDocumentController implements Initializable {
                 
         //Peças do jogo
         createPieceMap();
-        //Inicia PongHauKiREGISTRY
-        createRegistries();
         
         //Eventos
         addEventsToTheView();
+        
+        //Inicia PongHauKiREGISTRY
+        createRegistries();
         startGame();
     }   
     
@@ -139,7 +143,7 @@ public class FXMLGameDocumentController implements Initializable {
     private void createRegistries() {
         pongHauKiREGISTRY = new PongHauKiREGISTRY();
         try {
-            pongHauKiREGISTRY.createAndRegisterGameClient(player, pieceMap, msgTextFlow, labelGameStatus);
+            pongHauKiREGISTRY.createAndRegisterGameClient(player, pieceMap, msgTextFlow, labelGameStatus, modalAlert);
         } catch (Exception ex) {
             
         }
@@ -228,7 +232,10 @@ public class FXMLGameDocumentController implements Initializable {
         dialog.show();
     }
     
-    
+    /**
+     * @deprecated 
+     * @param msg 
+     */
     private void alertWinner(String msg){
         JFXDialogLayout content = new JFXDialogLayout();
         content.setHeading(new Text("FIM DE JOGO"));
@@ -283,7 +290,7 @@ public class FXMLGameDocumentController implements Initializable {
     
     private void quitGame() {
         try {
-            alertWinner(gameControl.quitGame(player.getIdPlayer()));
+            gameControl.quitGame(player.getIdPlayer());
             
         } catch (RemoteException ex) {
             
@@ -292,6 +299,10 @@ public class FXMLGameDocumentController implements Initializable {
     
     private void addEventsToTheView() {
         //Events
+        modalAlert = new ModalAlert(dialogStackPane, (e)->{
+            restartGame();
+        });
+        
         circuloAzulA.setOnMouseClicked((e)->{
             if(player.getName().equals("PLAYER_BLUE")){
                 movePiece("BLUE_A");

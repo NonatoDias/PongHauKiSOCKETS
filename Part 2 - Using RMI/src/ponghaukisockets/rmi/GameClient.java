@@ -5,6 +5,7 @@
  */
 package ponghaukisockets.rmi;
 
+import com.jfoenix.controls.JFXDialog;
 import ponghaukisockets.model.PieceMap;
 import ponghaukisockets.model.Player;
 import java.rmi.RemoteException;
@@ -16,6 +17,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import ponghaukisockets.model.ModalAlert;
 
 /**
  *
@@ -27,6 +29,7 @@ public class GameClient extends UnicastRemoteObject implements GameRemoteInterfa
     private PieceMap pieceMap;
     private TextFlow textflow = null;
     private Label labelGameStatus;
+    private ModalAlert modal;
     
     
     public GameClient(TextFlow textflow) throws RemoteException {
@@ -45,6 +48,11 @@ public class GameClient extends UnicastRemoteObject implements GameRemoteInterfa
     
     public void setPieceMap(PieceMap pieceMap){
         this.pieceMap = pieceMap;
+    }
+    
+    
+    void setModalAlert(ModalAlert modal) {
+        this.modal = modal;
     }
     
     @Override
@@ -78,11 +86,18 @@ public class GameClient extends UnicastRemoteObject implements GameRemoteInterfa
     }
     
     @Override
-    public String quitGame(String idPlayer) throws RemoteException {
-        if(idPlayer.equals(player.getIdPlayer())){
-            return player.getName().equals("PLAYER_BLUE") ? "Azul desistiu." : "Amarelo desistiu";
-        }
-        return "Você ganhou!";
+    public void quitGame(String idPlayer) throws RemoteException {
+        Platform.runLater(()->{ 
+            String msg = "";
+            if(idPlayer.equals(player.getIdPlayer())){
+                msg = "Você desistiu e perdeu!";
+                
+            }else{
+                msg += player.getName().equals("PLAYER_YELLOW") ? "Azul desistiu. " : "Amarelo desistiu. ";
+                msg += "Parabéns você ganhou!";
+            }
+            modal.show(msg);
+        });
     }
     
     @Override
