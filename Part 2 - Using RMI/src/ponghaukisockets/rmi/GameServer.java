@@ -33,7 +33,7 @@ public class GameServer extends UnicastRemoteObject implements GameRemoteInterfa
     @Override
     public void connect(String idPlayer, String data) throws RemoteException {
         try {
-            if(players.size() >= 0 && players.size() <= 2){
+            if(isAllPlayerReady()){
                 addPlayer(idPlayer);
                 log("SERVIDOR connectado com "+idPlayer);
             }
@@ -46,7 +46,7 @@ public class GameServer extends UnicastRemoteObject implements GameRemoteInterfa
     @Override
     public void writeChatMessage(String idPlayer, String msg, String color) throws RemoteException {
         try {
-            if(players.size() >= 0 && players.size() <= 2){
+            if(isAllPlayerReady()){
                 for(GameRemoteInterface gameInterface: players.getAllGameInterface()){
                     gameInterface.writeChatMessage(idPlayer, msg, color);
                 }
@@ -61,7 +61,7 @@ public class GameServer extends UnicastRemoteObject implements GameRemoteInterfa
     public void movePieceControl(String idPlayer, String pieceName) throws RemoteException {
         this.IdPlayerFromLastMove = idPlayer;
         try {
-            if(players.size() >= 0 && players.size() <= 2){
+            if(isAllPlayerReady()){
                 for(GameRemoteInterface gameInterface: players.getAllGameInterface()){
                     gameInterface.movePieceControl(idPlayer, pieceName);
                 }
@@ -73,8 +73,28 @@ public class GameServer extends UnicastRemoteObject implements GameRemoteInterfa
     }
     
     @Override
+    public String quitGame(String idPlayer) throws RemoteException {
+        String msg = "";
+        try {
+            if(isAllPlayerReady()){
+                for(GameRemoteInterface gameInterface: players.getAllGameInterface()){
+                    msg += gameInterface.quitGame(idPlayer);
+                }
+            }
+            
+        }catch (Exception ex) {
+            log("Error quitGame: "+ex.toString());
+        } 
+        return msg;
+    }
+    
+    @Override
     public String getIdPlayerFromLastMove() throws RemoteException {
         return this.IdPlayerFromLastMove;
+    }
+    
+    boolean isAllPlayerReady(){
+        return players.size() >= 0 && players.size() <= 2;
     }
     
     /**

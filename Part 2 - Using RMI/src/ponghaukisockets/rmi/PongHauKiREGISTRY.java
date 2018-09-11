@@ -50,7 +50,15 @@ public class PongHauKiREGISTRY {
         log("gameServerRef bind");
     }    
      
-    
+    /**
+     * 
+     * @param p
+     * @param PieceMap
+     * @param textflow
+     * @param labelGameStatus
+     * @throws RemoteException
+     * @throws MalformedURLException 
+     */
     public void createAndRegisterGameClient(Player p, PieceMap PieceMap, TextFlow textflow, Label labelGameStatus) throws RemoteException, MalformedURLException{
         GameClient client = new GameClient(textflow);
         client.setPlayer(p);

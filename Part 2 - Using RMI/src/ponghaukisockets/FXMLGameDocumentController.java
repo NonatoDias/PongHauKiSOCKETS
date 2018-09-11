@@ -282,7 +282,12 @@ public class FXMLGameDocumentController implements Initializable {
     }
     
     private void quitGame() {
-        
+        try {
+            alertWinner(gameControl.quitGame(player.getIdPlayer()));
+            
+        } catch (RemoteException ex) {
+            
+        }
     }
     
     private void addEventsToTheView() {

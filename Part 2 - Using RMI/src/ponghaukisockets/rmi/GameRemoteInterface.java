@@ -17,4 +17,5 @@ public interface GameRemoteInterface extends Remote{
     String getIdPlayerFromLastMove() throws  RemoteException;
     void writeChatMessage(String idPlayerSender, String msg, String color) throws  RemoteException;
     void movePieceControl(String idPlayer, String pieceName)  throws  RemoteException;
+    String quitGame(String idPlayer)  throws  RemoteException;
 }

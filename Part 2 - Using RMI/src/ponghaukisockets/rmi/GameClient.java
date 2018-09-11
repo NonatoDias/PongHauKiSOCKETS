@@ -78,6 +78,14 @@ public class GameClient extends UnicastRemoteObject implements GameRemoteInterfa
     }
     
     @Override
+    public String quitGame(String idPlayer) throws RemoteException {
+        if(idPlayer.equals(player.getIdPlayer())){
+            return player.getName().equals("PLAYER_BLUE") ? "Azul desistiu." : "Amarelo desistiu";
+        }
+        return "Você ganhou!";
+    }
+    
+    @Override
     public void movePieceControl(String idPlayer, String pieceName) throws RemoteException {
         this.IdPlayerFromLastMove = idPlayer;
         
@@ -134,7 +142,5 @@ public class GameClient extends UnicastRemoteObject implements GameRemoteInterfa
     private void log(String text){
         String msg = "*** GameClient *** "+text;
         System.out.println(msg);
-    }
-
-    
+    } 
 }
