@@ -43,7 +43,16 @@ public class PongHauKiREGISTRY {
         /** @TODO destruir thread ao fechar programa */
         this.port = port;
         this.registry = LocateRegistry.createRegistry(port);
+        //this.registry = LocateRegistry.getRegistry(port);
         log("RMIRegistry iniciado");
+    }
+    
+    public Registry getRMIRegistry(int port) throws RemoteException, MalformedURLException{
+        /** @TODO destruir thread ao fechar programa */
+        this.port = port;
+        this.registry = LocateRegistry.getRegistry(port);
+        log("Referencia RMIRegistry");
+        return this.registry;
     }
     
     public void createAndRegisterGameServer() throws RemoteException, MalformedURLException{
@@ -54,7 +63,7 @@ public class PongHauKiREGISTRY {
      
     /**
      * 
-     * @param p
+     * @param player
      * @param PieceMap
      * @param textflow
      * @param labelGameStatus
@@ -62,10 +71,10 @@ public class PongHauKiREGISTRY {
      * @throws RemoteException
      * @throws MalformedURLException 
      */
-    public void createAndRegisterGameClient(Player p, PieceMap PieceMap, TextFlow textflow, Label labelGameStatus, ModalAlert modalAlert) throws RemoteException, MalformedURLException{
+    public void createAndRegisterGameClient(Player p, PieceMap pieceMap, TextFlow textflow, Label labelGameStatus, ModalAlert modalAlert) throws RemoteException, MalformedURLException{
         GameClient client = new GameClient(textflow);
         client.setPlayer(p);
-        client.setPieceMap(PieceMap);
+        client.setPieceMap(pieceMap);
         client.setlabelGameStatus(labelGameStatus);
         client.setModalAlert(modalAlert);
         String name = "//localhost/gameClientRef"+p.getIdPlayer();

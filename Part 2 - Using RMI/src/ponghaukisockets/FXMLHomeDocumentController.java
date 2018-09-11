@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
+import java.rmi.server.ExportException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -159,8 +160,22 @@ public class FXMLHomeDocumentController implements Initializable {
     private void initServer() {
         try {
             pongHauKiREGISTRY.initRMIRegistry(Integer.parseInt(textFieldPort.getText()));
-            textFieldPort.setDisable(true);
             log("RMIRegistry iniciado pelo usuario");
+        }catch(ExportException ex){
+            log("ATENÇÃO já existe um registry nessa porta");
+            log("... ");
+            try {
+                pongHauKiREGISTRY.getRMIRegistry(Integer.parseInt(textFieldPort.getText()));
+                log("referencia RMIRegistry já iniciada");
+            } catch (Exception ex1) {
+                log("ERROR getRegistry: "+ex.toString());
+            } 
+        }catch (Exception ex) {
+            log("ERROR: "+ex.toString());
+        }
+        
+        try {
+            textFieldPort.setDisable(true);
             log("HOST: "+pongHauKiREGISTRY.getHost());
             log("PORT: "+pongHauKiREGISTRY.getPort());
             pongHauKiREGISTRY.createAndRegisterGameServer();
