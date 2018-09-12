@@ -57,8 +57,9 @@ public class PongHauKiREGISTRY {
     
     public void createAndRegisterGameServer() throws RemoteException, MalformedURLException{
         GameServer server = new GameServer();
-        Naming.rebind("//localhost/gameServerRef",server);
-        log("gameServerRef bind");
+        String name = "//"+this.getHost()+":"+this.port+"/gameServerRef";
+        Naming.rebind(name,server);
+        log("gameServerRef bind: "+name);
     }    
      
     /**
@@ -71,15 +72,16 @@ public class PongHauKiREGISTRY {
      * @throws RemoteException
      * @throws MalformedURLException 
      */
-    public void createAndRegisterGameClient(Player p, PieceMap pieceMap, TextFlow textflow, Label labelGameStatus, ModalAlert modalAlert) throws RemoteException, MalformedURLException{
-        GameClient client = new GameClient(textflow);
+    public void createAndRegisterGameClient(String serverName, Player p, PieceMap pieceMap, TextFlow textflow, Label labelGameStatus, ModalAlert modalAlert) throws RemoteException, MalformedURLException{
+        GameClient client = new GameClient();
         client.setPlayer(p);
+        client.setTextFlow(textflow);
         client.setPieceMap(pieceMap);
         client.setlabelGameStatus(labelGameStatus);
         client.setModalAlert(modalAlert);
-        String name = "//localhost/gameClientRef"+p.getIdPlayer();
+        String name = "//"+serverName+"/gameClientRef"+p.getIdPlayer();
         Naming.rebind(name,client);
-        log("gameClientRef bind");
+        log("gameClientRef bind: "+name);
     }    
     
     private void log(String msg){
@@ -95,7 +97,7 @@ public class PongHauKiREGISTRY {
         return "ERROR";
     }
 
-    public int getPort() {
+    public int getDefaultPort() {
         return 1099;
     }
 

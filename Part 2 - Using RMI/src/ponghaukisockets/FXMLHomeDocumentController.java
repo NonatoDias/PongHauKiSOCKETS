@@ -75,7 +75,7 @@ public class FXMLHomeDocumentController implements Initializable {
         
         labelHost.setText(pongHauKiREGISTRY.getHost());
         textFieldPort.setStyle("-fx-text-inner-color: white");
-        textFieldPort.setText(""+pongHauKiREGISTRY.getPort());
+        textFieldPort.setText(""+pongHauKiREGISTRY.getDefaultPort());
         
         addEventsToTheView();
     }    
@@ -177,7 +177,7 @@ public class FXMLHomeDocumentController implements Initializable {
         try {
             textFieldPort.setDisable(true);
             log("HOST: "+pongHauKiREGISTRY.getHost());
-            log("PORT: "+pongHauKiREGISTRY.getPort());
+            log("PORT: "+pongHauKiREGISTRY.getDefaultPort());
             pongHauKiREGISTRY.createAndRegisterGameServer();
             log("GameServer iniciado pelo usuario");
         } catch (Exception ex) {

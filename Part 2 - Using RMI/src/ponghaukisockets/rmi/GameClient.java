@@ -32,10 +32,13 @@ public class GameClient extends UnicastRemoteObject implements GameRemoteInterfa
     private ModalAlert modal;
     
     
-    public GameClient(TextFlow textflow) throws RemoteException {
+    public GameClient() throws RemoteException {
         super();
-        this.textflow = textflow;
         log("Servidor chat criado!");
+    }
+    
+    public void setTextFlow(TextFlow textflow){
+        this.textflow = textflow;
     }
     
     public void setPlayer(Player whoDidIt){
@@ -56,7 +59,7 @@ public class GameClient extends UnicastRemoteObject implements GameRemoteInterfa
     }
     
     @Override
-    public void connect(String idPlayer, String data) throws RemoteException {
+    public void connect(String serverName, String idPlayer, String data) throws RemoteException {
         switch(data){
             case "PLAYER_BLUE":
                 player.setChatColor(Paint.valueOf("#1e90ff"));
@@ -66,7 +69,7 @@ public class GameClient extends UnicastRemoteObject implements GameRemoteInterfa
                 break;
         }
         player.setName(data);
-        log("CLIENT "+idPlayer+" connectado SERVIDOR ");
+        log("CLIENT "+idPlayer+" connectado SERVIDOR: "+serverName);
         Platform.runLater(()->{
             renderStatus();
         });

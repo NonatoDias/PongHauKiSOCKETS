@@ -69,7 +69,7 @@ import ponghaukisockets.model.ModalAlert;
 public class FXMLGameDocumentController implements Initializable {
     private PieceMap pieceMap;
     private Player player  = null; //"PLAYER_BLUE" or "PLAYER_YELLOW"
-    private String hostServerName = "localhost";//DEfinido no modal ao iniciar o jogo
+    private String serverName = "localhost";//DEfinido no modal ao iniciar o jogo
     
     private PongHauKiREGISTRY pongHauKiREGISTRY;
     private GameRemoteInterface gameControl;
@@ -132,7 +132,7 @@ public class FXMLGameDocumentController implements Initializable {
         addEventsToTheView();
         
         //Inicia PongHauKiREGISTRY
-        createRegistries();
+        //createRegistries();
         startGame();
     }   
     
@@ -143,7 +143,7 @@ public class FXMLGameDocumentController implements Initializable {
     private void createRegistries() {
         pongHauKiREGISTRY = new PongHauKiREGISTRY();
         try {
-            pongHauKiREGISTRY.createAndRegisterGameClient(player, pieceMap, msgTextFlow, labelGameStatus, modalAlert);
+            pongHauKiREGISTRY.createAndRegisterGameClient(serverName, player, pieceMap, msgTextFlow, labelGameStatus, modalAlert);
         } catch (Exception ex) {
             
         }
@@ -155,8 +155,8 @@ public class FXMLGameDocumentController implements Initializable {
      */
     private void connect() {
         try {
-            gameControl =  (GameRemoteInterface)Naming.lookup("//"+hostServerName+"/gameServerRef");
-            gameControl.connect(player.getIdPlayer(), null);
+            gameControl =  (GameRemoteInterface)Naming.lookup("//"+serverName+"/gameServerRef");
+            gameControl.connect(serverName, player.getIdPlayer(), null);
             
             String title = player.getName().equals("PLAYER_BLUE") ? "Você é o AZUL" : "Você é o AMARELO";
             labelGameTitle.setText(title);
@@ -220,9 +220,10 @@ public class FXMLGameDocumentController implements Initializable {
         dialog = new JFXDialog(dialogStackPane, content, JFXDialog.DialogTransition.CENTER);
         btnDialogOK = new JFXButton("OK");
         btnDialogOK.setOnAction((e)->{
-            hostServerName = hostServerField.getText();
+            serverName = hostServerField.getText()+":1099";
             
             //RMI
+            createRegistries();
             connect();
             dialog.close();
             dialogStackPane.setVisible(false);

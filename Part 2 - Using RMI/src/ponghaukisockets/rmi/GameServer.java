@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 public class GameServer extends UnicastRemoteObject implements GameRemoteInterface{
     private PlayerRefecences players;
     private String IdPlayerFromLastMove;
+    private String serverName;
 
     public GameServer() throws RemoteException {
         super();
@@ -31,8 +32,9 @@ public class GameServer extends UnicastRemoteObject implements GameRemoteInterfa
     }
    
     @Override
-    public void connect(String idPlayer, String data) throws RemoteException {
+    public void connect(String serverName, String idPlayer, String data) throws RemoteException {
         try {
+            this.serverName = serverName;
             if(isAllPlayerReady()){
                 addPlayer(idPlayer);
                 log("SERVIDOR connectado com "+idPlayer);
@@ -105,10 +107,10 @@ public class GameServer extends UnicastRemoteObject implements GameRemoteInterfa
     }
     
     private void addPlayer(String idPlayer) throws NotBoundException, MalformedURLException, RemoteException{
-        String baseUrl = "//localhost/gameClientRef";
+        String baseUrl = "//"+serverName+"/gameClientRef";
         GameRemoteInterface intrf = (GameRemoteInterface)Naming.lookup(baseUrl+idPlayer);
         players.add(idPlayer, intrf);
-        intrf.connect(idPlayer, creatPlayName());
+        intrf.connect(serverName, idPlayer, creatPlayName());
     }
     
     private String creatPlayName(){
