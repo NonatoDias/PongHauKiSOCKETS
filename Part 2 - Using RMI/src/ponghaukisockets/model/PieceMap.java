@@ -48,6 +48,23 @@ public class PieceMap {
         this.positionsStatus[pieceYellowB.position] = true;
     }
     
+    public void setAllToInitialPosition(){
+        for (int i = 0; i <= 5; i++) {
+            this.positionsStatus[i] = false;
+        }
+        setToInitialPosition(this.pieceblueA);
+        setToInitialPosition(this.pieceblueB);
+        setToInitialPosition(this.pieceYellowA);
+        setToInitialPosition(this.pieceYellowB);
+        
+    }
+    
+    private void setToInitialPosition(Piece p){
+        pm.moveToXY(p.circle, p.initialX, p.initialY);
+        p.toInitialPosition();
+        this.positionsStatus[p.position] = true;
+    }
+    
     public void moveBlueA() {
         move(this.pieceblueA);
     }

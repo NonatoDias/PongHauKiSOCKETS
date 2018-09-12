@@ -160,4 +160,23 @@ public class PieceMovement {
         });
         translateTransition.play();
     }
+    
+    public void moveToXY(Circle circ, double x, double y){
+        //if(isAnyMoving == true) return; isAnyMoving = true;//só uma peça movimenta por vez 
+        double x0 = circ.localToScene(circ.getBoundsInLocal()).getMinX();
+        double y0 = circ.localToScene(circ.getBoundsInLocal()).getMinY();
+        
+        
+        TranslateTransition translateTransition = new TranslateTransition();  
+        translateTransition.setDuration(Duration.millis(delay_)); 
+        translateTransition.setNode(circ);
+        
+        translateTransition.setByX(x-x0);
+        translateTransition.setByY(y-y0);
+        translateTransition.setAutoReverse(false); 
+        /*translateTransition.setOnFinished((e)->{
+            isAnyMoving = false;
+        });*/
+        translateTransition.play();
+    }
 }

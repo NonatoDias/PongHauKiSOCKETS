@@ -163,9 +163,10 @@ public class FXMLGameDocumentController implements Initializable {
             labelGameTitle.setTextFill(player.getChatColor());
             //alertGameStatus("Esperando o outro jogador conectar...");
             
+            bindOnStageClose();
             
         } catch (Exception ex){
-            
+            System.out.println("controller - Error connect "+ex.toString());
         }
     }
     
@@ -181,21 +182,9 @@ public class FXMLGameDocumentController implements Initializable {
         showDialogHost();
     }
     
-    public void restartGame(){        
-        Parent game = null;
-        try {
-            game = FXMLLoader.load(getClass().getResource("FXMLGameDocument.fxml"));
-        } catch (IOException ex) {
-            //log("ERROR: "+ex.toString());
-        }
-        Stage stage2 = new Stage();
-        Scene scene2 = new Scene(game);
-        stage2.setScene(scene2);
-        stage2.setResizable(false);
-        stage2.show();
-        
-        Stage stage = (Stage) btnQuit.getScene().getWindow();
-        stage.close();
+    public void restartGame(){
+        pieceMap.setAllToInitialPosition();
+        jfxTf_message.setText("");
     }
     
     
@@ -296,6 +285,16 @@ public class FXMLGameDocumentController implements Initializable {
         } catch (RemoteException ex) {
             
         }
+    }
+    
+    /**
+     * Notifica o ganhador qndo a window for fechada
+     */
+    private void bindOnStageClose(){
+        Stage stage = (Stage) an_content.getScene().getWindow();
+        stage.setOnHiding( event ->{
+            quitGame();
+        });
     }
     
     private void addEventsToTheView() {
