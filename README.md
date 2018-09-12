@@ -22,3 +22,8 @@ adversário.
 ## Composição do projeto
 - Parte 1 - usando comunicação via sockets
 - Parte 2 - usando RMI
+
+### Parte 2 - Instruções 
+
+Antes de começa o jogor é necessário definir a porta do servidor de nomes e, em seguida, iniciá-lo:  
+![Screenshot](rmi.png)
