@@ -53,6 +53,13 @@ public class PongHauKiREGISTRY {
         //UnicastRemoteObject.unexportObject(this.registry, true);
     }
     
+    /**
+     * Cria o processo RMIRegistry
+     * @param port
+     * @return Registry
+     * @throws RemoteException
+     * @throws MalformedURLException 
+     */
     public Registry getRMIRegistry(int port) throws RemoteException, MalformedURLException{
         /** @TODO destruir thread ao fechar programa */
         this.port = port;
@@ -61,6 +68,11 @@ public class PongHauKiREGISTRY {
         return this.registry;
     }
     
+    /**
+     * Cria e registra uma instancia GameServer
+     * @throws RemoteException
+     * @throws MalformedURLException 
+     */
     public void createAndRegisterGameServer() throws RemoteException, MalformedURLException{
         GameServer server = new GameServer();
         String name = "//"+this.getHost()+":"+this.port+"/gameServerRef";

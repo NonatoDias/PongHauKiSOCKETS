@@ -37,10 +37,18 @@ public class GameClient extends UnicastRemoteObject implements GameRemoteInterfa
         log("Servidor chat criado!");
     }
     
+    /**
+     * Campo de mensagem 
+     * @param textflow 
+     */
     public void setTextFlow(TextFlow textflow){
         this.textflow = textflow;
     }
     
+    /**
+     * Jogador conectado
+     * @param whoDidIt 
+     */
     public void setPlayer(Player whoDidIt){
         this.player = whoDidIt;
     }
@@ -49,6 +57,10 @@ public class GameClient extends UnicastRemoteObject implements GameRemoteInterfa
         this.labelGameStatus = labelGameStatus;
     }
     
+    /**
+     * Controlador dos movimentos
+     * @param pieceMap 
+     */
     public void setPieceMap(PieceMap pieceMap){
         this.pieceMap = pieceMap;
     }
@@ -126,6 +138,11 @@ public class GameClient extends UnicastRemoteObject implements GameRemoteInterfa
         });
     }
     
+    /**
+     * Escreve a mensagem na tela
+     * @param msg
+     * @param value 
+     */
     public void addMessageToTheView(String msg, Paint value){
         Text text = new Text(msg+"\n");
         text.setFill(value);
@@ -134,6 +151,9 @@ public class GameClient extends UnicastRemoteObject implements GameRemoteInterfa
         this.textflow.getChildren().addAll(text);
     }
     
+    /**
+     * Mensagem para indicar quem joga
+     */
     public void renderStatus(){
         try {
             String idPlayer = player.getIdPlayer();

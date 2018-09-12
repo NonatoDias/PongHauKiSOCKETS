@@ -12,6 +12,8 @@ import ponghaukisockets.rmi.GameRemoteInterface;
 /**
  *
  * @author Nonato Dias
+ * 
+ * Armazena a referencia de todos os jogadores/janelas
  */
 public class PlayerRefecences {
     public List<String> allIds;

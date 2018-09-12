@@ -106,6 +106,13 @@ public class GameServer extends UnicastRemoteObject implements GameRemoteInterfa
         System.out.println(msg);
     }
     
+    /**
+     * Adiciona a referencia do jogador
+     * @param idPlayer
+     * @throws NotBoundException
+     * @throws MalformedURLException
+     * @throws RemoteException 
+     */
     private void addPlayer(String idPlayer) throws NotBoundException, MalformedURLException, RemoteException{
         String baseUrl = "//"+serverName+"/gameClientRef";
         GameRemoteInterface intrf = (GameRemoteInterface)Naming.lookup(baseUrl+idPlayer);
