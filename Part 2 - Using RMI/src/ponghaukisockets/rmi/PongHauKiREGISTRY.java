@@ -10,12 +10,14 @@ import java.net.MalformedURLException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.rmi.Naming;
+import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.concurrent.Task;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.control.Label;
@@ -47,6 +49,10 @@ public class PongHauKiREGISTRY {
         log("RMIRegistry iniciado");
     }
     
+    public void closeRMIRegistry() throws NoSuchObjectException{
+        //UnicastRemoteObject.unexportObject(this.registry, true);
+    }
+    
     public Registry getRMIRegistry(int port) throws RemoteException, MalformedURLException{
         /** @TODO destruir thread ao fechar programa */
         this.port = port;
@@ -61,6 +67,8 @@ public class PongHauKiREGISTRY {
         Naming.rebind(name,server);
         log("gameServerRef bind: "+name);
     }    
+    
+    //public unbind
      
     /**
      * 
@@ -96,8 +104,12 @@ public class PongHauKiREGISTRY {
         }
         return "ERROR";
     }
+    
+    public int getPort(){
+        return this.port;
+    }
 
-    public int getDefaultPort() {
+    public static int getDefaultPort() {
         return 1099;
     }
 

@@ -12,6 +12,7 @@ import com.jfoenix.controls.JFXTextField;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
 import java.rmi.server.ExportException;
 import java.text.DateFormat;
@@ -161,6 +162,7 @@ public class FXMLHomeDocumentController implements Initializable {
         try {
             pongHauKiREGISTRY.initRMIRegistry(Integer.parseInt(textFieldPort.getText()));
             log("RMIRegistry iniciado pelo usuario");
+            bindOnStageClose();
         }catch(ExportException ex){
             log("ATENÇÃO já existe um registry nessa porta");
             log("... ");
@@ -177,11 +179,24 @@ public class FXMLHomeDocumentController implements Initializable {
         try {
             textFieldPort.setDisable(true);
             log("HOST: "+pongHauKiREGISTRY.getHost());
-            log("PORT: "+pongHauKiREGISTRY.getDefaultPort());
+            log("PORT: "+pongHauKiREGISTRY.getPort());
             pongHauKiREGISTRY.createAndRegisterGameServer();
             log("GameServer iniciado pelo usuario");
         } catch (Exception ex) {
             log("ERROR: "+ex.toString());
         }
     }
+    
+    private void bindOnStageClose(){
+        Stage stage = (Stage) btnServer.getScene().getWindow();
+        stage.setOnHiding( event ->{
+            try {
+                pongHauKiREGISTRY.closeRMIRegistry();
+            } catch (NoSuchObjectException ex) {
+                
+            }
+        });
+    }
+    
+    
 }

@@ -209,14 +209,37 @@ public class FXMLGameDocumentController implements Initializable {
         dialog = new JFXDialog(dialogStackPane, content, JFXDialog.DialogTransition.CENTER);
         btnDialogOK = new JFXButton("OK");
         btnDialogOK.setOnAction((e)->{
-            serverName = hostServerField.getText()+":1099";
+            //serverName = hostServerField.getText()+":1099";
+            serverName = hostServerField.getText();
+            dialog.close();
+            showDialogPort();
+        });
+        content.setActions(btnDialogOK);
+        dialog.show();
+    }
+    
+    /**
+     * Modal para definicao de host 
+     */
+    private void showDialogPort(){
+        JFXDialogLayout content = new JFXDialogLayout();
+        JFXTextField portServerField = new JFXTextField();
+        
+        portServerField.setText(""+PongHauKiREGISTRY.getDefaultPort());
+        content.setHeading(new Text("Porta do servidor de nomes(port): "));
+        content.setBody(portServerField);
+            
+        
+        dialog = new JFXDialog(dialogStackPane, content, JFXDialog.DialogTransition.CENTER);
+        btnDialogOK = new JFXButton("OK");
+        btnDialogOK.setOnAction((e)->{
+            serverName += ":"+portServerField.getText();
             
             //RMI
             createRegistries();
             connect();
             dialog.close();
             dialogStackPane.setVisible(false);
-            //showDialogPort();
         });
         content.setActions(btnDialogOK);
         dialog.show();

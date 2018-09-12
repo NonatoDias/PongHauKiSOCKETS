@@ -25,8 +25,6 @@ public class Piece {
         this.initalPosition = position;
         this.initialX = circle.localToScene(circle.getBoundsInLocal()).getMinX();
         this.initialY = circle.localToScene(circle.getBoundsInLocal()).getMinY();
-        
-        //System.out.println("--------------  piece "+ this.initialX+ "   -   "+this.initialY);
     } 
 
     void toInitialPosition() {
